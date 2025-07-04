@@ -108,6 +108,13 @@
 
   <!-- Script to read URL and update page -->
   <script>
+
+    const usuarioId = localStorage.getItem("usuarioId");
+    if (!usuarioId) {
+      alert("Você precisa estar logado para acessar esta página.");
+      window.location.href = "login.html";
+    }
+
     function getAulaNameFromURL() {
       const params = new URLSearchParams(window.location.search);
       return params.get('aula') || 'Unknown Class';
@@ -121,6 +128,7 @@
     const aulaName = decodeURIComponent(getAulaNameFromURL());
     document.getElementById('aula-name-top').textContent = aulaName;
     document.getElementById('aula-name-heading').textContent = aulaName;
+
   </script>
 </body>
 </html>
