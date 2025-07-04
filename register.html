@@ -66,6 +66,7 @@
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirm-password').value;
+      console.log(name, email, password, confirmPassword);
 
       if (password !== confirmPassword) {
         alert("Passwords do not match.");
@@ -73,22 +74,22 @@
       }
 
       try {
-        const response = await fetch("http://localhost:5001/register", {
+        const response = await fetch("http://localhost:3000/usuario/cadastro", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            name: name,
+            nomeCompleto: name,
             email: email,
-            password: password,
-            confirm_password: confirmPassword,
+            senha: password,
+            confirmarSenha: confirmPassword,
           }),
         });
 
         const result = await response.json();
 
-        if (response.ok && result.success) {
+        if (response.status === 201) {
           alert("Registration successful!");
           window.location.href = "login.html";
         } else {
