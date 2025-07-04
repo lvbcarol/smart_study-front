@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Study - Home</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background-color: #2a003f; /* roxo escuro bonito */
+      color: white;
+    }
+
+    .btn-light {
+      background-color: #fff;
+      color: #2a003f;
+      font-weight: 500;
+    }
+
+    .btn-outline-light:hover {
+      background-color: #ffffff20;
+    }
+
+    .badge {
+      background-color: #ffffff;
+      color: #2a003f;
+    }
+
+    .navbar {
+      border-bottom: 2px solid #ffffff30;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+      <img src="images/logo.png" alt="Smart Study Logo" class="img-fluid" style="max-width: 30px; margin-right: 8px;" />
+      Smart Study
+    </a>
+    <div class="ms-auto d-flex gap-3">
+      <button class="btn btn-outline-light d-flex align-items-center" onclick="window.location.href='home.html'">
+        <i class="bi bi-house me-1"></i> Home
+      </button>
+      <button class="btn btn-outline-light" onclick="window.location.href='aboutus.html'">About Us</button>
+      <button class="btn btn-outline-light" onclick="window.location.href='myaccount.html'">My Account</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mt-5">
+    <div class="row align-items-center">
+      <!-- Left Section -->
+      <div class="col-lg-6 col-md-6">
+        <span class="badge mb-3 fs-4 px-3 py-2">#studysmart</span>
+        <h1 class="fw-bold">Who said that studying is boring?</h1>
+        <p class="fs-5 mt-3">
+          We are going to help you achieve your goals, no matter what!
+        </p>
+        <div class="d-flex align-items-center mt-4">
+          <img src="images/books.png" alt="Books Icon" class="me-3" style="max-width: 120px;" />
+          <button class="btn btn-light px-4 py-2 d-flex align-items-center" onclick="window.location.href='notebooks.html'">
+            My Notebooks
+            <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </div>
+      </div>
+      <!-- Right Section -->
+      <div class="col-lg-6 col-md-6">
+        <div class="rounded-3 overflow-hidden shadow-lg">
+          <img src="images/home.png" alt="Laptop and Study" class="img-fluid" style="max-width: 80%;" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

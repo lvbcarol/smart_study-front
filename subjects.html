@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Study - Subjects</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    body {
+      background-color: #3b1a5a;
+      color: white;
+    }
+    .card {
+      background-color: #5e2c82;
+      border: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+    /* Hover effect para o card quando estiver dentro de um link */
+    a.text-decoration-none .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    }
+    .card .badge {
+      background-color: #845ec2;
+    }
+    .btn-light {
+      color: black !important;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4 mb-5">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+      <img src="images/logo.png" alt="Smart Study Logo" class="img-fluid me-2" style="max-width: 30px;">
+      Smart Study
+    </a>
+    <div class="ms-auto">
+      <span id="aula-name-top" class="btn btn-outline-light"></span>
+    </div>
+  </nav>
+
+  <!-- Centralized Section -->
+  <div class="container text-white py-5">
+    <!-- Aula Name -->
+    <h2 id="aula-name-heading" class="text-center fw-bold mb-4"></h2>
+
+    <!-- Title -->
+    <h1 class="text-center fw-bold mb-5">What would you like to do today?</h1>
+
+    <!-- Cards -->
+    <div class="row g-4 justify-content-center">
+      <!-- Study -->
+      <div class="col-md-6 col-lg-4">
+        <a href="summary.html" class="text-decoration-none">
+          <div class="card text-white rounded shadow h-100 wider-card">
+            <div class="card-body">
+              <span class="badge mb-3">#one</span>
+              <h3 class="card-title fw-bold">Study</h3>
+              <p class="card-text">Keep in mind the main topics of each class!</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Tests -->
+      <div class="col-md-6 col-lg-4">
+        <a href="quizz.html" class="text-decoration-none">
+          <div class="card text-white rounded shadow h-100 wider-card">
+            <div class="card-body">
+              <span class="badge mb-3">#two</span>
+              <h3 class="card-title fw-bold">Tests</h3>
+              <p class="card-text">Test your knowledge with the approaches that most suits you!</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Progress -->
+      <div class="col-md-6 col-lg-4">
+        <a href="progress.html" class="text-decoration-none">
+          <div class="card text-white rounded shadow h-100 wider-card">
+            <div class="card-body">
+              <span class="badge mb-3">#three</span>
+              <h3 class="card-title fw-bold">Progress</h3>
+              <p class="card-text">Take a look on how far you came!</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Go Back Button -->
+    <div class="text-center mt-5">
+      <button class="btn btn-light rounded-pill px-4 py-2" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i> Go Back
+      </button>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Script to read URL and update page -->
+  <script>
+    function getAulaNameFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('aula') || 'Unknown Class';
+    }
+
+    function goBack() {
+      window.location.href = "notebooks.html";
+    }
+
+    // Set aula name on load
+    const aulaName = decodeURIComponent(getAulaNameFromURL());
+    document.getElementById('aula-name-top').textContent = aulaName;
+    document.getElementById('aula-name-heading').textContent = aulaName;
+  </script>
+</body>
+</html>

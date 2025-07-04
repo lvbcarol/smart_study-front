@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Study - Quiz Chat</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: #3b1a5a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .navbar {
+      background-color: #4a148c;
+    }
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .chat-box {
+      background-color: #5e2c82;
+      border-radius: 12px;
+      padding: 20px;
+      overflow-y: auto;
+      flex-grow: 1;
+      max-height: 70vh;
+    }
+    .message {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+    .message.bot .text {
+      background-color: #845ec2;
+      border-radius: 12px;
+      padding: 12px;
+      color: white;
+      margin-left: 10px;
+    }
+    .message.user .text {
+      background-color: #f1f1f1;
+      border-radius: 12px;
+      padding: 12px;
+      color: black;
+      margin-left: 10px;
+    }
+    .chat-input {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input input {
+      flex: 1;
+      border-radius: 12px;
+      border: none;
+      padding: 10px;
+    }
+    .chat-input button {
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: bold;
+    }
+    .bot-avatar {
+      width: 40px;
+      height: 40px;
+    }
+    .user-icon {
+      font-size: 1.8rem;
+      color: white;
+    }
+    .option-btn {
+      margin: 5px 0;
+      border-radius: 10px;
+      padding: 10px;
+      width: 100%;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark px-4 mb-4">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+      <img src="images/logo.png" alt="Smart Study Logo" class="img-fluid me-2" style="max-width: 30px;">
+      Smart Study
+    </a>
+  </nav>
+
+  <!-- Chat Container -->
+  <div class="chat-container">
+    <div class="chat-box" id="chatBox">
+      <div class="message bot">
+        <img src="images/chatbot.png" alt="Bot" class="bot-avatar">
+        <div class="text">Olá! Qual matéria vamos estudar?</div>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Digite sua resposta...">
+      <button class="btn btn-light" onclick="handleInitial()">Enviar</button>
+    </div>
+  </div>
+
+ <!-- Substitua seu <script> por este novo script corrigido -->
+<script>
+  const chatBox = document.getElementById("chatBox");
+  const userInput = document.getElementById("userInput");
+  const chatInputContainer = document.querySelector(".chat-input");
+
+  let currentQuestion = 0;
+  const userMistakes = [];
+
+  const quizData = [
+    {
+      question: "Qual é a capital do Brasil?",
+      options: ["São Paulo", "Brasília", "Rio de Janeiro", "Belo Horizonte"],
+      correct: 1,
+      explanation: "Brasília foi fundada em 1960 e é a capital planejada do Brasil."
+    },
+    {
+      question: "Qual estrutura de dados funciona como uma pilha?",
+      options: ["Fila", "Heap", "Stack", "Árvore"],
+      correct: 2,
+      explanation: "Stack segue o princípio LIFO (Last In, First Out)."
+    },
+    {
+      question: "O que significa HTML?",
+      options: ["HyperText Markup Language", "Hyper Training Machine Language", "HighText Machine Language", "None"],
+      correct: 0,
+      explanation: "HTML é a linguagem de marcação usada para construir páginas web."
+    },
+    {
+      question: "Qual linguagem é conhecida por sua tipagem forte e segura?",
+      options: ["Python", "JavaScript", "Rust", "PHP"],
+      correct: 2,
+      explanation: "Rust é conhecida pela segurança de memória e forte sistema de tipos."
+    },
+    {
+      question: "O que representa o CSS?",
+      options: ["Cascading Style Sheets", "Computer Style System", "Color Sheet Styling", "Custom Style Structure"],
+      correct: 0,
+      explanation: "CSS é usado para estilizar elementos HTML visualmente."
+    },
+    {
+      question: "O que significa a sigla API?",
+      options: ["Application Programming Interface", "Advanced Programming Input", "Active Program Interaction", "Application Page Internet"],
+      correct: 0,
+      explanation: "API é um conjunto de definições e protocolos para integrar sistemas."
+    },
+    {
+      question: "Qual destes é um banco de dados NoSQL?",
+      options: ["MySQL", "PostgreSQL", "MongoDB", "Oracle"],
+      correct: 2,
+      explanation: "MongoDB é um banco de dados orientado a documentos, categoria NoSQL."
+    },
+    {
+      question: "Em qual linguagem o React é baseado?",
+      options: ["Python", "JavaScript", "Ruby", "C++"],
+      correct: 1,
+      explanation: "React é uma biblioteca JavaScript para interfaces."
+    }
+  ];
+
+  function handleInitial() {
+    const text = userInput.value.trim();
+    if (!text) return;
+    appendMessage("user", `<i class="bi bi-person-circle"></i>`, text);
+    userInput.value = "";
+
+    setTimeout(() => {
+      appendMessage("bot", `<img src="images/chatbot.png" class="bot-avatar">`, `
+        Tudo pronto! Clique abaixo para começar o quizz.<br>
+        <button class="btn btn-light mt-2" onclick="startQuiz()">Iniciar Quizz</button>
+      `);
+    }, 600);
+  }
+
+  function appendMessage(sender, iconHTML, textHTML) {
+    const message = document.createElement("div");
+    message.className = `message ${sender}`;
+    message.innerHTML = `${iconHTML}<div class="text">${textHTML}</div>`;
+    chatBox.appendChild(message);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function startQuiz() {
+    currentQuestion = 0;
+    userMistakes.length = 0;
+    askQuestion();
+  }
+
+  function askQuestion() {
+    const q = quizData[currentQuestion];
+    let optionsHTML = "";
+    q.options.forEach((option, index) => {
+      const btnId = `q${currentQuestion}-opt-${index}`;
+      optionsHTML += `
+        <button class="btn btn-outline-light option-btn" onclick="selectOption(${index}, '${btnId}')" id="${btnId}">
+          ${String.fromCharCode(65 + index)}. ${option}
+        </button>
+      `;
+    });
+
+    appendMessage("bot", `<img src="images/chatbot.png" class="bot-avatar">`, `
+      <strong>Pergunta ${currentQuestion + 1}:</strong><br>${q.question}<br>${optionsHTML}
+    `);
+  }
+
+  function selectOption(selected, clickedId) {
+    const q = quizData[currentQuestion];
+    appendMessage("user", `<i class="bi bi-person-circle"></i>`, `${String.fromCharCode(65 + selected)}`);
+
+    // Colorir os botões com base em seus IDs únicos
+    q.options.forEach((_, i) => {
+      const btn = document.getElementById(`q${currentQuestion}-opt-${i}`);
+      if (!btn) return;
+      btn.classList.remove("btn-outline-light");
+      btn.disabled = true;
+      if (i === q.correct) {
+        btn.classList.add("btn-success");
+      } else {
+        btn.classList.add("btn-danger");
+      }
+    });
+
+    if (selected !== q.correct) {
+      userMistakes.push({
+        question: q.question,
+        correct: q.options[q.correct],
+        explanation: q.explanation
+      });
+    }
+
+    setTimeout(() => {
+      appendMessage("bot", `<img src="images/chatbot.png" class="bot-avatar">`, q.explanation);
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        setTimeout(askQuestion, 1500);
+      } else {
+        setTimeout(showSummary, 2000);
+      }
+    }, 800);
+  }
+
+  function showSummary() {
+    // Bloqueia campo de entrada
+    userInput.disabled = true;
+
+    let summaryHTML = "";
+    if (userMistakes.length === 0) {
+      summaryHTML = "Parabéns! Você acertou todas as perguntas!";
+    } else {
+      summaryHTML = "Você cometeu alguns erros. Vamos revisar:<br><ul>";
+      userMistakes.forEach(mistake => {
+        summaryHTML += `<li><strong>${mistake.question}</strong><br>
+          Resposta correta: ${mistake.correct}<br>
+          Explicação: ${mistake.explanation}</li><br>`;
+      });
+      summaryHTML += "</ul><br>Dica: revise os tópicos acima. Veja também:<br>";
+      summaryHTML += "- <a href='https://www.khanacademy.org' target='_blank'>Khan Academy</a><br>";
+      summaryHTML += "- <a href='https://www.alura.com.br' target='_blank'>Alura</a><br>";
+      summaryHTML += "- <a href='https://pt.wikipedia.org' target='_blank'>Wikipedia</a>";
+    }
+
+    summaryHTML += `<br><button class="btn btn-warning mt-3" onclick="salvarConversa()">Salvar Conversa</button>`;
+
+    appendMessage("bot", `<img src="images/chatbot.png" class="bot-avatar">`, summaryHTML);
+  }
+
+  function salvarConversa() {
+    const texto = [...chatBox.querySelectorAll('.message')]
+      .map(msg => msg.innerText.trim())
+      .join("\n\n");
+
+    const blob = new Blob([texto], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "conversa_quizz.txt";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+
+
+    
+</body>
+</html>

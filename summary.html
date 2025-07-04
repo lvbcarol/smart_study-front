@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Study - Summary Chat</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: #3b1a5a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: #4a148c;
+    }
+
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .chat-box {
+      background-color: #5e2c82;
+      border-radius: 12px;
+      padding: 20px;
+      overflow-y: auto;
+      flex-grow: 1;
+      max-height: 60vh;
+    }
+
+    .message {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .message.bot .text {
+      background-color: #845ec2;
+      border-radius: 12px;
+      padding: 12px;
+      color: white;
+      margin-left: 10px;
+    }
+
+    .message.user .text {
+      background-color: #f1f1f1;
+      border-radius: 12px;
+      padding: 12px;
+      color: black;
+      margin-left: 10px;
+    }
+
+    .chat-input {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      border-radius: 12px;
+      border: none;
+      padding: 10px;
+    }
+
+    .chat-input button {
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: bold;
+    }
+
+    .bot-avatar {
+      width: 40px;
+      height: 40px;
+    }
+
+    .user-icon {
+      font-size: 1.8rem;
+      color: white;
+    }
+
+    .save-btn {
+      margin-top: 20px;
+      align-self: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark px-4 mb-4">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+      <img src="images/logo.png" alt="Smart Study Logo" class="img-fluid me-2" style="max-width: 30px;">
+      Smart Study
+    </a>
+  </nav>
+
+  <!-- Chat Container -->
+  <div class="chat-container">
+    <div class="chat-box" id="chatBox">
+      <!-- Mensagem inicial do bot -->
+      <div class="message bot">
+        <img src="images/chatbot.png" alt="Bot" class="bot-avatar">
+        <div class="text">Olá! Qual matéria vamos estudar hoje?</div>
+      </div>
+    </div>
+
+    <!-- Input de mensagem -->
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Digite sua resposta...">
+      <button class="btn btn-light" onclick="sendMessage()">Enviar</button>
+    </div>
+
+    <!-- Botão para salvar -->
+    <button class="btn btn-outline-light save-btn" onclick="saveChat()">
+      <i class="bi bi-save"></i> Salvar conversa
+    </button>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (!message) return;
+
+      const chatBox = document.getElementById("chatBox");
+
+      // Mensagem do usuário
+      const userMessage = document.createElement("div");
+      userMessage.className = "message user";
+      userMessage.innerHTML = `
+        <div class="user-icon"><i class="bi bi-person-circle"></i></div>
+        <div class="text">${message}</div>
+      `;
+      chatBox.appendChild(userMessage);
+
+      // Mensagem do bot com resumo e fontes (simulada)
+      const botMessage = document.createElement("div");
+      botMessage.className = "message bot";
+      botMessage.innerHTML = `
+        <img src="images/chatbot.png" alt="Bot" class="bot-avatar">
+        <div class="text">
+          Aqui está um resumo da matéria "<strong>${message}</strong>":<br>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.<br><br>
+          Fontes confiáveis:<br>
+          - <a href="https://www.khanacademy.org" target="_blank">Khan Academy</a><br>
+          - <a href="https://www.alura.com.br" target="_blank">Alura</a><br>
+          - <a href="https://pt.wikipedia.org" target="_blank">Wikipedia</a>
+        </div>
+      `;
+      setTimeout(() => {
+        chatBox.appendChild(botMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+
+      input.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function saveChat() {
+      alert("Função de salvar em desenvolvimento...");
+      // Aqui futuramente você pode capturar o conteúdo do chatBox e enviar ao backend.
+    }
+  </script>
+</body>
+</html>
