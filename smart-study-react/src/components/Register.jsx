@@ -1,6 +1,6 @@
-// src/components/Register.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import API from "../api";
 
 function Register() {
@@ -39,87 +39,90 @@ function Register() {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center align-items-center vh-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1e0050] to-[#6f1ab6] px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-6xl bg-white rounded-xl shadow-2xl flex overflow-hidden"
+      >
         {/* Lado esquerdo */}
-        <div className="col-lg-5 col-md-6 text-center bg-primary text-white py-5 rounded-start">
+        <div className="w-1/2 bg-white flex flex-col items-center justify-center p-10">
           <img
             src="/images/logo.jpg"
             alt="Smart Study Logo"
-            className="img-fluid mb-4"
-            style={{ maxWidth: "150px" }}
+            className="w-60 h-60 object-contain mb-4"
           />
-          <h1 className="fw-bold">Smart Study</h1>
-          <p className="mt-3">Join us and revolutionize your learning!</p>
+          <h1 className="text-4xl font-bold text-[#1e0050]">Smart Study</h1>
         </div>
 
         {/* Lado direito */}
-        <div className="col-lg-5 col-md-6 bg-white text-dark py-5 rounded-end">
-          <h2 className="text-center mb-4">Create Your Account</h2>
-          <form onSubmit={handleRegister}>
-            <div className="mb-3">
-              <label className="form-label">Full Name</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter your name"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                required
-              />
-            </div>
+        <div className="w-1/2 bg-white p-10 flex flex-col justify-center">
+          <h2 className="text-2xl font-bold mb-6 text-black uppercase text-center">
+            Create your account!
+          </h2>
 
-            <div className="mb-3">
-              <label className="form-label">Email Address</label>
-              <input
-                type="email"
-                className="form-control"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
+          <form onSubmit={handleRegister} className="space-y-4">
+            <input
+              type="text"
+              className="w-full p-3 border border-black rounded-sm placeholder-gray-500"
+              placeholder="name"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+            />
+            <input
+              type="email"
+              className="w-full p-3 border border-black rounded-sm placeholder-gray-500"
+              placeholder="e-mail adress"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              className="w-full p-3 border border-black rounded-sm placeholder-gray-500"
+              placeholder="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              className="w-full p-3 border border-black rounded-sm placeholder-gray-500"
+              placeholder="confirm password"
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
+              required
+            />
 
-            <div className="mb-3">
-              <label className="form-label">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Enter your password"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">Confirm Password</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Confirm your password"
-                value={confirmarSenha}
-                onChange={(e) => setConfirmarSenha(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="text-center">
-              <button type="submit" className="btn btn-primary btn-lg w-100">
-                Sign Up
-              </button>
-            </div>
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              type="submit"
+              className="w-full py-3 font-bold text-white text-md rounded-sm bg-gradient-to-r from-blue-600 to-purple-500"
+            >
+              NEXT
+            </motion.button>
           </form>
 
-          <p className="text-center mt-3 text-muted">
-            Already have an account?{" "}
-            <Link to="/login" className="text-decoration-none">
-              Log In
+          <div className="text-center mt-5 text-black">
+            <p className="text-sm">Already have an account?</p>
+            <Link
+              to="/login"
+              className="inline-block border border-black mt-2 px-6 py-2 hover:bg-gray-200 transition"
+            >
+              LOG IN
             </Link>
+          </div>
+
+          <p className="mt-6 text-[11px] text-center text-gray-600">
+            By registering, You agree to the <br />
+            <span className="underline">Terms, Conditions and Policies</span> of Borcelle
+            & Privacy Policy
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
