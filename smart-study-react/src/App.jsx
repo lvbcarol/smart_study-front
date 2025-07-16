@@ -15,6 +15,7 @@ import AboutUs from "./components/AboutUs";
 import Navbar from "./components/Navbar"; // Componente da barra de navegação
 
 import PrivateRoute from "./components/PrivateRoute";
+import Layout from "./layout";
 
 // Exemplo:
 <Route path="/home" element={<PrivateRoute><Navbar /><Home /></PrivateRoute>} />
@@ -30,14 +31,17 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Páginas com Navbar */}
-        <Route path="/home" element={<><Navbar /><Home /></>} />
-        <Route path="/notebooks" element={<><Navbar /><Notebooks /></>} />
-        <Route path="/subjects" element={<><Navbar /><Subjects /></>} />
-        <Route path="/quizz" element={<><Navbar /><Quizz /></>} />
-        <Route path="/summary" element={<><Navbar /><Summary /></>} />
-        <Route path="/progress" element={<><Navbar /><Progress /></>} />
-        <Route path="/myaccount" element={<><Navbar /><MyAccount /></>} />
-        <Route path="/aboutus" element={<><Navbar /><AboutUs /></>} />
+        <Route path="/" element={<Layout></Layout>}>
+        <Route path="/home" element={<Home />} />
+        <Route path="/notebooks" element={<Notebooks />} />
+        <Route path="/subjects" element={<Subjects />} />
+        <Route path="/quizz" element={<Quizz />} />
+        <Route path="/summary" element={<Summary />} />
+        <Route path="/progress" element={<Progress />} />
+        <Route path="/myaccount" element={<MyAccount />} />
+        <Route path="/aboutus" element={<AboutUs />} />
+        </Route>
+        //excluir todos que estão escritos navbar e deixar igual a linha 35
 
         {/* Rota fallback: página não encontrada */}
         <Route path="*" element={<><Navbar /><h1 style={{ padding: "2rem", color: "white" }}>Página não encontrada</h1></>} />
