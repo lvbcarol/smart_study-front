@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import toast from 'react-hot-toast'; // Importar toast
+import toast from 'react-hot-toast';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import Logo from '../components/Logo';
@@ -30,7 +30,8 @@ const Login: React.FC = () => {
       toast.success('Login bem-sucedido!');
       
       setTimeout(() => {
-        navigate('/home');
+        // Passa o nome do usuário para a próxima rota
+        navigate('/home', { state: { userName: response.data.usuario.name } });
       }, 1000);
 
     } catch (err: any) {
@@ -43,7 +44,6 @@ const Login: React.FC = () => {
   };
 
   return (
-    // O JSX permanece o mesmo, sem o display de erro antigo
     <div className="min-h-screen bg-brand-purple flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-5xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -55,7 +55,21 @@ const Login: React.FC = () => {
               <Input id="password" label="password" type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} required disabled={isLoading}/>
               <Button type="submit" variant="primary" disabled={isLoading}>{isLoading ? 'ENTRANDO...' : 'CONFIRM'}</Button>
             </form>
-            <p className="text-sm text-center text-gray-500 mt-8">Não tem uma conta?{' '}<Link to="/register" className="font-semibold text-brand-primary hover:underline">Registre-se</Link></p>
+
+            {/* ✅ LINK ADICIONADO AQUI */}
+            <div className="text-right mt-3">
+                <Link to="/forgot-password" className="text-sm text-gray-600 hover:text-brand-primary hover:underline">
+                    Esqueceu a senha?
+                </Link>
+            </div>
+
+            <p className="text-sm text-center text-gray-500 mt-6">
+              Não tem uma conta?{' '}
+              <Link to="/register" className="font-semibold text-brand-primary hover:underline">
+                Registre-se
+              </Link>
+            </p>
+
           </div>
         </div>
       </div>

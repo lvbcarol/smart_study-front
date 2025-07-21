@@ -1,11 +1,10 @@
-// src/App.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast'; // 1. Importar o Toaster
-
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home';
-// ... outros imports
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
@@ -29,12 +28,12 @@ function App() {
         }}
       />
       <Routes>
-        {/* ...suas rotas */}
         <Route path="/" element={<Navigate to="/register" />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
-        {/* ...outras rotas */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </Router>
   );
