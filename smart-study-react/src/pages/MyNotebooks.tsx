@@ -52,6 +52,10 @@ const MyNotebooks: React.FC = () => {
     setNotebooks(notebooks.filter(notebook => notebook._id !== deletedId));
   };
   
+  const handleUpdateNotebook = (updatedNotebook: Notebook) => {
+    setNotebooks(notebooks.map(nb => nb._id === updatedNotebook._id ? updatedNotebook : nb));
+  };
+
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
   if (isLoading) {
@@ -70,7 +74,7 @@ const MyNotebooks: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {notebooks.map((notebook) => (
-            <NotebookCard key={notebook._id} notebook={notebook} onDelete={handleDeleteNotebook} />
+            <NotebookCard key={notebook._id} notebook={notebook} onDelete={handleDeleteNotebook} onUpdate={handleUpdateNotebook} />
           ))}
         </div>
       </main>

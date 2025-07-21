@@ -6,7 +6,7 @@ import Home from './pages/Home';
 import MyNotebooks from './pages/MyNotebooks';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import LessonPage from './pages/LessonPage';
+import SubjectPage from './pages/SubjectPage';
 
 function App() {
   return (
@@ -36,8 +36,8 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/my-notebooks" element={<MyNotebooks />} />
-        <Route path="/notebook/:notebookId/lesson/:lessonId" element={<LessonPage />} />
+        <Route path="/my-notebooks" element={<MyNotebooks />} />I
+        <Route path="/subjects/:lessonId" element={<SubjectPage />} />
       </Routes>
     </Router>
   );
