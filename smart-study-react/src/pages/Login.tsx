@@ -16,27 +16,24 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    const loadingToast = toast.loading('Entrando...');
-
+    const loadingToast = toast.loading('Signing in...');
     try {
       const response = await axios.post('http://localhost:3000/api/usuario/login', { email, password });
-      
       if (response.data.token) {
         localStorage.setItem('authToken', response.data.token);
+        localStorage.setItem('userName', response.data.usuario.name);
       }
-      
+
       toast.dismiss(loadingToast);
-      toast.success('Login bem-sucedido!');
-      
+      toast.success('Login successful!');
+
       setTimeout(() => {
-        // Passa o nome do usuário para a próxima rota
         navigate('/home', { state: { userName: response.data.usuario.name } });
       }, 1000);
-
+      
     } catch (err: any) {
       toast.dismiss(loadingToast);
-      const errorMessage = err.response?.data?.error || "E-mail ou senha inválidos.";
+      const errorMessage = err.response?.data?.error || "Invalid email or password.";
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -51,25 +48,21 @@ const Login: React.FC = () => {
           <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md mx-auto">
             <h2 className="text-2xl font-bold text-center text-gray-900 mb-8 uppercase">WELCOME!</h2>
             <form onSubmit={handleLogin} className="space-y-5">
-              <Input id="email" label="e-mail adress" type="email" placeholder="e-mail adress" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={isLoading}/>
+              <Input id="email" label="e-mail address" type="email" placeholder="e-mail address" value={email} onChange={(e) => setEmail(e.target.value)} required disabled={isLoading}/>
               <Input id="password" label="password" type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} required disabled={isLoading}/>
-              <Button type="submit" variant="primary" disabled={isLoading}>{isLoading ? 'ENTRANDO...' : 'CONFIRM'}</Button>
+              <Button type="submit" variant="primary" disabled={isLoading}>{isLoading ? 'SIGNING IN...' : 'CONFIRM'}</Button>
             </form>
-
-            {/* ✅ LINK ADICIONADO AQUI */}
             <div className="text-right mt-3">
                 <Link to="/forgot-password" className="text-sm text-gray-600 hover:text-brand-primary hover:underline">
-                    Esqueceu a senha?
+                    Forgot password?
                 </Link>
             </div>
-
             <p className="text-sm text-center text-gray-500 mt-6">
-              Não tem uma conta?{' '}
+              Don't have an account?{' '}
               <Link to="/register" className="font-semibold text-brand-primary hover:underline">
-                Registre-se
+                Sign up
               </Link>
             </p>
-
           </div>
         </div>
       </div>
