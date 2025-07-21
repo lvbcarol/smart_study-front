@@ -1,16 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  // ✅ GARANTA QUE ESTA LINHA ESTEJA CORRETA
   content: [
     "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}", // garante que Tailwind seja aplicado em todos os arquivos React
+    "./src/**/*.{js,ts,jsx,tsx}", // Diz para olhar todos os arquivos relevantes dentro de src
   ],
   theme: {
     extend: {
       colors: {
-        primary: '#5D3FD3',     // Roxo escuro
-        darkblue: '#1E1E2F',    // Azul escuro
+        'brand-purple': '#2A0E46',
+        'brand-primary': '#5B21B6',
       },
     },
   },
   plugins: [],
-};
+}
