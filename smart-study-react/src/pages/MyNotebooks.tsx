@@ -1,6 +1,7 @@
 // src/pages/MyNotebooks.tsx
 import React, { useEffect, useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { FaPlus, FaArrowLeft } from 'react-icons/fa';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import NotebookCard from '../components/NotebookCard';
@@ -17,6 +18,7 @@ const MyNotebooks: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newNotebookTitle, setNewNotebookTitle] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotebooks = async () => {
@@ -35,10 +37,7 @@ const MyNotebooks: React.FC = () => {
 
   const handleCreateNotebook = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Log para depuração. Verifique se esta mensagem aparece no console do NAVEGADOR.
-    console.log("Tentando criar caderno com o título:", newNotebookTitle);
     if (!newNotebookTitle.trim()) return;
-
     try {
       const response = await api.post<Notebook>('/notebooks', { title: newNotebookTitle });
       setNotebooks([...notebooks, response.data]);
@@ -68,12 +67,14 @@ const MyNotebooks: React.FC = () => {
     <div style={backgroundStyle} className="min-h-screen text-white">
       <Navbar />
       <main className="container mx-auto p-4 md:p-8">
-        <div className="flex justify-end items-center mb-8">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold">My notebooks</h1>
           <button onClick={() => setIsModalOpen(true)} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition">
             <FaPlus />
             <span className="hidden md:inline">New notebook</span>
           </button>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {notebooks.map((notebook, index) => (
             <NotebookCard 
@@ -85,6 +86,18 @@ const MyNotebooks: React.FC = () => {
             />
           ))}
         </div>
+
+        {/* ✅ BOTÃO "GO BACK" ADICIONADO AQUI */}
+        <div className="mt-16">
+          <button 
+            onClick={() => navigate('/home')}
+            className="bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-3 hover:bg-opacity-30 transition"
+          >
+            <FaArrowLeft />
+            <span>go back to Home</span>
+          </button>
+        </div>
+
       </main>
 
       <Modal title="Create New Notebook" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

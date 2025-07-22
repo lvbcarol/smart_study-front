@@ -19,6 +19,7 @@ const SubjectPage: React.FC = () => {
 
   useEffect(() => {
     if (!lessonId) return;
+    
     const fetchDetails = async () => {
       try {
         const response = await api.get(`/lessons/${lessonId}`);
@@ -32,10 +33,10 @@ const SubjectPage: React.FC = () => {
     fetchDetails();
   }, [lessonId]);
   
+  // ✅ Array de funcionalidades agora apenas com Summary e Quizz
   const features = [
     { tag: '#one', title: 'Summary', description: 'Keep in mind the main topics of each class!', to: `/summary/${lessonId}` },
     { tag: '#two', title: 'Quizz', description: 'Test your knowledge with the approaches that most suits you!', to: `/quizz/${lessonId}` },
-    { tag: '#three', title: 'Progress', description: 'Take a look on how far you came!', to: `/progress/${lessonId}` },
   ];
 
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
@@ -45,20 +46,20 @@ const SubjectPage: React.FC = () => {
       <Navbar />
       <main className="container mx-auto p-4 md:p-8">
         {isLoading ? (
-          <div className="text-center">Loading...</div>
+          <div className="text-center text-xl mt-16">Loading subject details...</div>
         ) : (
           <>
             <div className="flex justify-end mb-12">
               <div className="bg-white text-gray-800 font-semibold py-2 px-5 rounded-full">
-                {details ? `${details.notebookTitle} - ${details.lessonTitle}` : 'Loading...'}
+                {details ? `${details.notebookTitle} - ${details.lessonTitle}` : 'Lesson'}
               </div>
             </div>
 
             <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold">What would you like to do today?</h1>
+              <h1 className="text-4xl md:text-5xl font-bold">How would you like to study today?</h1>
             </div>
 
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {features.map((feature, index) => (
                 <FeatureCard 
                   key={feature.tag}
@@ -69,12 +70,13 @@ const SubjectPage: React.FC = () => {
             </div>
 
             <div className="mt-16">
+              {/* ✅ CORREÇÃO AQUI: O botão agora navega para '/my-notebooks' */}
               <button 
-                onClick={() => navigate(-1)} // Volta para a página anterior
+                onClick={() => navigate('/my-notebooks')}
                 className="bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-3 hover:bg-opacity-30 transition"
               >
                 <FaArrowLeft />
-                <span>go back</span>
+                <span>go back to Notebooks</span>
               </button>
             </div>
           </>
