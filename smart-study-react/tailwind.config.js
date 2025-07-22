@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
-  // ✅ GARANTA QUE ESTA LINHA ESTEJA CORRETA
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}", // Diz para olhar todos os arquivos relevantes dentro de src
@@ -13,5 +13,7 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }

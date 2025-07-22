@@ -1,5 +1,5 @@
 // src/components/NotebookCard.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaPlus, FaTrash, FaPencilAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -11,19 +11,20 @@ interface NotebookCardProps {
   notebook: Notebook;
   onDelete: (id: string) => void;
   onUpdate: (updatedNotebook: Notebook) => void;
+  // ✅ NOVA PROP: index para escalonar a animação
+  index: number;
 }
 
-const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdate }) => {
+const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdate, index }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [currentTitle, setCurrentTitle] = useState(notebook.title);
   
   const [isAddingLesson, setIsAddingLesson] = useState(false);
   const [newLessonTitle, setNewLessonTitle] = useState('');
 
-  // ✅ NOVOS ESTADOS PARA EDIÇÃO DE AULAS
   const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
   const [editingLessonTitle, setEditingLessonTitle] = useState('');
-
+  
   const navigate = useNavigate();
 
   const handleTitleUpdate = async (e: React.FormEvent) => {
@@ -65,7 +66,6 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
     }
   };
 
-  // ✅ NOVAS FUNÇÕES PARA INICIAR E SALVAR A EDIÇÃO DA AULA
   const handleStartEditLesson = (lesson: Lesson) => {
     setEditingLessonId(lesson._id);
     setEditingLessonTitle(lesson.title);
@@ -77,7 +77,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
     try {
       const response = await api.put(`/notebooks/${notebook._id}/lessons/${editingLessonId}`, { title: editingLessonTitle });
       onUpdate(response.data);
-      setEditingLessonId(null); // Sai do modo de edição
+      setEditingLessonId(null);
       toast.success('Lesson updated!');
     } catch (error) {
       toast.error('Error updating lesson.');
@@ -85,7 +85,12 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
   };
 
   return (
-    <div className="flex bg-[#2a0e46] rounded-2xl shadow-lg border border-purple-700 overflow-hidden">
+    // ✅ ALTERAÇÃO AQUI: Adicionamos a classe 'animate-fade-in-up'
+    <div 
+      className="flex bg-[#8a3dd7] rounded-2xl shadow-lg border border-purple-700 overflow-hidden animate-fade-in-up"
+      // ✅ E um estilo para atrasar a animação de cada card
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
       <div className="bg-white p-2 flex flex-col items-center gap-2 shadow-inner">
         {Array.from({ length: 12 }).map((_, i) => <div key={i} className="w-4 h-4 bg-gray-300 rounded-full"></div>)}
       </div>
@@ -109,7 +114,6 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
           <div className="space-y-2">
             {notebook.lessons.map(lesson => (
               <div key={lesson._id} className="flex items-center gap-2">
-                {/* ✅ LÓGICA DE RENDERIZAÇÃO CONDICIONAL PARA EDIÇÃO DA AULA */}
                 {editingLessonId === lesson._id ? (
                   <form onSubmit={handleUpdateLesson} className="flex-grow">
                     <input type="text" value={editingLessonTitle} onChange={(e) => setEditingLessonTitle(e.target.value)} className="w-full bg-purple-800 rounded px-2 py-1 focus:outline-none" autoFocus onBlur={handleUpdateLesson} />

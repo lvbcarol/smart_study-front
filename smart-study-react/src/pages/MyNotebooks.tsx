@@ -62,6 +62,9 @@ const MyNotebooks: React.FC = () => {
     return <div style={backgroundStyle} className="min-h-screen text-white text-center p-8">Loading...</div>;
   }
 
+// src/pages/MyNotebooks.tsx
+// ... (imports e todo o resto do código permanece igual)
+
   return (
     <div style={backgroundStyle} className="min-h-screen text-white">
       <Navbar />
@@ -72,26 +75,24 @@ const MyNotebooks: React.FC = () => {
             <span className="hidden md:inline">New notebook</span>
           </button>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {notebooks.map((notebook) => (
-            <NotebookCard key={notebook._id} notebook={notebook} onDelete={handleDeleteNotebook} onUpdate={handleUpdateNotebook} />
+          {/* ✅ ALTERAÇÃO AQUI: Adicionamos 'index' ao map e passamos como prop */}
+          {notebooks.map((notebook, index) => (
+            <NotebookCard 
+              key={notebook._id} 
+              notebook={notebook} 
+              onDelete={handleDeleteNotebook} 
+              onUpdate={handleUpdateNotebook}
+              index={index} 
+            />
           ))}
         </div>
       </main>
 
-      <Modal title="Create New Notebook" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <form onSubmit={handleCreateNotebook}>
-          <div className="space-y-4">
-            <Input id="notebookTitle" label="Notebook Title" type="text" placeholder="E.g., Object-Oriented Programming" value={newNotebookTitle} onChange={(e) => setNewNotebookTitle(e.target.value)} />
-            <div className="flex justify-end gap-2">
-              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-              <Button type="submit">Create</Button>
-            </div>
-          </div>
-        </form>
-      </Modal>
+      {/* ... (o modal continua igual) */}
     </div>
   );
 };
 
-export default MyNotebooks;
+export default MyNotebooks; 

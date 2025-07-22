@@ -1,15 +1,85 @@
 // src/pages/SubjectPage.tsx
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import api from '../services/api';
+import Navbar from '../components/Navbar';
+import FeatureCard from '../components/FeatureCard';
+import { FaArrowLeft } from 'react-icons/fa';
+
+interface SubjectDetails {
+  notebookTitle: string;
+  lessonTitle: string;
+}
 
 const SubjectPage: React.FC = () => {
-  const { lessonId } = useParams();
+  const { lessonId } = useParams<{ lessonId: string }>();
+  const navigate = useNavigate();
+  const [details, setDetails] = useState<SubjectDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!lessonId) return;
+    const fetchDetails = async () => {
+      try {
+        const response = await api.get(`/lessons/${lessonId}`);
+        setDetails(response.data);
+      } catch (error) {
+        console.error("Error fetching lesson details:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchDetails();
+  }, [lessonId]);
+  
+  const features = [
+    { tag: '#one', title: 'Summary', description: 'Keep in mind the main topics of each class!', to: `/summary/${lessonId}` },
+    { tag: '#two', title: 'Quizz', description: 'Test your knowledge with the approaches that most suits you!', to: `/quizz/${lessonId}` },
+    { tag: '#three', title: 'Progress', description: 'Take a look on how far you came!', to: `/progress/${lessonId}` },
+  ];
+
+  const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
   return (
-    <div className="p-8 text-white">
-      <h1 className="text-3xl">Subject Page</h1>
-      <p className="mt-4">Content for Lesson ID: {lessonId}</p>
-      <Link to="/my-notebooks" className="text-blue-400 hover:underline mt-8 block">&larr; Back to My Notebooks</Link>
+    <div style={backgroundStyle} className="min-h-screen text-white">
+      <Navbar />
+      <main className="container mx-auto p-4 md:p-8">
+        {isLoading ? (
+          <div className="text-center">Loading...</div>
+        ) : (
+          <>
+            <div className="flex justify-end mb-12">
+              <div className="bg-white text-gray-800 font-semibold py-2 px-5 rounded-full">
+                {details ? `${details.notebookTitle} - ${details.lessonTitle}` : 'Loading...'}
+              </div>
+            </div>
+
+            <div className="text-center">
+              <h1 className="text-4xl md:text-5xl font-bold">What would you like to do today?</h1>
+            </div>
+
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {features.map((feature, index) => (
+                <FeatureCard 
+                  key={feature.tag}
+                  index={index}
+                  {...feature}
+                />
+              ))}
+            </div>
+
+            <div className="mt-16">
+              <button 
+                onClick={() => navigate(-1)} // Volta para a página anterior
+                className="bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-3 hover:bg-opacity-30 transition"
+              >
+                <FaArrowLeft />
+                <span>go back</span>
+              </button>
+            </div>
+          </>
+        )}
+      </main>
     </div>
   );
 };
