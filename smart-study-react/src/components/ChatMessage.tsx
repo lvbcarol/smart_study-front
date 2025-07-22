@@ -2,7 +2,7 @@
 import React from 'react';
 import botAvatar from '../assets/bot-avatar.png';
 import { FaUser } from 'react-icons/fa';
-import ReactMarkdown from 'react-markdown'; // Importa a biblioteca para renderizar a formatação
+import ReactMarkdown from 'react-markdown';
 
 interface ChatMessageProps {
   message: {
@@ -14,14 +14,19 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const isBot = message.sender === 'bot';
 
-  // Renderiza a mensagem do Bot
   if (isBot) {
     return (
       <div className="flex items-start gap-3 my-4 animate-fade-in-up w-full">
         <img src={botAvatar} alt="Bot Avatar" className="w-10 h-10 rounded-full flex-shrink-0" />
         <div className="bg-blue-800 rounded-2xl rounded-bl-none p-4 max-w-lg">
-          {/* ✅ Usa ReactMarkdown para interpretar a formatação da IA */}
-          <ReactMarkdown className="prose prose-invert prose-p:text-white prose-strong:text-white prose-ul:text-white prose-li:text-white">
+          {/* ✅ CORREÇÃO: Usamos a prop 'components' para aplicar estilos aos elementos do Markdown */}
+          <ReactMarkdown
+            components={{
+              // Aplica as classes do Tailwind Typography a todos os elementos
+              // p, strong, ul, ol, etc., para que fiquem brancos em fundo escuro.
+              div: ({ node, ...props }) => <div className="prose prose-invert max-w-none" {...props} />,
+            }}
+          >
             {message.text}
           </ReactMarkdown>
         </div>
@@ -29,7 +34,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     );
   }
 
-  // Renderiza a mensagem do Usuário
+  // Renderiza a mensagem do Usuário (sem alterações)
   return (
     <div className="flex items-start justify-end gap-3 my-4 animate-fade-in-up w-full">
       <div className="bg-purple-300 rounded-2xl rounded-br-none p-4 max-w-lg">

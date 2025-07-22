@@ -7,7 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', ...props }) => {
-  const baseStyle = "w-full py-2.5 px-4 rounded-md font-semibold text-center transition-transform transform hover:scale-105";
+  const baseStyle = "w-full py-2.5 px-4 rounded-md font-semibold text-center transition-transform transform hover:scale-105 disabled:opacity-50 disabled:scale-100";
 
   const styles = {
     primary: "bg-gradient-to-r from-blue-600 to-purple-600 text-white",
@@ -15,6 +15,7 @@ const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', ...props
   };
 
   return (
+    // A propriedade {...props} garante que o type="submit" seja aplicado ao botão
     <button {...props} className={`${baseStyle} ${styles[variant]}`}>
       {children}
     </button>

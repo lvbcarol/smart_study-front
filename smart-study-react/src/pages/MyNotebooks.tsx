@@ -26,7 +26,6 @@ const MyNotebooks: React.FC = () => {
         setNotebooks(response.data);
       } catch (error) {
         toast.error("Error fetching notebooks.");
-        console.error("Error fetching notebooks:", error);
       } finally {
         setIsLoading(false);
       }
@@ -36,7 +35,10 @@ const MyNotebooks: React.FC = () => {
 
   const handleCreateNotebook = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Log para depuração. Verifique se esta mensagem aparece no console do NAVEGADOR.
+    console.log("Tentando criar caderno com o título:", newNotebookTitle);
     if (!newNotebookTitle.trim()) return;
+
     try {
       const response = await api.post<Notebook>('/notebooks', { title: newNotebookTitle });
       setNotebooks([...notebooks, response.data]);
@@ -55,15 +57,12 @@ const MyNotebooks: React.FC = () => {
   const handleUpdateNotebook = (updatedNotebook: Notebook) => {
     setNotebooks(notebooks.map(nb => nb._id === updatedNotebook._id ? updatedNotebook : nb));
   };
-
+  
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
   if (isLoading) {
     return <div style={backgroundStyle} className="min-h-screen text-white text-center p-8">Loading...</div>;
   }
-
-// src/pages/MyNotebooks.tsx
-// ... (imports e todo o resto do código permanece igual)
 
   return (
     <div style={backgroundStyle} className="min-h-screen text-white">
@@ -75,9 +74,7 @@ const MyNotebooks: React.FC = () => {
             <span className="hidden md:inline">New notebook</span>
           </button>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* ✅ ALTERAÇÃO AQUI: Adicionamos 'index' ao map e passamos como prop */}
           {notebooks.map((notebook, index) => (
             <NotebookCard 
               key={notebook._id} 
@@ -90,9 +87,19 @@ const MyNotebooks: React.FC = () => {
         </div>
       </main>
 
-      {/* ... (o modal continua igual) */}
+      <Modal title="Create New Notebook" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <form onSubmit={handleCreateNotebook}>
+          <div className="space-y-4">
+            <Input id="notebookTitle" label="Notebook Title" type="text" placeholder="E.g., Object-Oriented Programming" value={newNotebookTitle} onChange={(e) => setNewNotebookTitle(e.target.value)} />
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+              <Button type="submit">Create</Button>
+            </div>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };
 
-export default MyNotebooks; 
+export default MyNotebooks;

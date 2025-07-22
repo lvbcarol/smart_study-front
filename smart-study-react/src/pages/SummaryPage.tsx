@@ -1,17 +1,11 @@
 // src/pages/SummaryPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import ChatMessage from '../components/ChatMessage';
-import { FaPaperPlane, FaSave } from 'react-icons/fa';
+import { FaPaperPlane, FaSave, FaArrowLeft } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import ReactMarkdown from 'react-markdown'; // Para formatar a resposta da IA
-
-// Instale a biblioteca de Markdown: npm install react-markdown
-// No componente ChatMessage, vamos usar a biblioteca para renderizar o texto do bot
-// Em ChatMessage.tsx: <ReactMarkdown className="prose prose-invert">{message.text}</ReactMarkdown>
-// Para o estilo do prose, instale: npm install -D @tailwindcss/typography e adicione no tailwind.config.js -> plugins: [require('@tailwindcss/typography')]
 
 interface Message {
   sender: 'user' | 'bot';
@@ -20,6 +14,7 @@ interface Message {
 
 const SummaryPage: React.FC = () => {
   const { lessonId } = useParams();
+  const navigate = useNavigate();
   const [lessonTitle, setLessonTitle] = useState('your subject');
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
@@ -54,7 +49,7 @@ const SummaryPage: React.FC = () => {
     setMessages(newMessages);
     setUserInput('');
     setIsLoading(true);
-    setIsChatSaved(false); // Uma nova mensagem torna a conversa "não salva"
+    setIsChatSaved(false);
 
     try {
       const response = await api.post('/ai/summarize', { topic: trimmedInput, context: lessonTitle });
@@ -76,7 +71,7 @@ const SummaryPage: React.FC = () => {
     }
   };
 
-  const hasSummary = messages.length > 1; // Verifica se já existe mais que a mensagem inicial
+  const hasSummary = messages.length > 1;
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
   return (
@@ -88,10 +83,9 @@ const SummaryPage: React.FC = () => {
             {messages.map((msg, index) => <ChatMessage key={index} message={msg} />)}
             {isLoading && <ChatMessage message={{ sender: 'bot', text: 'Thinking...' }} />}
             <div ref={chatEndRef} />
-          }
+          </div>
         </div>
 
-        {/* Mostra o formulário apenas se a conversa não estiver salva ou se ainda não houver resumo */}
         {(!isChatSaved || !hasSummary) && (
           <form onSubmit={handleSendMessage} className="mt-4 flex items-center gap-3">
             <input type="text" value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder="Type your subject here..." className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" disabled={isLoading} />
@@ -99,11 +93,21 @@ const SummaryPage: React.FC = () => {
           </form>
         )}
         
-        {/* Mostra o botão de salvar apenas se houver um resumo e ele não estiver salvo */}
         {(hasSummary && !isChatSaved && !isLoading) && (
             <div className="flex justify-center mt-4">
                 <button onClick={handleSaveChat} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition">
                     <FaSave /> Save Conversation
+                </button>
+            </div>
+        )}
+
+        {(isChatSaved) && (
+            <div className="flex justify-center mt-4">
+                <button 
+                  onClick={() => navigate(`/subjects/${lessonId}`)} 
+                  className="bg-white bg-opacity-20 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition"
+                >
+                    <FaArrowLeft /> Back to Subject
                 </button>
             </div>
         )}
