@@ -42,3 +42,14 @@ body {
   /* Adicionamos 'backwards' para que o estado inicial (invisível) seja aplicado antes da animação começar */
   animation: fade-in-up 0.6s ease-out backwards;
 }
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
