@@ -1,6 +1,7 @@
 // src/pages/QuizzPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import ChatMessage from '../components/ChatMessage';
@@ -22,6 +23,7 @@ interface Message {
 }
 
 const QuizzPage: React.FC = () => {
+  const { t } = useTranslation();
   const { lessonId } = useParams();
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -47,12 +49,12 @@ const QuizzPage: React.FC = () => {
         setIsQuizzSaved(true);
       } else {
         if (messages.length === 0) {
-          addMessage('bot', `What topic do you want to study today? Send me the subject for the quizz.`);
+          addMessage('bot', t('chat.quizzInitial'));
         }
       }
     });
     return () => { isMounted = false; };
-  }, [lessonId]);
+  }, [lessonId, t]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -111,7 +113,7 @@ const QuizzPage: React.FC = () => {
     const correctAnswersCount = finalAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
     const score = Math.round((correctAnswersCount / quizData.length) * 100);
 
-    addMessage('bot', `Quizz finished! 🏆\n\nYou got ${correctAnswersCount} out of ${quizData.length} correct (${score}%).`);
+    addMessage('bot', t('chat.quizzFinished', { correct: correctAnswersCount, total: quizData.length, score: score }));
     setIsLoading(true);
 
     const mistakes = quizData
@@ -129,7 +131,7 @@ const QuizzPage: React.FC = () => {
       const feedbackResponse = await api.post('/ai/analyze-quizz', { quizzData, userAnswers: finalAnswers });
       addMessage('bot', feedbackResponse.data.feedback);
     } catch (error) {
-      addMessage('bot', "Keep studying! Review your answers and, if necessary, go back to the 'Summary' tab to dive deeper into the topics you had the most trouble with. You are doing great!");
+      addMessage('bot', t('chat.feedbackError'));
     } finally {
       setIsLoading(false);
     }
@@ -166,14 +168,14 @@ const QuizzPage: React.FC = () => {
                 )}
               </div>
             ))}
-            {isLoading && <ChatMessage message={{ sender: 'bot', text: 'Thinking...' }} />}
+            {isLoading && <ChatMessage message={{ sender: 'bot', text: t('chat.thinking') }} />}
             <div ref={chatEndRef} />
           </div>
         </div>
 
         {quizState === 'initial' && (
           <form onSubmit={handleTopicSubmit} className="mt-4 flex items-center gap-3">
-            <input type="text" value={userInput} onChange={e => setUserInput(e.target.value)} placeholder="Type the subject for the quizz..." className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" disabled={isLoading} />
+            <input type="text" value={userInput} onChange={e => setUserInput(e.target.value)} placeholder={t('chat.typeSubject')} className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" disabled={isLoading} />
             <button type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}><FaPaperPlane /></button>
           </form>
         )}
@@ -181,7 +183,7 @@ const QuizzPage: React.FC = () => {
         {(quizState === 'finished' && !isQuizzSaved && !isLoading) && (
             <div className="flex justify-center mt-4">
                 <button onClick={handleSaveQuizz} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition">
-                    <FaSave /> Save Quizz
+                    <FaSave /> {t('chat.saveQuizz')}
                 </button>
             </div>
         )}
@@ -192,7 +194,7 @@ const QuizzPage: React.FC = () => {
                   onClick={() => navigate(`/subjects/${lessonId}`)} 
                   className="bg-white bg-opacity-20 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition"
                 >
-                    <FaArrowLeft /> Back to Subject
+                    <FaArrowLeft /> {t('chat.backToSubject')}
                 </button>
             </div>
         )}

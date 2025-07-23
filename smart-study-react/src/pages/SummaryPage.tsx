@@ -1,6 +1,7 @@
 // src/pages/SummaryPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import ChatMessage from '../components/ChatMessage';
@@ -13,6 +14,7 @@ interface Message {
 }
 
 const SummaryPage: React.FC = () => {
+  const { t } = useTranslation();
   const { lessonId } = useParams();
   const navigate = useNavigate();
   const [lessonTitle, setLessonTitle] = useState('your subject');
@@ -31,10 +33,10 @@ const SummaryPage: React.FC = () => {
         setMessages(chatHistory);
         setIsChatSaved(true);
       } else {
-        setMessages([{ sender: 'bot', text: `Hello! What specific subject within "${lessonTitle}" would you like me to summarize today?` }]);
+        setMessages([{ sender: 'bot', text: t('chat.summaryInitial', { title: lessonTitle }) }]);
       }
     }).finally(() => setIsLoading(false));
-  }, [lessonId]);
+  }, [lessonId, t]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -81,14 +83,14 @@ const SummaryPage: React.FC = () => {
         <div className="flex-grow flex flex-col justify-end overflow-hidden">
           <div className="overflow-y-auto pr-2">
             {messages.map((msg, index) => <ChatMessage key={index} message={msg} />)}
-            {isLoading && <ChatMessage message={{ sender: 'bot', text: 'Thinking...' }} />}
+            {isLoading && <ChatMessage message={{ sender: 'bot', text: t('chat.thinking') }} />}
             <div ref={chatEndRef} />
           </div>
         </div>
 
         {(!isChatSaved || !hasSummary) && (
           <form onSubmit={handleSendMessage} className="mt-4 flex items-center gap-3">
-            <input type="text" value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder="Type your subject here..." className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" disabled={isLoading} />
+            <input type="text" value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder={t('chat.typeSubject')} className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" disabled={isLoading} />
             <button type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}><FaPaperPlane /></button>
           </form>
         )}
@@ -96,7 +98,7 @@ const SummaryPage: React.FC = () => {
         {(hasSummary && !isChatSaved && !isLoading) && (
             <div className="flex justify-center mt-4">
                 <button onClick={handleSaveChat} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition">
-                    <FaSave /> Save Conversation
+                    <FaSave /> {t('chat.saveConversation')}
                 </button>
             </div>
         )}
@@ -107,7 +109,7 @@ const SummaryPage: React.FC = () => {
                   onClick={() => navigate(`/subjects/${lessonId}`)} 
                   className="bg-white bg-opacity-20 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition"
                 >
-                    <FaArrowLeft /> Back to Subject
+                    <FaArrowLeft /> {t('chat.backToSubject')}
                 </button>
             </div>
         )}

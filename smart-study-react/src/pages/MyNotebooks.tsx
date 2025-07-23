@@ -1,6 +1,7 @@
 // src/pages/MyNotebooks.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { FaPlus, FaArrowLeft } from 'react-icons/fa';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
@@ -14,6 +15,7 @@ interface Lesson { _id: string; title: string; }
 interface Notebook { _id: string; title: string; lessons: Lesson[]; }
 
 const MyNotebooks: React.FC = () => {
+  const { t } = useTranslation();
   const [notebooks, setNotebooks] = useState<Notebook[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,7 +29,7 @@ const MyNotebooks: React.FC = () => {
         const response = await api.get<Notebook[]>('/notebooks');
         setNotebooks(response.data);
       } catch (error) {
-        toast.error("Error fetching notebooks.");
+        toast.error("Error fetching notebooks."); // Este pode ser adicionado ao JSON
       } finally {
         setIsLoading(false);
       }
@@ -43,9 +45,9 @@ const MyNotebooks: React.FC = () => {
       setNotebooks([...notebooks, response.data]);
       setNewNotebookTitle('');
       setIsModalOpen(false);
-      toast.success('Notebook created!');
+      toast.success(t('myNotebooks.createSuccess')); // Chave de tradução
     } catch (error) {
-      toast.error('Error creating notebook.');
+      toast.error(t('myNotebooks.createError')); // Chave de tradução
     }
   };
 
@@ -60,7 +62,7 @@ const MyNotebooks: React.FC = () => {
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
   if (isLoading) {
-    return <div style={backgroundStyle} className="min-h-screen text-white text-center p-8">Loading...</div>;
+    return <div style={backgroundStyle} className="min-h-screen text-white text-center p-8">{t('myNotebooks.loading')}</div>;
   }
 
   return (
@@ -68,10 +70,10 @@ const MyNotebooks: React.FC = () => {
       <Navbar />
       <main className="container mx-auto p-4 md:p-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">My notebooks</h1>
+          <h1 className="text-4xl font-bold">{t('myNotebooks.title')}</h1>
           <button onClick={() => setIsModalOpen(true)} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition">
             <FaPlus />
-            <span className="hidden md:inline">New notebook</span>
+            <span className="hidden md:inline">{t('myNotebooks.newNotebook')}</span>
           </button>
         </div>
 
@@ -87,7 +89,6 @@ const MyNotebooks: React.FC = () => {
           ))}
         </div>
 
-        {/* ✅ BOTÃO "GO BACK" ADICIONADO AQUI */}
         <div className="mt-16">
           <button 
             onClick={() => navigate('/home')}
@@ -100,13 +101,13 @@ const MyNotebooks: React.FC = () => {
 
       </main>
 
-      <Modal title="Create New Notebook" isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <Modal title={t('myNotebooks.modalTitle')} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <form onSubmit={handleCreateNotebook}>
           <div className="space-y-4">
-            <Input id="notebookTitle" label="Notebook Title" type="text" placeholder="E.g., Object-Oriented Programming" value={newNotebookTitle} onChange={(e) => setNewNotebookTitle(e.target.value)} />
+            <Input id="notebookTitle" label="Notebook Title" type="text" placeholder={t('myNotebooks.modalPlaceholder')} value={newNotebookTitle} onChange={(e) => setNewNotebookTitle(e.target.value)} />
             <div className="flex justify-end gap-2">
-              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-              <Button type="submit">Create</Button>
+              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>{t('myNotebooks.cancel')}</Button>
+              <Button type="submit">{t('myNotebooks.create')}</Button>
             </div>
           </div>
         </form>

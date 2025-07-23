@@ -1,7 +1,8 @@
 // src/components/NotebookCard.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaPlus, FaTrash, FaPencilAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import api from '../services/api';
 
@@ -11,11 +12,11 @@ interface NotebookCardProps {
   notebook: Notebook;
   onDelete: (id: string) => void;
   onUpdate: (updatedNotebook: Notebook) => void;
-  // ✅ NOVA PROP: index para escalonar a animação
   index: number;
 }
 
 const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdate, index }) => {
+  const { t } = useTranslation();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [currentTitle, setCurrentTitle] = useState(notebook.title);
   
@@ -55,7 +56,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
   };
 
   const handleDeleteNotebook = async () => {
-    if (window.confirm(`Are you sure you want to delete the notebook "${notebook.title}"?`)) {
+    if (window.confirm(t('myNotebooks.confirmDelete', { title: notebook.title }))) {
       try {
         await api.delete(`/notebooks/${notebook._id}`);
         toast.success('Notebook deleted!');
@@ -85,10 +86,8 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
   };
 
   return (
-    // ✅ ALTERAÇÃO AQUI: Adicionamos a classe 'animate-fade-in-up'
     <div 
-      className="flex bg-[#8a3dd7] rounded-2xl shadow-lg border border-purple-700 overflow-hidden animate-fade-in-up"
-      // ✅ E um estilo para atrasar a animação de cada card
+      className="flex bg-[#2a0e46] rounded-2xl shadow-lg border border-purple-700 overflow-hidden animate-fade-in-up"
       style={{ animationDelay: `${index * 100}ms` }}
     >
       <div className="bg-white p-2 flex flex-col items-center gap-2 shadow-inner">
@@ -132,13 +131,13 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
 
           {isAddingLesson ? (
             <form onSubmit={handleAddLesson} className="mt-4 flex gap-2">
-              <input type="text" value={newLessonTitle} onChange={(e) => setNewLessonTitle(e.target.value)} placeholder="New lesson name" className="flex-grow bg-purple-800 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-white" autoFocus />
-              <button type="submit" className="bg-green-500 p-2 rounded hover:bg-green-400">Save</button>
+              <input type="text" value={newLessonTitle} onChange={(e) => setNewLessonTitle(e.target.value)} placeholder={t('myNotebooks.newLesson')} className="flex-grow bg-purple-800 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-white" autoFocus />
+              <button type="submit" className="bg-green-500 p-2 rounded hover:bg-green-400">{t('myNotebooks.save')}</button>
               <button type="button" onClick={() => setIsAddingLesson(false)} className="bg-gray-600 p-2 rounded hover:bg-gray-500">X</button>
             </form>
           ) : (
             <button onClick={() => setIsAddingLesson(true)} className="mt-4 text-gray-300 hover:text-white flex items-center gap-2">
-              <FaPlus size={12} /> New lesson
+              <FaPlus size={12} /> {t('myNotebooks.newLesson')}
             </button>
           )}
         </div>

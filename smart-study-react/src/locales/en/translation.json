@@ -1,4 +1,58 @@
 {
+  "navbar": {
+    "home": "Home",
+    "myNotebooks": "My notebooks",
+    "progress": "Progress",
+    "aboutUs": "About us",
+    "myAccount": "My account"
+  },
+  "home": {
+    "welcome": "Welcome back, {{name}}.",
+    "title": "Stop memorizing. Start understanding.",
+    "subtitle": "Smart Study is your personal AI study assistant. Transform your notes into interactive summaries, generate practice quizzes on any topic, and track your learning progress to ace your exams with confidence.",
+    "cta": "Go to My Notebooks"
+  },
+  "myNotebooks": {
+    "title": "My notebooks",
+    "newNotebook": "New notebook",
+    "loading": "Loading...",
+    "modalTitle": "Create New Notebook",
+    "modalPlaceholder": "E.g., Object-Oriented Programming",
+    "cancel": "Cancel",
+    "create": "Create",
+    "confirmDelete": "Are you sure you want to delete the notebook \"{{title}}\"?",
+    "newLesson": "New lesson",
+    "save": "Save"
+  },
+  "subject": {
+    "title": "What would you like to do today?",
+    "summaryTitle": "Summary",
+    "summaryDesc": "Keep in mind the main topics of each class!",
+    "quizzTitle": "Quizz",
+    "quizzDesc": "Test your knowledge with the approaches that most suits you!",
+    "goBack": "go back to Notebooks"
+  },
+  "chat": {
+    "thinking": "Thinking...",
+    "summaryInitial": "Hello! What specific subject within \"{{title}}\" would you like me to summarize today?",
+    "quizzInitial": "What topic do you want to study today? Send me the subject for the quizz.",
+    "typeSubject": "Type your subject here...",
+    "quizzFinished": "Quizz finished! 🏆\n\nYou got {{correct}} out of {{total}} correct ({{score}}%).",
+    "feedbackError": "I had trouble generating detailed feedback, but your score was saved. Great job on the quiz!",
+    "saveConversation": "Save Conversation",
+    "saveQuizz": "Save Quizz",
+    "backToSubject": "Back to Subject"
+  },
+  "progress": {
+    "title": "My Progress",
+    "subtitle": "Here's a visual overview of your study performance.",
+    "loading": "Loading your progress data...",
+    "noDataTitle": "No Progress Data Yet",
+    "noDataSubtitle": "It looks like you haven't completed any quizzes yet. Complete a quiz in one of your notebooks, and your progress will show up here!",
+    "chartOverall": "Overall Performance Over Time",
+    "chartRecent": "Recent Performance (Last 15)",
+    "chartAverage": "Average Score by Notebook"
+  },
   "myAccount": {
     "welcome": "Welcome, {{name}}",
     "accountInfo": "Account Information",
@@ -10,5 +64,33 @@
     "signLanguage": "Sign Language Features (for deaf users)",
     "saveChanges": "Save Changes",
     "preferencesSaved": "Preferences saved successfully!"
+  },
+  "aboutUs": {
+    "title": "About Us",
+    "philosophy": {
+      "text": "Smart Study was designed to be a powerful ally for a <strong>deep, individual, and lasting learning experience.</strong> We developed a method where every user can create their own study environment, based on three pillars:"
+    },
+    "pillars": {
+      "summary": { "title": "Summary", "desc": "Content Absorption" },
+      "quizz": { "title": "Quizz", "desc": "Applied Learning" },
+      "progress": { "title": "Progress", "desc": "Instant & Motivating Feedback" }
+    },
+    "story": {
+      "title": "Our Story",
+      "text": "This project was conceived and developed by Information Systems student <strong>Carolina Lansoni Vilas Boas</strong>, in partnership with the <strong>Instituto Mauá de Tecnologia</strong> and the global <strong>Grand Challenges Scholarship Program</strong>. We are committed to inclusivity, with future developments planned for enhanced accessibility.",
+      "motto": "Study smart, always!"
+    },
+    "techStack": {
+      "title": "Tech Stack",
+      "subtitle": "The technologies that power Smart Study",
+      "react": "For building our fast and interactive user interface.",
+      "nodejs": "The engine of our backend, handling all server-side logic.",
+      "mongodb": "Our flexible cloud database where your study data is securely stored.",
+      "tailwind": "For crafting the modern, responsive design you see.",
+      "typescript": "To ensure our code is robust, scalable, and error-free.",
+      "gemini": "The powerful AI brain that generates your summaries and quizzes.",
+      "brevo": "The service that reliably delivers important emails, like password resets.",
+      "tremor": "To create the beautiful and insightful graphs on your Progress page."
+    }
   }
 }

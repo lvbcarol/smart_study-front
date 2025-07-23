@@ -1,5 +1,58 @@
-
 {
+  "navbar": {
+    "home": "Início",
+    "myNotebooks": "Meus cadernos",
+    "progress": "Progresso",
+    "aboutUs": "Sobre nós",
+    "myAccount": "Minha conta"
+  },
+  "home": {
+    "welcome": "Bem-vindo(a) de volta, {{name}}.",
+    "title": "Pare de memorizar. Comece a entender.",
+    "subtitle": "O Smart Study é seu assistente de estudos pessoal com IA. Transforme suas anotações em resumos interativos, gere quizzes práticos sobre qualquer tópico e acompanhe seu progresso para gabaritar suas provas com confiança.",
+    "cta": "Ir para Meus Cadernos"
+  },
+  "myNotebooks": {
+    "title": "Meus cadernos",
+    "newNotebook": "Novo caderno",
+    "loading": "Carregando...",
+    "modalTitle": "Criar Novo Caderno",
+    "modalPlaceholder": "Ex: Programação Orientada a Objetos",
+    "cancel": "Cancelar",
+    "create": "Criar",
+    "confirmDelete": "Tem certeza que deseja deletar o caderno \"{{title}}\"?",
+    "newLesson": "Nova aula",
+    "save": "Salvar"
+  },
+  "subject": {
+    "title": "O que você gostaria de fazer hoje?",
+    "summaryTitle": "Resumo",
+    "summaryDesc": "Tenha em mente os tópicos principais de cada aula!",
+    "quizzTitle": "Quizz",
+    "quizzDesc": "Teste seu conhecimento com as abordagens que mais combinam com você!",
+    "goBack": "voltar para Cadernos"
+  },
+  "chat": {
+    "thinking": "Pensando...",
+    "summaryInitial": "Olá! Qual tópico específico dentro de \"{{title}}\" você gostaria que eu resumisse hoje?",
+    "quizzInitial": "Qual tema você quer estudar hoje? Me envie o tópico para o quizz.",
+    "typeSubject": "Digite o assunto aqui...",
+    "quizzFinished": "Quizz finalizado! 🏆\n\nVocê acertou {{correct}} de {{total}} questões ({{score}}%).",
+    "feedbackError": "Tive problemas para gerar um feedback detalhado, mas sua pontuação foi salva. Ótimo trabalho no quizz!",
+    "saveConversation": "Salvar Conversa",
+    "saveQuizz": "Salvar Quizz",
+    "backToSubject": "Voltar para a Matéria"
+  },
+  "progress": {
+    "title": "Meu Progresso",
+    "subtitle": "Aqui está uma visão geral da sua performance nos estudos.",
+    "loading": "Carregando seus dados de progresso...",
+    "noDataTitle": "Ainda Não Há Dados de Progresso",
+    "noDataSubtitle": "Parece que você ainda não completou nenhum quizz. Complete um quizz em um dos seus cadernos, e seu progresso aparecerá aqui!",
+    "chartOverall": "Desempenho Geral ao Longo do Tempo",
+    "chartRecent": "Desempenho Recente (Últimos 15)",
+    "chartAverage": "Pontuação Média por Caderno"
+  },
   "myAccount": {
     "welcome": "Bem-vindo(a), {{name}}",
     "accountInfo": "Informações da Conta",
@@ -11,5 +64,33 @@
     "signLanguage": "Recursos de Linguagem de Sinais (para usuários surdos)",
     "saveChanges": "Salvar Alterações",
     "preferencesSaved": "Preferências salvas com sucesso!"
+  },
+  "aboutUs": {
+    "title": "Sobre Nós",
+    "philosophy": {
+      "text": "O projeto Smart Study foi pensado para ser um poderoso aliado para uma <strong>experiência de aprendizado profunda, individual e duradoura.</strong> Nós desenvolvemos um método onde cada usuário pode criar seu próprio ambiente de estudo, baseado em três pilares:"
+    },
+    "pillars": {
+      "summary": { "title": "Resumo", "desc": "Absorção de Conteúdo" },
+      "quizz": { "title": "Quizz", "desc": "Aprendizado Aplicado" },
+      "progress": { "title": "Progresso", "desc": "Feedback Instantâneo e Motivador" }
+    },
+    "story": {
+      "title": "Nossa História",
+      "text": "Este projeto foi idealizado e desenvolvido pela estudante de Sistemas de Informação <strong>Carolina Lansoni Vilas Boas</strong>, em parceria com o <strong>Instituto Mauá de Tecnologia</strong> e o programa global <strong>Grand Challenges Scholarship Program</strong>. Estamos comprometidos com a inclusão, com futuros desenvolvimentos planejados para recursos de acessibilidade aprimorados.",
+      "motto": "Estude sempre, estude inteligente!"
+    },
+    "techStack": {
+      "title": "Tecnologias Utilizadas",
+      "subtitle": "As tecnologias que dão vida ao Smart Study",
+      "react": "Para construir nossa interface de usuário rápida e interativa.",
+      "nodejs": "O motor do nosso backend, gerenciando toda a lógica do servidor.",
+      "mongodb": "Nosso banco de dados flexível na nuvem, onde seus dados de estudo são armazenados com segurança.",
+      "tailwind": "Para criar o design moderno e responsivo que você vê.",
+      "typescript": "Para garantir que nosso código seja robusto, escalável e livre de erros.",
+      "gemini": "O poderoso cérebro de IA que gera seus resumos e quizzes.",
+      "brevo": "O serviço que entrega e-mails importantes de forma confiável, como redefinições de senha.",
+      "tremor": "Para criar os gráficos bonitos e perspicazes em sua página de Progresso."
+    }
   }
 }

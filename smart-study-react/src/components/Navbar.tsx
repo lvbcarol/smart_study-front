@@ -3,18 +3,19 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import navLogo from '../assets/navbar-logo.png';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 const Navbar: React.FC = () => {
+  const { t } = useTranslation(); 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // ✅ ADICIONADO "PROGRESS" AO ARRAY DE LINKS
-  const navLinks = [
-    { href: '/home', label: 'Home' },
-    { href: '/my-notebooks', label: 'My notebooks' },
-    { href: '/progress', label: 'Progress' },
-    { href: '/about-us', label: 'About us' },
-    { href: '/my-account', label: 'My account' },
-  ];
+const navLinks = [
+  { href: '/home', label: t('navbar.home') },
+  { href: '/my-notebooks', label: t('navbar.myNotebooks') },
+  { href: '/progress', label: t('navbar.progress') },
+  { href: '/about-us', label: t('navbar.aboutUs') },
+  { href: '/my-account', label: t('navbar.myAccount') },
+];
 
   return (
     <header className="w-full text-white p-4 border-b border-purple-800 relative">
