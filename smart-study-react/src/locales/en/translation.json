@@ -1,0 +1,14 @@
+{
+  "myAccount": {
+    "welcome": "Welcome, {{name}}",
+    "accountInfo": "Account Information",
+    "fullName": "Full Name",
+    "email": "Registered E-mail",
+    "languageSettings": "Language Settings",
+    "accessibility": "Accessibility",
+    "audioDescription": "Audio Features (for visually impaired)",
+    "signLanguage": "Sign Language Features (for deaf users)",
+    "saveChanges": "Save Changes",
+    "preferencesSaved": "Preferences saved successfully!"
+  }
+}

@@ -1,0 +1,15 @@
+
+{
+  "myAccount": {
+    "welcome": "Bem-vindo(a), {{name}}",
+    "accountInfo": "Informações da Conta",
+    "fullName": "Nome Completo",
+    "email": "E-mail Cadastrado",
+    "languageSettings": "Configurações de Idioma",
+    "accessibility": "Acessibilidade",
+    "audioDescription": "Recursos de Áudio (para deficientes visuais)",
+    "signLanguage": "Recursos de Linguagem de Sinais (para usuários surdos)",
+    "saveChanges": "Salvar Alterações",
+    "preferencesSaved": "Preferências salvas com sucesso!"
+  }
+}
