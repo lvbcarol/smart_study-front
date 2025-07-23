@@ -1,13 +1,13 @@
 // src/pages/MyAccount.tsx
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAccessibility } from '../context/AccessibilityContext';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import ToggleSwitch from '../components/ui/ToggleSwitch';
 import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
 
-// Interface para definir a estrutura do objeto de usuário
 interface User {
   _id: string;
   name: string;
@@ -21,40 +21,37 @@ interface User {
 
 const MyAccount: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const { setSignLanguageEnabled } = useAccessibility(); 
+  
   const [user, setUser] = useState<User | null>(null);
+  const [initialSettings, setInitialSettings] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Efeito que busca os dados do usuário quando a página carrega
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // ✅ CORREÇÃO AQUI: O endpoint correto é '/usuario/me' (singular)
         const response = await api.get('/usuario/me');
         setUser(response.data);
-        // Sincroniza o idioma da interface com o idioma salvo do usuário
+        // Guarda uma "foto" das configurações iniciais para comparar depois
+        setInitialSettings(JSON.stringify(response.data)); 
         i18n.changeLanguage(response.data.language.split('-')[0]);
+        // Sincroniza o estado global com o que veio do banco
+        setSignLanguageEnabled(response.data.accessibility.signLanguage);
       } catch (error) {
-        console.error("Failed to fetch user data", error);
         toast.error("Failed to load user data.");
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchUserData();
-  }, [i18n]); // A dependência [i18n] garante que o efeito rode se a instância de idioma mudar
+  }, [i18n, setSignLanguageEnabled]);
 
-  // O restante do código lida com a atualização do estado e o salvamento,
-  // mas o 'fetchUserData' acima é o que faz os dados aparecerem.
-  const handleSettingsChange = (field: keyof User['accessibility'], value: boolean) => {
+  const handleAccessibilityChange = (field: keyof User['accessibility'], value: boolean) => {
     if (!user) return;
-    setUser({
-      ...user,
-      accessibility: {
-        ...user.accessibility,
-        [field]: value,
-      },
-    });
+    setUser(prevUser => ({
+        ...prevUser!,
+        accessibility: { ...prevUser!.accessibility, [field]: value },
+    }));
   };
   
   const handleLanguageChange = (lang: 'en-US' | 'pt-BR') => {
@@ -67,10 +64,20 @@ const MyAccount: React.FC = () => {
     if (!user) return;
     const loadingToast = toast.loading('Saving...');
     try {
-      await api.put('/usuario/me', {
+      const settingsToSave = {
         language: user.language,
         accessibility: user.accessibility,
-      });
+      };
+      // Envia as novas configurações para o backend
+      await api.put('/usuario/me', settingsToSave);
+      
+      // ✅ PASSO CRUCIAL: Após salvar, atualiza o estado global
+      // Isso irá acionar a aparição do widget VLibras em todo o site
+      setSignLanguageEnabled(user.accessibility.signLanguage);
+      
+      // Atualiza o estado inicial para desativar o botão "Salvar"
+      setInitialSettings(JSON.stringify(user));
+
       toast.dismiss(loadingToast);
       toast.success(t('myAccount.preferencesSaved'));
     } catch (error) {
@@ -78,6 +85,8 @@ const MyAccount: React.FC = () => {
       toast.error('Failed to save preferences.');
     }
   };
+
+  const hasChanges = JSON.stringify(user) !== initialSettings;
 
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
@@ -122,13 +131,15 @@ const MyAccount: React.FC = () => {
           <div className="bg-white text-gray-800 p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold border-b pb-2 mb-4">{t('myAccount.accessibility')}</h2>
             <div className="space-y-4">
-              <ToggleSwitch label={t('myAccount.audioDescription')} enabled={user?.accessibility.audioDescription || false} onChange={(val) => handleSettingsChange('audioDescription', val)} />
-              <ToggleSwitch label={t('myAccount.signLanguage')} enabled={user?.accessibility.signLanguage || false} onChange={(val) => handleSettingsChange('signLanguage', val)} />
+              <ToggleSwitch label={t('myAccount.audioDescription')} enabled={user?.accessibility.audioDescription || false} onChange={(val) => handleAccessibilityChange('audioDescription', val)} />
+              <ToggleSwitch label={t('myAccount.signLanguage')} enabled={user?.accessibility.signLanguage || false} onChange={(val) => handleAccessibilityChange('signLanguage', val)} />
             </div>
           </div>
           
           <div className="flex justify-end">
-            <Button onClick={handleSaveChanges}>{t('myAccount.saveChanges')}</Button>
+            <Button onClick={handleSaveChanges} disabled={!hasChanges}>
+              {t('myAccount.saveChanges')}
+            </Button>
           </div>
         </div>
       </main>

@@ -53,3 +53,14 @@ body {
   flex: 0 0 100%;
   min-width: 0;
 }
+
+/* Esconde o botão do VLibras por padrão */
+.vw-access-button.active {
+  display: block; /* Garante que o widget possa controlar a visibilidade */
+}
+.vw-access-button.hidden {
+  display: none !important;
+}
+.vw-access-button {
+  display: none;
+}

@@ -111,7 +111,8 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
           </div>
           
           <div className="space-y-2">
-            {notebook.lessons.map(lesson => (
+            {/* ✅ CORREÇÃO AQUI: Garantimos que o array de aulas exista antes de tentar mapeá-lo */}
+            {notebook.lessons && notebook.lessons.map(lesson => (
               <div key={lesson._id} className="flex items-center gap-2">
                 {editingLessonId === lesson._id ? (
                   <form onSubmit={handleUpdateLesson} className="flex-grow">
@@ -119,7 +120,18 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                   </form>
                 ) : (
                   <>
-                    <button onClick={() => navigate(`/subjects/${lesson._id}`)} className="flex-grow text-left p-2 rounded hover:bg-purple-800 transition">
+                    <button 
+                      onClick={() => {
+                        // Verificação de segurança extra
+                        if (lesson._id) {
+                          navigate(`/subjects/${lesson._id}`);
+                        } else {
+                          console.error("Lesson ID is missing!", lesson);
+                          toast.error("Could not open this lesson.");
+                        }
+                      }} 
+                      className="flex-grow text-left p-2 rounded hover:bg-purple-800 transition"
+                    >
                       {lesson.title}
                     </button>
                     <button onClick={() => handleStartEditLesson(lesson)} className="text-gray-400 hover:text-white"><FaPencilAlt size={12} /></button>
@@ -131,13 +143,13 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
 
           {isAddingLesson ? (
             <form onSubmit={handleAddLesson} className="mt-4 flex gap-2">
-              <input type="text" value={newLessonTitle} onChange={(e) => setNewLessonTitle(e.target.value)} placeholder={t('myNotebooks.newLesson')} className="flex-grow bg-purple-800 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-white" autoFocus />
-              <button type="submit" className="bg-green-500 p-2 rounded hover:bg-green-400">{t('myNotebooks.save')}</button>
+              <input type="text" value={newLessonTitle} onChange={(e) => setNewLessonTitle(e.target.value)} placeholder="New lesson name" className="flex-grow bg-purple-800 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-white" autoFocus />
+              <button type="submit" className="bg-green-500 p-2 rounded hover:bg-green-400">Save</button>
               <button type="button" onClick={() => setIsAddingLesson(false)} className="bg-gray-600 p-2 rounded hover:bg-gray-500">X</button>
             </form>
           ) : (
             <button onClick={() => setIsAddingLesson(true)} className="mt-4 text-gray-300 hover:text-white flex items-center gap-2">
-              <FaPlus size={12} /> {t('myNotebooks.newLesson')}
+              <FaPlus size={12} /> New lesson
             </button>
           )}
         </div>

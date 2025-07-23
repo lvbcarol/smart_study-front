@@ -1,8 +1,14 @@
 // src/App.tsx
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
-// Importação de todas as nossas páginas
+// Importação dos Provedores de Contexto
+import { AccessibilityProvider, useAccessibility } from './context/AccessibilityContext';
+
+// Importação dos Componentes e Páginas
+import VLibrasWidget from './components/VLibrasWidget';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -15,8 +21,23 @@ import QuizzPage from './pages/QuizzPage';
 import ProgressPage from './pages/ProgressPage';
 import TermsOfUse from './pages/TermsOfUse';
 import LessonPage from './pages/LessonPage';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
-function App() {
+// Componente interno para ter acesso aos hooks de contexto (useAccessibility, useTranslation)
+// que precisam estar dentro dos seus provedores.
+const AppContent: React.FC = () => {
+  const { isSignLanguageEnabled } = useAccessibility();
+  const { i18n } = useTranslation();
+
+ // ✅ LOG DE DEPURAÇÃO: Verificando as condições
+  console.log({
+    isSignLanguageEnabled: isSignLanguageEnabled,
+    language: i18n.language,
+    shouldRenderWidget: isSignLanguageEnabled && (i18n.language === 'pt' || i18n.language === 'pt-BR')
+  });
+
+
   return (
     <Router>
       <Toaster 
@@ -26,11 +47,18 @@ function App() {
           error: { style: { background: 'white', color: 'red' } },
         }}
       />
+      
+      {/* Lógica condicional para renderizar o widget do VLibras */}
+      {/* Só mostra se a opção estiver ativa E o idioma for português */}
+      {isSignLanguageEnabled && i18n.language === 'pt' && <VLibrasWidget />}
+
       <Routes>
         {/* Rotas Principais e de Autenticação */}
         <Route path="/" element={<Navigate to="/register" />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         
         {/* Rotas da Aplicação (após login) */}
         <Route path="/home" element={<Home />} />
@@ -49,6 +77,15 @@ function App() {
         <Route path="/notebook/:notebookId/lesson/:lessonId" element={<LessonPage />} />
       </Routes>
     </Router>
+  );
+}
+
+// Componente principal que "abraça" a aplicação com os provedores de contexto
+function App() {
+  return (
+    <AccessibilityProvider>
+      <AppContent />
+    </AccessibilityProvider>
   );
 }
 
