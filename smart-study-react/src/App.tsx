@@ -9,6 +9,7 @@ import { AccessibilityProvider, useAccessibility } from './context/Accessibility
 
 // Importação dos Componentes e Páginas
 import VLibrasWidget from './components/VLibrasWidget';
+import ASLHelperButton from './components/ASLHelperButton';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -24,19 +25,10 @@ import LessonPage from './pages/LessonPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 
-// Componente interno para ter acesso aos hooks de contexto (useAccessibility, useTranslation)
-// que precisam estar dentro dos seus provedores.
+// Componente interno para ter acesso aos hooks de contexto
 const AppContent: React.FC = () => {
   const { isSignLanguageEnabled } = useAccessibility();
   const { i18n } = useTranslation();
-
- // ✅ LOG DE DEPURAÇÃO: Verificando as condições
-  console.log({
-    isSignLanguageEnabled: isSignLanguageEnabled,
-    language: i18n.language,
-    shouldRenderWidget: isSignLanguageEnabled && (i18n.language === 'pt' || i18n.language === 'pt-BR')
-  });
-
 
   return (
     <Router>
@@ -48,9 +40,9 @@ const AppContent: React.FC = () => {
         }}
       />
       
-      {/* Lógica condicional para renderizar o widget do VLibras */}
-      {/* Só mostra se a opção estiver ativa E o idioma for português */}
-      {isSignLanguageEnabled && i18n.language === 'pt' && <VLibrasWidget />}
+      {/* Lógica de Acessibilidade Multilíngue */}
+      {isSignLanguageEnabled && (i18n.language === 'pt' || i18n.language === 'pt-BR') && <VLibrasWidget />}
+      {isSignLanguageEnabled && i18n.language === 'en' && <ASLHelperButton />}
 
       <Routes>
         {/* Rotas Principais e de Autenticação */}
@@ -80,7 +72,7 @@ const AppContent: React.FC = () => {
   );
 }
 
-// Componente principal que "abraça" a aplicação com os provedores de contexto
+// Componente principal que fornece o contexto para a aplicação
 function App() {
   return (
     <AccessibilityProvider>
