@@ -1,11 +1,10 @@
 // src/components/ActiveQuiz.tsx
-import React, {useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 import ChatMessage from './ChatMessage';
 import QuizzOptions from './QuizzOptions';
 import { FaPaperPlane, FaSave } from 'react-icons/fa';
-import toast from 'react-hot-toast';
 
 interface QuizQuestion {
   question: string;
@@ -98,15 +97,20 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
   };
 
   const finishQuizz = (finalAnswers: (number | null)[]) => {
-    setQuizFlowState('finished');
+    setQuizFlowState('finished'); // Muda o estado para 'finalizado'
     const correctAnswersCount = finalAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
     const score = Math.round((correctAnswersCount / quizData.length) * 100);
+
     const scoreMessageText = t('chat.quizzFinished', { correct: correctAnswersCount, total: quizData.length, score: score });
-    
-    const finalMessages = [...messages, { sender: 'user' as const, text: `Answered question ${finalAnswers.length}` }, { sender: 'bot' as const, text: scoreMessageText }];
-    setMessages(finalMessages);
-    
-    onQuizComplete(score, finalMessages, quizData, finalAnswers);
+    addMessage('bot', scoreMessageText);
+    // ✅ FIM: A função para aqui. A chamada de feedback da IA foi removida.
+  };
+
+  const handleSaveAndExit = () => {
+    const correctAnswersCount = userAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
+    const score = Math.round((correctAnswersCount / quizData.length) * 100);
+    // Passa todos os dados para a QuizzPage salvar
+    onQuizComplete(score, messages, quizData, userAnswers);
   };
 
   return (
@@ -148,9 +152,10 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
             </form>
           )}
           
+          {/* O botão de salvar só aparece quando o quizz é finalizado */}
           {quizFlowState === 'finished' && (
             <div className="flex justify-center">
-              <button onClick={onQuizComplete} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition animate-fade-in-up">
+              <button onClick={handleSaveAndExit} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition animate-fade-in-up">
                 <FaSave /> {t('chat.saveQuizz')}
               </button>
             </div>
