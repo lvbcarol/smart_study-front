@@ -82,8 +82,19 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
     }
   };
 
+  const handleDeleteLesson = async (lessonId: string, lessonTitle: string) => {
+    if (window.confirm(`Are you sure you want to delete the lesson "${lessonTitle}"?`)) {
+      try {
+        const response = await api.delete(`/notebooks/${notebook._id}/lessons/${lessonId}`);
+        onUpdate(response.data);
+        toast.success('Lesson deleted!');
+      } catch (error) {
+        toast.error('Error deleting lesson.');
+      }
+    }
+  };
+
   return (
-    // ✅ ANIMAÇÃO DE HOVER CORRIGIDA AQUI: trocamos 'hover:-translate-y-2' por 'hover:scale-105'
     <div 
       className="flex bg-violet-500 bg-opacity-30 backdrop-blur-sm rounded-2xl shadow-lg border border-violet-700 overflow-hidden transition-all duration-300 transform hover:scale-105 animate-fade-in-up"
       style={{ animationDelay: `${index * 100}ms` }}
@@ -120,7 +131,10 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                     <button onClick={() => navigate(`/subjects/${lesson._id}`)} className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition">
                       {lesson.title}
                     </button>
-                    <button onClick={() => handleStartEditLesson(lesson)} className="text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"><FaPencilAlt size={12} /></button>
+                    <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button onClick={() => handleStartEditLesson(lesson)} className="p-1 text-gray-300 hover:text-white"><FaPencilAlt size={12} /></button>
+                      <button onClick={() => handleDeleteLesson(lesson._id, lesson.title)} className="p-1 text-gray-300 hover:text-red-500"><FaTrash size={12} /></button>
+                    </div>
                   </>
                 )}
               </div>
