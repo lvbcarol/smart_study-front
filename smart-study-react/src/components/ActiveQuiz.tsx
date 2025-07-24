@@ -1,0 +1,151 @@
+// src/components/ActiveQuiz.tsx
+import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import api from '../services/api';
+import ChatMessage from './ChatMessage';
+import QuizzOptions from './QuizzOptions';
+import { FaPaperPlane, FaSave } from 'react-icons/fa';
+
+interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctAnswerIndex: number;
+  explanation: string;
+}
+interface Message {
+  sender: 'user' | 'bot';
+  text: string;
+  quizzOptions?: QuizQuestion;
+  questionIndex?: number;
+}
+
+interface ActiveQuizProps {
+  lessonTitle: string;
+  onQuizComplete: (score: number, chatHistory: Message[]) => void;
+}
+
+const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) => {
+  const { t } = useTranslation();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [userInput, setUserInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [quizData, setQuizData] = useState<QuizQuestion[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
+  const [quizFlowState, setQuizFlowState] = useState<'initial' | 'started' | 'finished'>('initial');
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      addMessage('bot', t('chat.quizzInitial'));
+    }
+  }, [t]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
+
+  const addMessage = (sender: 'user' | 'bot', text: string, quizzOptions?: QuizQuestion, questionIndex?: number) => {
+    setMessages(prev => [...prev, { sender, text, quizzOptions, questionIndex }]);
+  };
+
+  const handleTopicSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const topic = userInput.trim();
+    if (!topic || isLoading) return;
+
+    addMessage('user', topic);
+    setUserInput('');
+    setIsLoading(true);
+    setQuizFlowState('started');
+
+    try {
+      const response = await api.post('/ai/generate-quizz', { topic, context: lessonTitle });
+      const quizz = response.data.quizz;
+      setQuizData(quizz);
+      setCurrentQuestionIndex(0);
+      setUserAnswers(Array(quizz.length).fill(null));
+      addMessage('bot', `Question 1: ${quizz[0].question}`, quizz[0], 0);
+    } catch (error) {
+      addMessage('bot', 'Sorry, I had trouble creating the quizz. Please try another topic.');
+      setQuizFlowState('initial');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAnswerSelect = (selectedIndex: number, questionIndex: number) => {
+    const updatedAnswers = [...userAnswers];
+    updatedAnswers[questionIndex] = selectedIndex;
+    setUserAnswers(updatedAnswers);
+
+    setTimeout(() => {
+      addMessage('bot', `Explanation: ${quizData[questionIndex].explanation}`);
+      
+      setTimeout(() => {
+        const nextIndex = questionIndex + 1;
+        if (nextIndex < quizData.length) {
+          setCurrentQuestionIndex(nextIndex);
+          addMessage('bot', `Question ${nextIndex + 1}: ${quizData[nextIndex].question}`, quizData[nextIndex], nextIndex);
+        } else {
+          finishQuizz(updatedAnswers);
+        }
+      }, 2000);
+    }, 1000);
+  };
+
+  const finishQuizz = (finalAnswers: (number | null)[]) => {
+    setQuizFlowState('finished');
+    const correctAnswersCount = finalAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
+    const score = Math.round((correctAnswersCount / quizData.length) * 100);
+
+    const scoreMessageText = t('chat.quizzFinished', { correct: correctAnswersCount, total: quizData.length, score: score });
+    addMessage('bot', scoreMessageText);
+  };
+
+  const handleSaveAndExit = () => {
+    const correctAnswersCount = userAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
+    const score = Math.round((correctAnswersCount / quizData.length) * 100);
+    onQuizComplete(score, messages);
+  };
+
+  return (
+    <div className="w-full h-full flex flex-col">
+       <div className="flex-grow flex flex-col justify-end overflow-hidden">
+          <div className="overflow-y-auto pr-2">
+            {messages.map((msg, index) => (
+              <div key={index}>
+                <ChatMessage message={msg} />
+                {msg.quizzOptions && (
+                  <QuizzOptions 
+                    options={msg.quizzOptions.options}
+                    correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
+                    selectedAnswerIndex={userAnswers[msg.questionIndex!]}
+                    onSelectAnswer={(selectedIndex) => handleAnswerSelect(selectedIndex, msg.questionIndex!)}
+                  />
+                )}
+              </div>
+            ))}
+            {isLoading && <ChatMessage message={{ sender: 'bot', text: t('chat.thinking') }} />}
+            <div ref={chatEndRef} />
+          </div>
+        </div>
+
+        {quizFlowState === 'initial' && (
+          <form onSubmit={handleTopicSubmit} className="mt-4 flex items-center gap-3">
+              <input type="text" value={userInput} onChange={e => setUserInput(e.target.value)} placeholder={t('chat.typeSubject')} className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" disabled={isLoading} />
+              <button type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}><FaPaperPlane /></button>
+          </form>
+        )}
+        
+        {quizFlowState === 'finished' && (
+          <div className="flex justify-center mt-4">
+            <button onClick={handleSaveAndExit} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition">
+              <FaSave /> {t('chat.saveQuizz')}
+            </button>
+          </div>
+        )}
+    </div>
+  );
+};
+export default ActiveQuiz;

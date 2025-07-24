@@ -25,7 +25,7 @@
     "save": "Salvar"
   },
   "subject": {
-    "title": "Como você gostaria de estudar hoje?",
+    "title": "O que você gostaria de fazer hoje?",
     "summaryTitle": "Resumo",
     "summaryDesc": "Tenha em mente os tópicos principais de cada aula!",
     "quizzTitle": "Quizz",
@@ -34,7 +34,7 @@
   },
   "chat": {
     "thinking": "Pensando...",
-    "summaryInitial": "Olá! Qual tópico vamos estudar hoje?",
+    "summaryInitial": "Olá! Qual tópico específico dentro de \"{{title}}\" você gostaria que eu resumisse hoje?",
     "quizzInitial": "Qual tema você quer estudar hoje? Me envie o tópico para o quizz.",
     "typeSubject": "Digite o assunto aqui...",
     "quizzFinished": "Quizz finalizado! 🏆\n\nVocê acertou {{correct}} de {{total}} questões ({{score}}%).",
@@ -93,5 +93,10 @@
       "brevo": "O serviço que entrega e-mails importantes de forma confiável, como redefinições de senha.",
       "recharts": "Para criar os gráficos bonitos e perspicazes em sua página de Progresso."
     }
+  },
+  "widgets": {
+    "aslTitle": "Abrir Dicionário de ASL",
+    "vlibrasTitle": "Abrir site do VLibras",
+    "screenReaderTitle": "Saiba mais sobre o NVDA, um leitor de tela gratuito"
   }
 }

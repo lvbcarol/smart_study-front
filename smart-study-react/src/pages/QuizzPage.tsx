@@ -4,203 +4,143 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
+import ActiveQuiz from '../components/ActiveQuiz';
 import ChatMessage from '../components/ChatMessage';
-import QuizzOptions from '../components/QuizzOptions';
-import { FaPaperPlane, FaSave, FaArrowLeft } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import { FaArrowLeft, FaPlus } from 'react-icons/fa';
 
-interface QuizQuestion {
-  question: string;
-  options: string[];
-  correctAnswerIndex: number;
-  explanation: string;
-}
 interface Message {
   sender: 'user' | 'bot';
   text: string;
-  quizzOptions?: QuizQuestion;
+  quizzOptions?: any;
   questionIndex?: number;
 }
 
+interface Attempt {
+  _id: string;
+  attemptNumber: number;
+  score: number;
+  date: string;
+  chatHistory: Message[];
+}
+
 const QuizzPage: React.FC = () => {
-  const { t } = useTranslation();
-  const { lessonId } = useParams();
+  const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [userInput, setUserInput] = useState('');
+  const { t } = useTranslation();
+  
+  const [view, setView] = useState<'list' | 'active_quiz' | 'view_attempt'>('list');
+  const [attempts, setAttempts] = useState<Attempt[]>([]);
+  const [selectedAttempt, setSelectedAttempt] = useState<Attempt | null>(null);
   const [lessonTitle, setLessonTitle] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [quizData, setQuizData] = useState<QuizQuestion[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
-  const [quizState, setQuizState] = useState<'initial' | 'started' | 'finished'>('initial');
-  const [isQuizzSaved, setIsQuizzSaved] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let isMounted = true;
-    api.get(`/lessons/${lessonId}`).then(res => {
-      if (!isMounted) return;
-      setLessonTitle(res.data.lessonTitle);
-      const savedQuizz = res.data.quizzChatHistory;
-      if (savedQuizz && savedQuizz.length > 0) {
-        setMessages(savedQuizz);
-        setQuizState('finished');
-        setIsQuizzSaved(true);
-      } else {
-        if (messages.length === 0) {
-          addMessage('bot', t('chat.quizzInitial'));
-        }
-      }
-    });
-    return () => { isMounted = false; };
-  }, [lessonId, t]);
+    if (view === 'view_attempt') {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedAttempt, view]);
+
+  const fetchAttempts = async () => {
+    if (!lessonId) return;
+    setIsLoading(true);
+    try {
+      const response = await api.get(`/lessons/${lessonId}`);
+      setLessonTitle(response.data.lessonTitle);
+      setAttempts(response.data.quizzAttempts || []);
+    } catch (error) {
+      toast.error("Failed to load quiz attempts.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
+    if (view === 'list') {
+      fetchAttempts();
+    }
+  }, [lessonId, view]);
 
-  const addMessage = (sender: 'user' | 'bot', text: string, quizzOptions?: QuizQuestion, questionIndex?: number) => {
-    setMessages(prev => [...prev, { sender, text, quizzOptions, questionIndex }]);
-  };
-
-  const handleTopicSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const topic = userInput.trim();
-    if (!topic) return;
-
-    addMessage('user', topic);
-    setUserInput('');
-    setIsLoading(true);
-
+  const handleQuizSave = async (score: number, chatHistory: Message[]) => {
+    if (!lessonId) return;
+    const loadingToast = toast.loading('Saving your attempt...');
     try {
-      const response = await api.post('/ai/generate-quizz', { topic, context: lessonTitle });
-      const quizz = response.data.quizz;
-      setQuizData(quizz);
-      setCurrentQuestionIndex(0);
-      setUserAnswers(Array(quizz.length).fill(null));
-      setQuizState('started');
-      addMessage('bot', `Question 1: ${quizz[0].question}`, quizz[0], 0);
+      await api.post(`/lessons/${lessonId}/quizz-attempts`, { score, chatHistory });
+      toast.dismiss(loadingToast);
+      toast.success('Your new attempt has been saved!');
+      setView('list');
     } catch (error) {
-      addMessage('bot', 'Sorry, I had trouble creating the quizz. Please try another topic.');
-    } finally {
-      setIsLoading(false);
+      toast.dismiss(loadingToast);
+      toast.error("Failed to save your quiz attempt.");
     }
   };
 
-  const handleAnswerSelect = (selectedIndex: number, questionIndex: number) => {
-    const updatedAnswers = [...userAnswers];
-    updatedAnswers[questionIndex] = selectedIndex;
-    setUserAnswers(updatedAnswers);
-
-    setTimeout(() => {
-      addMessage('bot', `Explanation: ${quizData[questionIndex].explanation}`);
-      
-      setTimeout(() => {
-        const nextIndex = questionIndex + 1;
-        if (nextIndex < quizData.length) {
-          setCurrentQuestionIndex(nextIndex);
-          addMessage('bot', `Question ${nextIndex + 1}: ${quizData[nextIndex].question}`, quizData[nextIndex], nextIndex);
-        } else {
-          finishQuizz(updatedAnswers);
-        }
-      }, 2000);
-    }, 1000);
-  };
-
-  const finishQuizz = async (finalAnswers: (number | null)[]) => {
-    setQuizState('finished');
-    const correctAnswersCount = finalAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
-    const score = Math.round((correctAnswersCount / quizData.length) * 100);
-
-    addMessage('bot', t('chat.quizzFinished', { correct: correctAnswersCount, total: quizData.length, score: score }));
-    setIsLoading(true);
-
-    const mistakes = quizData
-      .filter((q, index) => finalAnswers[index] !== q.correctAnswerIndex)
-      .map(q => ({ question: q.question, explanation: q.explanation }));
-
-    try {
-      await api.post(`/lessons/${lessonId}/quizz-attempts`, { score, mistakes });
-      toast.success('Your score has been saved!');
-    } catch (error) {
-      toast.error('Could not save your score.');
-    }
-
-    try {
-      const feedbackResponse = await api.post('/ai/analyze-quizz', { quizzData, userAnswers: finalAnswers });
-      addMessage('bot', feedbackResponse.data.feedback);
-    } catch (error) {
-      addMessage('bot', t('chat.feedbackError'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  
-  const handleSaveQuizz = async () => {
-    try {
-        await api.put(`/lessons/${lessonId}/quizz-chat`, {messages});
-        setIsQuizzSaved(true);
-        toast.success('Quizz saved successfully!');
-    } catch (error) {
-        toast.error('Error saving quizz.');
-    }
-  };
-  
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
-  return (
-    <div style={backgroundStyle} className="min-h-screen text-white flex flex-col">
-      <Navbar />
-      <main className="container mx-auto p-4 flex-grow flex flex-col">
-        <div className="flex-grow flex flex-col justify-end overflow-hidden">
-          <div className="overflow-y-auto pr-2">
-            {messages.map((msg, index) => (
-              <div key={index}>
-                <ChatMessage message={msg} />
-                {msg.quizzOptions && (
-                  <QuizzOptions 
-                    options={msg.quizzOptions.options}
-                    correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
-                    selectedAnswerIndex={userAnswers[msg.questionIndex!]}
-                    onSelectAnswer={(selectedIndex) => handleAnswerSelect(selectedIndex, msg.questionIndex!)}
-                  />
-                )}
-              </div>
-            ))}
-            {isLoading && <ChatMessage message={{ sender: 'bot', text: t('chat.thinking') }} />}
+  const renderContent = () => {
+    if (isLoading) {
+      return <div className="text-center w-full">Loading...</div>;
+    }
+
+    if (view === 'active_quiz') {
+      return <ActiveQuiz lessonId={lessonId!} lessonTitle={lessonTitle} onQuizComplete={handleQuizSave} />;
+    }
+
+    if (view === 'view_attempt' && selectedAttempt) {
+      return (
+        <div className="w-full flex flex-col h-full">
+          <div className="flex justify-between items-center mb-4 flex-shrink-0">
+            <h2 className="text-2xl font-bold">Reviewing Attempt #{selectedAttempt.attemptNumber} ({selectedAttempt.score}%)</h2>
+            <button onClick={() => setView('list')} className="bg-white bg-opacity-20 text-white font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
+               <FaArrowLeft /> Back to Attempts
+            </button>
+          </div>
+          <div className="flex-grow overflow-y-auto pr-2 bg-black bg-opacity-20 p-4 rounded-lg">
+            {selectedAttempt.chatHistory.map((msg, index) => <ChatMessage key={index} message={msg} />)}
             <div ref={chatEndRef} />
           </div>
         </div>
+      );
+    }
 
-        {quizState === 'initial' && (
-          <form onSubmit={handleTopicSubmit} className="mt-4 flex items-center gap-3">
-            <input type="text" value={userInput} onChange={e => setUserInput(e.target.value)} placeholder={t('chat.typeSubject')} className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" disabled={isLoading} />
-            <button type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}><FaPaperPlane /></button>
-          </form>
-        )}
-        
-        {(quizState === 'finished' && !isQuizzSaved && !isLoading) && (
-            <div className="flex justify-center mt-4">
-                <button onClick={handleSaveQuizz} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition">
-                    <FaSave /> {t('chat.saveQuizz')}
-                </button>
-            </div>
-        )}
-
-        {(isQuizzSaved) && (
-            <div className="flex justify-center mt-4">
-                <button 
-                  onClick={() => navigate(`/subjects/${lessonId}`)} 
-                  className="bg-white bg-opacity-20 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition"
-                >
-                    <FaArrowLeft /> {t('chat.backToSubject')}
-                </button>
-            </div>
-        )}
+    return (
+      <div className="w-full">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold">{lessonTitle} - Quizzes</h1>
+          <button onClick={() => setView('active_quiz')} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition">
+            <FaPlus /> Start New Quiz
+          </button>
+        </div>
+        <div className="space-y-4">
+          {attempts.length > 0 ? (
+            attempts.slice().reverse().map(att => (
+              <button key={att._id} onClick={() => { setSelectedAttempt(att); setView('view_attempt'); }} className="w-full text-left p-4 bg-purple-500 bg-opacity-30 rounded-lg hover:bg-opacity-50 transition">
+                <div className="flex justify-between">
+                  <span className="font-bold">Attempt #{att.attemptNumber}</span>
+                  <span className="font-bold text-lg">{att.score}%</span>
+                </div>
+                <span className="text-sm text-gray-300">{new Date(att.date).toLocaleString()}</span>
+              </button>
+            ))
+          ) : (
+            <p className="text-center text-gray-400 py-8">No quiz attempts yet. Start a new one!</p>
+          )}
+        </div>
+        <button onClick={() => navigate(`/subjects/${lessonId}`)} className="mt-16 bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
+          <FaArrowLeft /> {t('chat.backToSubject')}
+        </button>
+      </div>
+    );
+  };
+  
+  return (
+    <div style={backgroundStyle} className="min-h-screen text-white flex flex-col">
+      <Navbar />
+      <main className="container mx-auto p-4 md:p-8 flex-grow flex items-center">
+        {renderContent()}
       </main>
     </div>
   );
 };
-
 export default QuizzPage;
