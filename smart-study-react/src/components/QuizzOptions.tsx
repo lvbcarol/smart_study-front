@@ -23,20 +23,19 @@ const QuizzOptions: React.FC<QuizzOptionsProps> = ({ options, correctAnswerIndex
   };
 
   return (
-    <div className="mt-4 space-y-3">
+    // Usa flexbox para centralizar os botões filhos
+    <div className="mt-4 space-y-3 flex flex-col items-center">
       {options.map((option, index) => {
-        const optionLetter = String.fromCharCode(65 + index); // Gera A, B, C...
+        const optionLetter = String.fromCharCode(65 + index);
         return (
           <button
             key={index}
-            // ✅ MELHORIA DE ACESSIBILIDADE AQUI:
-            // O leitor de tela irá ler, por exemplo: "Botão, Opção A: [Texto da opção]"
             aria-label={`Option ${optionLetter}: ${option}`}
             onClick={() => onSelectAnswer(index)}
             disabled={selectedAnswerIndex !== null}
-            className={`w-full text-left p-3 rounded-lg transition ${getButtonClass(index)}`}
+            // ✅ ESTILIZAÇÃO AQUI: Define uma largura máxima para os botões
+            className={`w-full max-w-lg text-left p-3 rounded-lg transition ${getButtonClass(index)}`}
           >
-            {/* A parte abaixo é apenas visual */}
             {optionLetter}. {option}
           </button>
         )

@@ -1,5 +1,5 @@
 // src/components/ActiveQuiz.tsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 import ChatMessage from './ChatMessage';
@@ -103,16 +103,14 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
     const score = Math.round((correctAnswersCount / quizData.length) * 100);
     const scoreMessageText = t('chat.quizzFinished', { correct: correctAnswersCount, total: quizData.length, score: score });
     
-    // Adiciona a mensagem de pontuação ao histórico que será salvo
     const finalMessages = [...messages, { sender: 'user' as const, text: `Answered question ${finalAnswers.length}` }, { sender: 'bot' as const, text: scoreMessageText }];
     setMessages(finalMessages);
     
-    // Chama a função do pai para lidar com o salvamento e a tela de revisão
     onQuizComplete(score, finalMessages, quizData, finalAnswers);
   };
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="chat-container h-full flex flex-col">
        <div className="flex-grow flex flex-col justify-end overflow-hidden">
           <div className="overflow-y-auto pr-2">
             {messages.map((msg, index) => (
@@ -133,22 +131,31 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
           </div>
         </div>
 
-        {quizFlowState === 'initial' && (
-          <form onSubmit={handleTopicSubmit} className="mt-4 flex items-center gap-3">
-              <input 
-                type="text" 
-                value={userInput} 
-                // ✅ CORREÇÃO AQUI: e.target.value em vez de e.g.value
-                onChange={e => setUserInput(e.target.value)} 
-                placeholder={t('chat.typeSubject')} 
-                className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" 
-                disabled={isLoading} 
-              />
-              <button type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}>
-                <FaPaperPlane />
+        <div className="mt-4 flex-shrink-0">
+          {quizFlowState === 'initial' && (
+            <form onSubmit={handleTopicSubmit} className="flex items-center gap-3">
+                <input 
+                  type="text" 
+                  value={userInput} 
+                  onChange={e => setUserInput(e.target.value)} 
+                  placeholder={t('chat.typeSubject')} 
+                  className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" 
+                  disabled={isLoading} 
+                />
+                <button type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}>
+                  <FaPaperPlane />
+                </button>
+            </form>
+          )}
+          
+          {quizFlowState === 'finished' && (
+            <div className="flex justify-center">
+              <button onClick={onQuizComplete} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition animate-fade-in-up">
+                <FaSave /> {t('chat.saveQuizz')}
               </button>
-          </form>
-        )}
+            </div>
+          )}
+        </div>
     </div>
   );
 };

@@ -64,3 +64,10 @@ body {
 .vw-access-button {
   display: none;
 }
+
+/* Classe para limitar a largura máxima do container do chat */
+.chat-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto; /* Centraliza o container */
+}
