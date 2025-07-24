@@ -5,6 +5,7 @@ import api from '../services/api';
 import ChatMessage from './ChatMessage';
 import QuizzOptions from './QuizzOptions';
 import { FaPaperPlane, FaSave } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 interface QuizQuestion {
   question: string;
@@ -21,7 +22,7 @@ interface Message {
 
 interface ActiveQuizProps {
   lessonTitle: string;
-  onQuizComplete: (score: number, chatHistory: Message[]) => void;
+  onQuizComplete: (score: number, chatHistory: Message[], quizData: QuizQuestion[], userAnswers: (number | null)[]) => void;
 }
 
 const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) => {
@@ -33,11 +34,13 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [quizFlowState, setQuizFlowState] = useState<'initial' | 'started' | 'finished'>('initial');
+  const hasInitialized = useRef(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messages.length === 0) {
+    if (!hasInitialized.current) {
       addMessage('bot', t('chat.quizzInitial'));
+      hasInitialized.current = true;
     }
   }, [t]);
 
@@ -67,7 +70,7 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
       setUserAnswers(Array(quizz.length).fill(null));
       addMessage('bot', `Question 1: ${quizz[0].question}`, quizz[0], 0);
     } catch (error) {
-      addMessage('bot', 'Sorry, I had trouble creating the quizz. Please try another topic.');
+      addMessage('bot', 'The AI service is currently busy. Please wait a moment and try submitting your topic again.');
       setQuizFlowState('initial');
     } finally {
       setIsLoading(false);
@@ -98,15 +101,14 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
     setQuizFlowState('finished');
     const correctAnswersCount = finalAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
     const score = Math.round((correctAnswersCount / quizData.length) * 100);
-
     const scoreMessageText = t('chat.quizzFinished', { correct: correctAnswersCount, total: quizData.length, score: score });
-    addMessage('bot', scoreMessageText);
-  };
-
-  const handleSaveAndExit = () => {
-    const correctAnswersCount = userAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
-    const score = Math.round((correctAnswersCount / quizData.length) * 100);
-    onQuizComplete(score, messages);
+    
+    // Adiciona a mensagem de pontuação ao histórico que será salvo
+    const finalMessages = [...messages, { sender: 'user' as const, text: `Answered question ${finalAnswers.length}` }, { sender: 'bot' as const, text: scoreMessageText }];
+    setMessages(finalMessages);
+    
+    // Chama a função do pai para lidar com o salvamento e a tela de revisão
+    onQuizComplete(score, finalMessages, quizData, finalAnswers);
   };
 
   return (
@@ -133,19 +135,22 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
 
         {quizFlowState === 'initial' && (
           <form onSubmit={handleTopicSubmit} className="mt-4 flex items-center gap-3">
-              <input type="text" value={userInput} onChange={e => setUserInput(e.target.value)} placeholder={t('chat.typeSubject')} className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" disabled={isLoading} />
-              <button type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}><FaPaperPlane /></button>
+              <input 
+                type="text" 
+                value={userInput} 
+                // ✅ CORREÇÃO AQUI: e.target.value em vez de e.g.value
+                onChange={e => setUserInput(e.target.value)} 
+                placeholder={t('chat.typeSubject')} 
+                className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" 
+                disabled={isLoading} 
+              />
+              <button type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}>
+                <FaPaperPlane />
+              </button>
           </form>
-        )}
-        
-        {quizFlowState === 'finished' && (
-          <div className="flex justify-center mt-4">
-            <button onClick={handleSaveAndExit} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition">
-              <FaSave /> {t('chat.saveQuizz')}
-            </button>
-          </div>
         )}
     </div>
   );
 };
+
 export default ActiveQuiz;

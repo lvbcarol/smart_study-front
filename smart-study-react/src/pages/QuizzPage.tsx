@@ -6,22 +6,31 @@ import api from '../services/api';
 import Navbar from '../components/Navbar';
 import ActiveQuiz from '../components/ActiveQuiz';
 import ChatMessage from '../components/ChatMessage';
+import QuizzOptions from '../components/QuizzOptions';
 import toast from 'react-hot-toast';
-import { FaArrowLeft, FaPlus } from 'react-icons/fa';
+import { FaArrowLeft, FaPlus, FaSave } from 'react-icons/fa';
 
+// --- Interfaces de Tipagem ---
+interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctAnswerIndex: number;
+  explanation: string;
+}
 interface Message {
   sender: 'user' | 'bot';
   text: string;
-  quizzOptions?: any;
+  quizzOptions?: QuizQuestion;
   questionIndex?: number;
 }
-
 interface Attempt {
   _id: string;
   attemptNumber: number;
   score: number;
   date: string;
   chatHistory: Message[];
+  quizData: QuizQuestion[];
+  userAnswers: (number | null)[];
 }
 
 const QuizzPage: React.FC = () => {
@@ -62,11 +71,30 @@ const QuizzPage: React.FC = () => {
     }
   }, [lessonId, view]);
 
-  const handleQuizSave = async (score: number, chatHistory: Message[]) => {
+  const handleQuizComplete = (score: number, chatHistory: Message[], quizData: QuizQuestion[], userAnswers: (number | null)[]) => {
+    const newAttemptData: Attempt = {
+      _id: `temp_${Date.now()}`,
+      attemptNumber: (attempts?.length || 0) + 1,
+      score,
+      date: new Date().toISOString(),
+      chatHistory,
+      quizData,
+      userAnswers,
+    };
+    setSelectedAttempt(newAttemptData);
+    setView('view_attempt');
+  };
+
+  const handleSaveAttempt = async (attemptToSave: Attempt) => {
     if (!lessonId) return;
     const loadingToast = toast.loading('Saving your attempt...');
     try {
-      await api.post(`/lessons/${lessonId}/quizz-attempts`, { score, chatHistory });
+      await api.post(`/lessons/${lessonId}/quizz-attempts`, { 
+        score: attemptToSave.score, 
+        chatHistory: attemptToSave.chatHistory,
+        quizData: attemptToSave.quizData,
+        userAnswers: attemptToSave.userAnswers,
+      });
       toast.dismiss(loadingToast);
       toast.success('Your new attempt has been saved!');
       setView('list');
@@ -75,16 +103,16 @@ const QuizzPage: React.FC = () => {
       toast.error("Failed to save your quiz attempt.");
     }
   };
-
+  
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
   const renderContent = () => {
     if (isLoading) {
-      return <div className="text-center w-full">Loading...</div>;
+      return <div className="text-center w-full text-xl animate-pulse">Loading...</div>;
     }
 
     if (view === 'active_quiz') {
-      return <ActiveQuiz lessonId={lessonId!} lessonTitle={lessonTitle} onQuizComplete={handleQuizSave} />;
+      return <ActiveQuiz lessonId={lessonId!} lessonTitle={lessonTitle} onQuizComplete={handleQuizComplete} />;
     }
 
     if (view === 'view_attempt' && selectedAttempt) {
@@ -92,12 +120,31 @@ const QuizzPage: React.FC = () => {
         <div className="w-full flex flex-col h-full">
           <div className="flex justify-between items-center mb-4 flex-shrink-0">
             <h2 className="text-2xl font-bold">Reviewing Attempt #{selectedAttempt.attemptNumber} ({selectedAttempt.score}%)</h2>
-            <button onClick={() => setView('list')} className="bg-white bg-opacity-20 text-white font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
-               <FaArrowLeft /> Back to Attempts
-            </button>
+            <div className="flex items-center gap-4">
+              {selectedAttempt._id.startsWith('temp_') && (
+                <button onClick={() => handleSaveAttempt(selectedAttempt)} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition">
+                  <FaSave /> Save Quizz
+                </button>
+              )}
+              <button onClick={() => setView('list')} className="bg-white bg-opacity-20 text-white font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
+                 <FaArrowLeft /> Back to Attempts
+              </button>
+            </div>
           </div>
           <div className="flex-grow overflow-y-auto pr-2 bg-black bg-opacity-20 p-4 rounded-lg">
-            {selectedAttempt.chatHistory.map((msg, index) => <ChatMessage key={index} message={msg} />)}
+            {selectedAttempt.chatHistory.map((msg, index) => (
+              <div key={index}>
+                <ChatMessage message={msg} />
+                {msg.quizzOptions && (
+                  <QuizzOptions 
+                    options={msg.quizzOptions.options}
+                    correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
+                    selectedAnswerIndex={selectedAttempt.userAnswers[msg.questionIndex!]}
+                    onSelectAnswer={() => {}}
+                  />
+                )}
+              </div>
+            ))}
             <div ref={chatEndRef} />
           </div>
         </div>
@@ -105,7 +152,7 @@ const QuizzPage: React.FC = () => {
     }
 
     return (
-      <div className="w-full">
+      <div className="w-full animate-fade-in-up">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold">{lessonTitle} - Quizzes</h1>
           <button onClick={() => setView('active_quiz')} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition">
@@ -143,4 +190,5 @@ const QuizzPage: React.FC = () => {
     </div>
   );
 };
+
 export default QuizzPage;
