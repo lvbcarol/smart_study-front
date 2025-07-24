@@ -25,7 +25,7 @@
     "save": "Salvar"
   },
   "subject": {
-    "title": "O que você gostaria de fazer hoje?",
+    "title": "Como você gostaria de estudar hoje?",
     "summaryTitle": "Resumo",
     "summaryDesc": "Tenha em mente os tópicos principais de cada aula!",
     "quizzTitle": "Quizz",
@@ -34,7 +34,7 @@
   },
   "chat": {
     "thinking": "Pensando...",
-    "summaryInitial": "Olá! Qual tópico específico dentro de \"{{title}}\" você gostaria que eu resumisse hoje?",
+    "summaryInitial": "Olá! Qual tópico vamos estudar hoje?",
     "quizzInitial": "Qual tema você quer estudar hoje? Me envie o tópico para o quizz.",
     "typeSubject": "Digite o assunto aqui...",
     "quizzFinished": "Quizz finalizado! 🏆\n\nVocê acertou {{correct}} de {{total}} questões ({{score}}%).",
@@ -91,7 +91,7 @@
       "typescript": "Para garantir que nosso código seja robusto, escalável e livre de erros.",
       "gemini": "O poderoso cérebro de IA que gera seus resumos e quizzes.",
       "brevo": "O serviço que entrega e-mails importantes de forma confiável, como redefinições de senha.",
-      "tremor": "Para criar os gráficos bonitos e perspicazes em sua página de Progresso."
+      "recharts": "Para criar os gráficos bonitos e perspicazes em sua página de Progresso."
     }
   }
 }

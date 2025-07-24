@@ -25,7 +25,7 @@
     "save": "Save"
   },
   "subject": {
-    "title": "What would you like to do today?",
+    "title": "How would you like to study today?",
     "summaryTitle": "Summary",
     "summaryDesc": "Keep in mind the main topics of each class!",
     "quizzTitle": "Quizz",
@@ -34,7 +34,7 @@
   },
   "chat": {
     "thinking": "Thinking...",
-    "summaryInitial": "Hello! What specific subject within \"{{title}}\" would you like me to summarize today?",
+    "summaryInitial": "Hello! What would you like me to summarize today?",
     "quizzInitial": "What topic do you want to study today? Send me the subject for the quizz.",
     "typeSubject": "Type your subject here...",
     "quizzFinished": "Quizz finished! 🏆\n\nYou got {{correct}} out of {{total}} correct ({{score}}%).",
@@ -91,7 +91,7 @@
       "typescript": "To ensure our code is robust, scalable, and error-free.",
       "gemini": "The powerful AI brain that generates your summaries and quizzes.",
       "brevo": "The service that reliably delivers important emails, like password resets.",
-      "tremor": "To create the beautiful and insightful graphs on your Progress page."
+      "recharts": "To create the beautiful and insightful graphs on your Progress page."
     }
   }
 }
