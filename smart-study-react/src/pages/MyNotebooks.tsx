@@ -16,7 +16,7 @@ interface Notebook { _id: string; title: string; lessons: Lesson[]; }
 
 const MyNotebooks: React.FC = () => {
   const { t } = useTranslation();
-  const [notebooks, setNotebooks] = useState<Notebook[]>([]);
+  const [notebooks, setNotebooks] = useState<Notebook[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newNotebookTitle, setNewNotebookTitle] = useState('');
@@ -29,7 +29,8 @@ const MyNotebooks: React.FC = () => {
         const response = await api.get<Notebook[]>('/notebooks');
         setNotebooks(response.data);
       } catch (error) {
-        toast.error("Error fetching notebooks."); // Este pode ser adicionado ao JSON
+        toast.error("Error fetching notebooks.");
+        setNotebooks([]);
       } finally {
         setIsLoading(false);
       }
@@ -39,30 +40,36 @@ const MyNotebooks: React.FC = () => {
 
   const handleCreateNotebook = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newNotebookTitle.trim()) return;
+    if (!newNotebookTitle.trim() || !notebooks) return;
     try {
       const response = await api.post<Notebook>('/notebooks', { title: newNotebookTitle });
       setNotebooks([...notebooks, response.data]);
       setNewNotebookTitle('');
       setIsModalOpen(false);
-      toast.success(t('myNotebooks.createSuccess')); // Chave de tradução
+      toast.success(t('myNotebooks.createSuccess') || 'Notebook created!');
     } catch (error) {
-      toast.error(t('myNotebooks.createError')); // Chave de tradução
+      toast.error(t('myNotebooks.createError') || 'Error creating notebook.');
     }
   };
 
   const handleDeleteNotebook = (deletedId: string) => {
+    if (!notebooks) return;
     setNotebooks(notebooks.filter(notebook => notebook._id !== deletedId));
   };
   
   const handleUpdateNotebook = (updatedNotebook: Notebook) => {
+    if (!notebooks) return;
     setNotebooks(notebooks.map(nb => nb._id === updatedNotebook._id ? updatedNotebook : nb));
   };
   
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
   if (isLoading) {
-    return <div style={backgroundStyle} className="min-h-screen text-white text-center p-8">{t('myNotebooks.loading')}</div>;
+    return (
+      <div style={backgroundStyle} className="min-h-screen text-white flex items-center justify-center">
+        <p className="text-xl animate-pulse">{t('myNotebooks.loading') || 'Loading...'}</p>
+      </div>
+    );
   }
 
   return (
@@ -71,23 +78,31 @@ const MyNotebooks: React.FC = () => {
       <main className="container mx-auto p-4 md:p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold">{t('myNotebooks.title')}</h1>
-          <button onClick={() => setIsModalOpen(true)} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition">
+          <button onClick={() => setIsModalOpen(true)} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0">
             <FaPlus />
             <span className="hidden md:inline">{t('myNotebooks.newNotebook')}</span>
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {notebooks.map((notebook, index) => (
-            <NotebookCard 
-              key={notebook._id} 
-              notebook={notebook} 
-              onDelete={handleDeleteNotebook} 
-              onUpdate={handleUpdateNotebook}
-              index={index} 
-            />
-          ))}
-        </div>
+        {/* ✅ Grid para os cards e mensagem de "sem cadernos" */}
+        {notebooks && notebooks.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {notebooks.map((notebook, index) => (
+              <NotebookCard 
+                key={notebook._id} 
+                notebook={notebook} 
+                onDelete={handleDeleteNotebook} 
+                onUpdate={handleUpdateNotebook}
+                index={index} 
+              />
+            ))}
+          </div>
+        ) : (
+            <div className="text-center text-gray-400 py-16">
+                <h2 className="text-2xl font-semibold">No notebooks yet!</h2>
+                <p className="mt-2">Click on "New notebook" to get started.</p>
+            </div>
+        )}
 
         <div className="mt-16">
           <button 
