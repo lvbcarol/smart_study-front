@@ -1,4 +1,4 @@
-// (código completo da seção 3, mas com as funções preenchidas)
+// src/pages/QuizzPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -8,9 +8,29 @@ import ActiveQuiz from '../components/ActiveQuiz';
 import ChatMessage from '../components/ChatMessage';
 import QuizzOptions from '../components/QuizzOptions';
 import toast from 'react-hot-toast';
-import { FaArrowLeft, FaPlus, FaSave } from 'react-icons/fa';
+import { FaArrowLeft, FaPlus } from 'react-icons/fa';
 
-// ... (Interfaces)
+interface QuizQuestion {
+  question: string;
+  options: string[];
+  correctAnswerIndex: number;
+  explanation: string;
+}
+interface Message {
+  sender: 'user' | 'bot';
+  text: string;
+  quizzOptions?: QuizQuestion;
+  questionIndex?: number;
+}
+interface Attempt {
+  _id: string;
+  attemptNumber: number;
+  score: number;
+  date: string;
+  chatHistory: Message[];
+  quizData: QuizQuestion[];
+  userAnswers: (number | null)[];
+}
 
 const QuizzPage: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
@@ -50,7 +70,7 @@ const QuizzPage: React.FC = () => {
     }
   }, [lessonId, view]);
 
-  const handleQuizSave = async (score: number, chatHistory: Message[], quizData: QuizQuestion[], userAnswers: (number|null)[]) => {
+  const handleQuizSave = async (score: number, chatHistory: Message[], quizData: QuizQuestion[], userAnswers: (number | null)[]) => {
     if (!lessonId) return;
     const loadingToast = toast.loading('Saving your attempt...');
     try {
@@ -73,7 +93,7 @@ const QuizzPage: React.FC = () => {
 
   const renderContent = () => {
     if (isLoading) {
-      return <div className="text-center w-full">Loading...</div>;
+      return <div className="text-center w-full text-xl animate-pulse">Loading...</div>;
     }
 
     if (view === 'active_quiz') {
@@ -93,7 +113,7 @@ const QuizzPage: React.FC = () => {
             {selectedAttempt.chatHistory.map((msg, index) => (
               <div key={index}>
                 <ChatMessage message={msg} />
-                {msg.quizzOptions && (
+                {msg.quizzOptions && selectedAttempt.quizData && selectedAttempt.userAnswers && (
                   <QuizzOptions 
                     options={msg.quizzOptions.options}
                     correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
@@ -109,23 +129,32 @@ const QuizzPage: React.FC = () => {
       );
     }
 
+    // A view padrão é a lista de tentativas (o "Hub")
     return (
-      <div className="w-full">
-        <div className="flex justify-between items-center mb-8">
+      // ✅ ESTILIZAÇÃO AQUI: Conteúdo centralizado e com largura máxima
+      <div className="w-full max-w-3xl mx-auto flex flex-col items-center text-center">
+        <div className="flex justify-between items-center mb-8 w-full">
           <h1 className="text-4xl font-bold">{lessonTitle} - Quizzes</h1>
-          <button onClick={() => setView('active_quiz')} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition">
-            <FaPlus /> Start New Quiz
+          <button onClick={() => setView('active_quiz')} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0">
+            <FaPlus />
+            <span className="hidden md:inline">Start New Quiz</span>
           </button>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
           {attempts.length > 0 ? (
-            attempts.slice().reverse().map(att => (
-              <button key={att._id} onClick={() => { setSelectedAttempt(att); setView('view_attempt'); }} className="w-full text-left p-4 bg-purple-500 bg-opacity-30 rounded-lg hover:bg-opacity-50 transition">
+            attempts.slice().reverse().map((att, index) => (
+              <button 
+                key={att._id} 
+                onClick={() => { setSelectedAttempt(att); setView('view_attempt'); }} 
+                // ✅ ESTILIZAÇÃO E ANIMAÇÃO AQUI
+                className="w-full text-left p-4 bg-violet-600 rounded-lg shadow-lg hover:bg-violet-500 transition-all transform hover:scale-105 animate-fade-in-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div className="flex justify-between">
-                  <span className="font-bold">Attempt #{att.attemptNumber}</span>
-                  <span className="font-bold text-lg">{att.score}%</span>
+                  <span className="font-bold text-lg">Attempt #{att.attemptNumber}</span>
+                  <span className="font-bold text-xl">{att.score}%</span>
                 </div>
-                <span className="text-sm text-gray-300">{new Date(att.date).toLocaleString()}</span>
+                <span className="text-sm text-violet-200">{new Date(att.date).toLocaleString()}</span>
               </button>
             ))
           ) : (
@@ -148,4 +177,5 @@ const QuizzPage: React.FC = () => {
     </div>
   );
 };
+
 export default QuizzPage;
