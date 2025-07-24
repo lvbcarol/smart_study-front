@@ -63,7 +63,8 @@
     "audioDescription": "Recursos de Áudio (para deficientes visuais)",
     "signLanguage": "Recursos de Linguagem de Sinais (para usuários surdos)",
     "saveChanges": "Salvar Alterações",
-    "preferencesSaved": "Preferências salvas com sucesso!"
+    "preferencesSaved": "Preferências salvas com sucesso!",
+    "accessibilityHelpText": "Quando acionados, aparecerá um widget que redirecionará o usuário para um site de seu respectivo país, com a ferramenta necessária para a melhor experiência de usuário."
   },
   "aboutUs": {
     "title": "Sobre Nós",

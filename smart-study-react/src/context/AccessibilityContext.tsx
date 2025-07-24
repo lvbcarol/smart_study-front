@@ -1,36 +1,41 @@
 // src/context/AccessibilityContext.tsx
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 interface AccessibilityContextType {
   isSignLanguageEnabled: boolean;
   setSignLanguageEnabled: (enabled: boolean) => void;
-  // Podemos adicionar outras opções de acessibilidade aqui no futuro
+  isAudioEnabled: boolean;
+  setAudioEnabled: (enabled: boolean) => void;
 }
 
-// Cria o contexto com um valor padrão
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
-// Cria o "provedor" que irá gerenciar o estado
 export const AccessibilityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isSignLanguageEnabled, setSignLanguageEnabledState] = useState(() => {
-    // Tenta ler o valor do localStorage na primeira vez que carrega
     return localStorage.getItem('signLanguageEnabled') === 'true';
   });
+  
+  const [isAudioEnabled, setAudioEnabledState] = useState(() => {
+    return localStorage.getItem('audioEnabled') === 'true';
+  });
 
-  // Função para atualizar o estado e o localStorage
   const setSignLanguageEnabled = (enabled: boolean) => {
     localStorage.setItem('signLanguageEnabled', String(enabled));
     setSignLanguageEnabledState(enabled);
   };
+  
+  const setAudioEnabled = (enabled: boolean) => {
+    localStorage.setItem('audioEnabled', String(enabled));
+    setAudioEnabledState(enabled);
+  };
 
   return (
-    <AccessibilityContext.Provider value={{ isSignLanguageEnabled, setSignLanguageEnabled }}>
+    <AccessibilityContext.Provider value={{ isSignLanguageEnabled, setSignLanguageEnabled, isAudioEnabled, setAudioEnabled }}>
       {children}
     </AccessibilityContext.Provider>
   );
 };
 
-// Hook customizado para facilitar o uso do contexto em outras páginas
 export const useAccessibility = (): AccessibilityContextType => {
   const context = useContext(AccessibilityContext);
   if (context === undefined) {

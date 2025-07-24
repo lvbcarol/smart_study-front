@@ -7,9 +7,12 @@ import { useTranslation } from 'react-i18next';
 // Importação dos Provedores de Contexto
 import { AccessibilityProvider, useAccessibility } from './context/AccessibilityContext';
 
-// Importação dos Componentes e Páginas
+// Importação dos Componentes Globais e Widgets
 import VLibrasWidget from './components/VLibrasWidget';
 import ASLHelperButton from './components/ASLHelperButton';
+import ScreenReaderHelper from './components/ScreenReaderHelper';
+
+// Importação de todas as Páginas
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -25,9 +28,10 @@ import LessonPage from './pages/LessonPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 
-// Componente interno para ter acesso aos hooks de contexto
+// Componente interno para ter acesso aos hooks de contexto (useAccessibility, useTranslation)
+// que precisam estar dentro dos seus provedores.
 const AppContent: React.FC = () => {
-  const { isSignLanguageEnabled } = useAccessibility();
+  const { isSignLanguageEnabled, isAudioEnabled } = useAccessibility();
   const { i18n } = useTranslation();
 
   return (
@@ -40,12 +44,17 @@ const AppContent: React.FC = () => {
         }}
       />
       
-      {/* Lógica de Acessibilidade Multilíngue */}
+      {/* --- Lógica de Acessibilidade Global --- */}
+      {/* Mostra o widget correto de linguagem de sinais baseado no idioma */}
       {isSignLanguageEnabled && (i18n.language === 'pt' || i18n.language === 'pt-BR') && <VLibrasWidget />}
       {isSignLanguageEnabled && i18n.language === 'en' && <ASLHelperButton />}
+      
+      {/* Mostra o widget de ajuda para leitores de tela */}
+      {isAudioEnabled && <ScreenReaderHelper />}
 
+      {/* --- Definição de Todas as Rotas da Aplicação --- */}
       <Routes>
-        {/* Rotas Principais e de Autenticação */}
+        {/* Rotas de Autenticação */}
         <Route path="/" element={<Navigate to="/register" />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
@@ -72,7 +81,7 @@ const AppContent: React.FC = () => {
   );
 }
 
-// Componente principal que fornece o contexto para a aplicação
+// Componente principal que "abraça" a aplicação com os provedores de contexto
 function App() {
   return (
     <AccessibilityProvider>

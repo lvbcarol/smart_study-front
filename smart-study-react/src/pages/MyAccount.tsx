@@ -9,20 +9,13 @@ import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
 
 interface User {
-  _id: string;
-  name: string;
-  email: string;
-  language: 'en-US' | 'pt-BR';
-  accessibility: {
-    audioDescription: boolean;
-    signLanguage: boolean;
-  };
+  _id: string; name: string; email: string; language: 'en-US' | 'pt-BR';
+  accessibility: { audioDescription: boolean; signLanguage: boolean; };
 }
 
 const MyAccount: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { setSignLanguageEnabled } = useAccessibility(); 
-  
+  const { setSignLanguageEnabled, setAudioEnabled } = useAccessibility(); 
   const [user, setUser] = useState<User | null>(null);
   const [initialSettings, setInitialSettings] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,11 +25,10 @@ const MyAccount: React.FC = () => {
       try {
         const response = await api.get('/usuario/me');
         setUser(response.data);
-        // Guarda uma "foto" das configurações iniciais para comparar depois
         setInitialSettings(JSON.stringify(response.data)); 
         i18n.changeLanguage(response.data.language.split('-')[0]);
-        // Sincroniza o estado global com o que veio do banco
         setSignLanguageEnabled(response.data.accessibility.signLanguage);
+        setAudioEnabled(response.data.accessibility.audioDescription);
       } catch (error) {
         toast.error("Failed to load user data.");
       } finally {
@@ -44,7 +36,7 @@ const MyAccount: React.FC = () => {
       }
     };
     fetchUserData();
-  }, [i18n, setSignLanguageEnabled]);
+  }, [i18n, setSignLanguageEnabled, setAudioEnabled]);
 
   const handleAccessibilityChange = (field: keyof User['accessibility'], value: boolean) => {
     if (!user) return;
@@ -68,16 +60,12 @@ const MyAccount: React.FC = () => {
         language: user.language,
         accessibility: user.accessibility,
       };
-      // Envia as novas configurações para o backend
       await api.put('/usuario/me', settingsToSave);
       
-      // ✅ PASSO CRUCIAL: Após salvar, atualiza o estado global
-      // Isso irá acionar a aparição do widget VLibras em todo o site
       setSignLanguageEnabled(user.accessibility.signLanguage);
+      setAudioEnabled(user.accessibility.audioDescription);
       
-      // Atualiza o estado inicial para desativar o botão "Salvar"
       setInitialSettings(JSON.stringify(user));
-
       toast.dismiss(loadingToast);
       toast.success(t('myAccount.preferencesSaved'));
     } catch (error) {
@@ -86,8 +74,7 @@ const MyAccount: React.FC = () => {
     }
   };
 
-  const hasChanges = JSON.stringify(user) !== initialSettings;
-
+  const hasChanges = user ? JSON.stringify(user) !== initialSettings : false;
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
   if (isLoading) {
@@ -134,6 +121,10 @@ const MyAccount: React.FC = () => {
               <ToggleSwitch label={t('myAccount.audioDescription')} enabled={user?.accessibility.audioDescription || false} onChange={(val) => handleAccessibilityChange('audioDescription', val)} />
               <ToggleSwitch label={t('myAccount.signLanguage')} enabled={user?.accessibility.signLanguage || false} onChange={(val) => handleAccessibilityChange('signLanguage', val)} />
             </div>
+            {/* ✅ TEXTO EXPLICATIVO ADICIONADO AQUI */}
+            <p className="text-xs text-gray-500 mt-4 pt-4 border-t">
+              {t('myAccount.accessibilityHelpText')}
+            </p>
           </div>
           
           <div className="flex justify-end">

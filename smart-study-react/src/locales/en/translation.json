@@ -63,7 +63,8 @@
     "audioDescription": "Audio Features (for visually impaired)",
     "signLanguage": "Sign Language Features (for deaf users)",
     "saveChanges": "Save Changes",
-    "preferencesSaved": "Preferences saved successfully!"
+    "preferencesSaved": "Preferences saved successfully!",
+    "accessibilityHelpText": "When activated, a helper widget will appear that will redirect the user to a site from their respective country, with the necessary tool for the best user experience."
   },
   "aboutUs": {
     "title": "About Us",
