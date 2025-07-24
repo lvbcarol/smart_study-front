@@ -22,7 +22,15 @@
     "create": "Criar",
     "confirmDelete": "Tem certeza que deseja deletar o caderno \"{{title}}\"?",
     "newLesson": "Nova aula",
-    "save": "Salvar"
+    "save": "Salvar",
+    "deleteModal": {
+      "titleNotebook": "Excluir Caderno",
+      "titleLesson": "Excluir Aula",
+      "bodyNotebook": "Você tem certeza de que quer excluir este caderno? Todas as aulas e conteúdos dele serão excluidos permanentemente e não poderão ser recuperados.",
+      "bodyLesson": "Você tem certeza que deseja excluir esta aula?",
+      "confirm": "Excluir",
+      "cancel": "Cancelar"
+    }
   },
   "subject": {
     "title": "O que você gostaria de fazer hoje?",

@@ -22,8 +22,17 @@
     "create": "Create",
     "confirmDelete": "Are you sure you want to delete the notebook \"{{title}}\"?",
     "newLesson": "New lesson",
-    "save": "Save"
+    "save": "Save",
+    "deleteModal": {
+      "titleNotebook": "Delete Notebook",
+      "titleLesson": "Delete Lesson",
+      "bodyNotebook": "Are you sure you want to delete this notebook? All its lessons and content will be permanently deleted and cannot be recovered.",
+      "bodyLesson": "Are you sure you want to delete this lesson?",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
   },
+  
   "subject": {
     "title": "What would you like to do today?",
     "summaryTitle": "Summary",
