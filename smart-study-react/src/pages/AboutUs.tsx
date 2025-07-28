@@ -5,15 +5,25 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Navbar from '../components/Navbar';
 import aboutUsImage from '../assets/aboutus.png';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { useInteractiveSound } from '../hooks/useInteractiveSound'; // 1. Importe o hook
 
 const AboutUs: React.FC = () => {
   const { t } = useTranslation();
+  const soundEvents = useInteractiveSound(); // 2. Inicialize o hook
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
-  const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi]);
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+  
+  const scrollTo = useCallback((index: number) => {
+    if (emblaApi) emblaApi.scrollTo(index);
+  }, [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -99,19 +109,41 @@ const AboutUs: React.FC = () => {
             </div>
           </div>
 
-          {/* Controles do Carrossel */}
+          {/* ✅ 3. Adiciona os eventos de som aos controles do carrossel */}
           <div className="flex items-center justify-center mt-8 gap-8">
-            <button onClick={scrollPrev} className="bg-white bg-opacity-20 p-3 rounded-full hover:bg-opacity-30 transition"><FaArrowLeft /></button>
+            <button 
+              onMouseEnter={soundEvents.onMouseEnter}
+              onClick={() => {
+                soundEvents.onClick();
+                scrollPrev();
+              }}
+              className="bg-white bg-opacity-20 p-3 rounded-full hover:bg-opacity-30 transition"
+            >
+              <FaArrowLeft />
+            </button>
             <div className="flex gap-3">
               {[...Array(3).keys()].map(index => (
                 <button 
                   key={index} 
-                  onClick={() => scrollTo(index)}
+                  onMouseEnter={soundEvents.onMouseEnter}
+                  onClick={() => {
+                    soundEvents.onClick();
+                    scrollTo(index);
+                  }}
                   className={`w-3 h-3 rounded-full transition ${selectedIndex === index ? 'bg-white' : 'bg-gray-600'}`}
                 />
               ))}
             </div>
-            <button onClick={scrollNext} className="bg-white bg-opacity-20 p-3 rounded-full hover:bg-opacity-30 transition"><FaArrowRight /></button>
+            <button 
+              onMouseEnter={soundEvents.onMouseEnter}
+              onClick={() => {
+                soundEvents.onClick();
+                scrollNext();
+              }}
+              className="bg-white bg-opacity-20 p-3 rounded-full hover:bg-opacity-30 transition"
+            >
+              <FaArrowRight />
+            </button>
           </div>
 
         </div>
