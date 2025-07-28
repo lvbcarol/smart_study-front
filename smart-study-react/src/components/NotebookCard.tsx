@@ -1,5 +1,5 @@
 // src/components/NotebookCard.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaPlus, FaTrash, FaPencilAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 import api from '../services/api';
 import Modal from './ui/Modal';
 import Button from './ui/Button';
+import { useSounds } from '../context/SoundContext';
+import { useInteractiveSound } from '../hooks/useInteractiveSound';
 
 interface Lesson { _id: string; title: string; }
 interface Notebook { _id: string; title: string; lessons: Lesson[]; }
@@ -19,6 +21,9 @@ interface NotebookCardProps {
 
 const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdate, index }) => {
   const { t } = useTranslation();
+  const { playAppearSound } = useSounds();
+  const soundEvents = useInteractiveSound(); // Hook para sons de clique e hover
+  
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [currentTitle, setCurrentTitle] = useState(notebook.title);
   const [isAddingLesson, setIsAddingLesson] = useState(false);
@@ -33,6 +38,13 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
     id: '',
     title: ''
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      playAppearSound();
+    }, index * 100);
+    return () => clearTimeout(timer);
+  }, [playAppearSound, index]);
 
   const handleTitleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,10 +144,10 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
               ) : (
                 <div className="flex items-center gap-2">
                   <h3 className="text-2xl font-bold">{notebook.title}</h3>
-                  <button onClick={() => setIsEditingTitle(true)} className="text-gray-300 hover:text-white"><FaPencilAlt size={14} /></button>
+                  <button {...soundEvents} onClick={() => setIsEditingTitle(true)} className="text-gray-300 hover:text-white"><FaPencilAlt size={14} /></button>
                 </div>
               )}
-              <button onClick={handleDeleteNotebookRequest} className="text-gray-300 hover:text-red-500"><FaTrash /></button>
+              <button {...soundEvents} onClick={handleDeleteNotebookRequest} className="text-gray-300 hover:text-red-500"><FaTrash /></button>
             </div>
             
             <div className="space-y-2">
@@ -147,12 +159,12 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                     </form>
                   ) : (
                     <>
-                      <button onClick={() => navigate(`/subjects/${lesson._id}`)} className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition">
+                      <button {...soundEvents} onClick={() => navigate(`/subjects/${lesson._id}`)} className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition">
                         {lesson.title}
                       </button>
                       <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => handleStartEditLesson(lesson)} className="p-1 text-gray-300 hover:text-white"><FaPencilAlt size={12} /></button>
-                        <button onClick={() => handleDeleteLessonRequest(lesson)} className="p-1 text-gray-300 hover:text-red-500"><FaTrash size={12} /></button>
+                        <button {...soundEvents} onClick={() => handleStartEditLesson(lesson)} className="p-1 text-gray-300 hover:text-white"><FaPencilAlt size={12} /></button>
+                        <button {...soundEvents} onClick={() => handleDeleteLessonRequest(lesson)} className="p-1 text-gray-300 hover:text-red-500"><FaTrash size={12} /></button>
                       </div>
                     </>
                   )}
@@ -163,11 +175,11 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
             {isAddingLesson ? (
               <form onSubmit={handleAddLesson} className="mt-4 flex gap-2">
                 <input type="text" value={newLessonTitle} onChange={(e) => setNewLessonTitle(e.target.value)} placeholder="New lesson name" className="flex-grow bg-violet-900 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-white" autoFocus />
-                <button type="submit" className="bg-green-500 p-2 rounded hover:bg-green-400">Save</button>
-                <button type="button" onClick={() => setIsAddingLesson(false)} className="bg-gray-600 p-2 rounded hover:bg-gray-500">X</button>
+                <Button type="submit">Save</Button>
+                <Button type="button" variant="secondary" onClick={() => setIsAddingLesson(false)}>X</Button>
               </form>
             ) : (
-              <button onClick={() => setIsAddingLesson(true)} className="mt-4 text-gray-300 hover:text-white flex items-center gap-2">
+              <button {...soundEvents} onClick={() => setIsAddingLesson(true)} className="mt-4 text-gray-300 hover:text-white flex items-center gap-2">
                 <FaPlus size={12} /> New lesson
               </button>
             )}
@@ -194,6 +206,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                 {t('myNotebooks.deleteModal.cancel')}
             </Button>
             <button 
+                {...soundEvents}
                 onClick={handleConfirmDelete} 
                 className="bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700 transition"
             >
