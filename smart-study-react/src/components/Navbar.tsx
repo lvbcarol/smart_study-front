@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import navLogo from '../assets/navbar-logo.png';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { useSounds } from '../context/SoundContext'; // 1. Importe o hook de sons
+import { useSounds } from '../context/SoundContext';
 
 const Navbar: React.FC = () => {
   const { t } = useTranslation();
-  const { playHoverSound, playClickSound } = useSounds(); // 2. Inicialize o hook
+  const { playHoverSound, playClickSound } = useSounds();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
@@ -20,12 +20,12 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <header className="w-full text-white p-4 border-b border-purple-800 relative">
+    // ✅ CORREÇÃO 1: Adiciona 'z-50' para garantir que a navbar fique acima de outros conteúdos relativos.
+    <header className="w-full text-white p-4 border-b border-purple-800 relative z-50">
       <div className="container mx-auto flex items-center justify-between">
 
         {/* --- Seção Esquerda: Logo --- */}
         <div className="w-1/3">
-          {/* ✅ 3. Adiciona os eventos de som ao Link do logo */}
           <Link 
             to="/home" 
             className="flex items-center gap-3"
@@ -40,7 +40,6 @@ const Navbar: React.FC = () => {
         {/* --- Seção Central (Navegação Desktop) --- */}
         <nav className="hidden md:flex items-center justify-center gap-8 w-1/3">
           {navLinks.map((link) => (
-            // ✅ 3. Adiciona os eventos de som a cada Link do menu
             <Link 
               key={link.href} 
               to={link.href} 
@@ -57,7 +56,7 @@ const Navbar: React.FC = () => {
         <div className="w-1/3 flex justify-end">
             <button 
               onClick={() => {
-                playClickSound(); // Adiciona som de clique ao botão hambúrguer também
+                playClickSound();
                 setIsMenuOpen(!isMenuOpen);
               }} 
               className="md:hidden z-50 p-2" 
@@ -70,8 +69,9 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* --- Menu Overlay (Mobile) --- */}
+      {/* ✅ CORREÇÃO 2: Garante que o fundo cubra toda a tela e o conteúdo seja centralizado. */}
       <div 
-        className={`absolute top-0 left-0 w-full h-screen bg-purple-900 bg-opacity-95 backdrop-blur-sm md:hidden transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed top-0 left-0 w-full h-screen bg-purple-900 bg-opacity-95 backdrop-blur-sm md:hidden transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <nav className="flex flex-col items-center justify-center h-full gap-8">
           {navLinks.map((link) => (
