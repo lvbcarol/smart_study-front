@@ -1,5 +1,7 @@
 // src/components/ui/Button.tsx
 import React from 'react';
+// ✅ CORREÇÃO: A importação do hook de som estava faltando
+import { useInteractiveSound } from '../../hooks/useInteractiveSound';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -7,6 +9,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', ...props }) => {
+  // ✅ CORREÇÃO: A chamada para o hook estava faltando
+  const soundEvents = useInteractiveSound();
+  
   const baseStyle = "w-full py-2.5 px-4 rounded-md font-semibold text-center transition-transform transform hover:scale-105 disabled:opacity-50 disabled:scale-100";
 
   const styles = {
@@ -15,8 +20,7 @@ const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', ...props
   };
 
   return (
-    // A propriedade {...props} garante que o type="submit" seja aplicado ao botão
-    <button {...props} className={`${baseStyle} ${styles[variant]}`}>
+    <button {...soundEvents} {...props} className={`${baseStyle} ${styles[variant]}`}>
       {children}
     </button>
   );

@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 
 // Provedores de Contexto
 import { AccessibilityProvider, useAccessibility } from './context/AccessibilityContext';
-import { MusicProvider } from './context/MusicContext'; // ✅ A LINHA QUE FALTAVA
+import { MusicProvider } from './context/MusicContext';
+import { SoundProvider } from './context/SoundContext';
 
 // Componentes Globais e Widgets
 import VLibrasWidget from './components/VLibrasWidget';
@@ -51,7 +52,6 @@ const AppContent: React.FC = () => {
       <MusicPlayer />
 
       <Routes>
-        {/* ... (todas as suas rotas) ... */}
         <Route path="/" element={<Navigate to="/register" />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
@@ -74,12 +74,13 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    // Ordem dos providers corrigida para evitar conflitos
-    <AccessibilityProvider>
+    <SoundProvider>
       <MusicProvider>
-        <AppContent />
+        <AccessibilityProvider>
+          <AppContent />
+        </AccessibilityProvider>
       </MusicProvider>
-    </AccessibilityProvider>
+    </SoundProvider>
   );
 }
 
