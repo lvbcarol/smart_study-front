@@ -68,6 +68,15 @@
     "explanationLabel": "Explanation",
     "aiError": "The AI service is currently busy. Please wait a moment and try submitting your topic again."
   },
+  "quizzPage": {
+    "loading": "Loading Quiz Data...",
+    "reviewingAttempt": "Reviewing Attempt #{{number}} ({{score}}%)",
+    "backToAttempts": "Back to Attempts",
+    "title": "{{lessonTitle}} - Quizzes",
+    "startNew": "Start New Quiz",
+    "attempt": "Attempt #{{number}}",
+    "noAttempts": "No quiz attempts yet. Start a new one!"
+  },
   "progress": {
     "title": "My Progress",
     "subtitle": "Here's a visual overview of your study performance.",

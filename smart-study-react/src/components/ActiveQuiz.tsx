@@ -67,16 +67,14 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
       const response = await api.post('/ai/generate-quizz', { 
         topic, 
         context: lessonTitle,
-        language: i18n.language
+        language: i18n.language // Envia o idioma para a IA
       });
       const quizz = response.data.quizz;
       setQuizData(quizz);
       setCurrentQuestionIndex(0);
       setUserAnswers(Array(quizz.length).fill(null));
-      // ✅ Tradução da numeração da pergunta
       addMessage('bot', `${t('chat.questionLabel', { number: 1 })}: ${quizz[0].question}`, quizz[0], 0);
     } catch (error) {
-      // ✅ Tradução da mensagem de erro
       addMessage('bot', t('chat.aiError'));
       setQuizFlowState('initial');
     } finally {
@@ -90,14 +88,12 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
     setUserAnswers(updatedAnswers);
 
     setTimeout(() => {
-      // ✅ Tradução do prefixo da explicação
       addMessage('bot', `${t('chat.explanationLabel')}: ${quizData[questionIndex].explanation}`);
       
       setTimeout(() => {
         const nextIndex = questionIndex + 1;
         if (nextIndex < quizData.length) {
           setCurrentQuestionIndex(nextIndex);
-          // ✅ Tradução da numeração da pergunta
           addMessage('bot', `${t('chat.questionLabel', { number: nextIndex + 1 })}: ${quizData[nextIndex].question}`, quizData[nextIndex], nextIndex);
         } else {
           finishQuizz(updatedAnswers);
@@ -111,13 +107,15 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
     const correctAnswersCount = finalAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
     const score = Math.round((correctAnswersCount / quizData.length) * 100);
     const scoreMessageText = t('chat.quizzFinished', { correct: correctAnswersCount, total: quizData.length, score: score });
-    
-    // Adiciona a mensagem de pontuação ao histórico que será salvo
-    const finalMessages = [...messages, { sender: 'user' as const, text: `Answered question ${finalAnswers.length}` }, { sender: 'bot' as const, text: scoreMessageText }];
-    setMessages(finalMessages);
-    
-    // Chama a função do pai para lidar com o salvamento e a tela de revisão
-    onQuizComplete(score, finalMessages, quizData, finalAnswers);
+    addMessage('bot', scoreMessageText);
+    // A função para aqui, esperando o usuário clicar em "Salvar".
+  };
+
+  const handleSaveAndExit = () => {
+    const correctAnswersCount = userAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
+    const score = Math.round((correctAnswersCount / quizData.length) * 100);
+    // Passa todos os dados para a QuizzPage salvar
+    onQuizComplete(score, messages, quizData, userAnswers);
   };
 
   return (
@@ -173,7 +171,7 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
             <div className="flex justify-center">
               <button 
                 {...soundEvents}
-                onClick={() => onQuizComplete(0, messages, quizData, userAnswers)} // A pontuação real é calculada e passada pelo pai
+                onClick={handleSaveAndExit} 
                 className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition animate-fade-in-up"
               >
                 <FaSave /> {t('chat.saveQuizz')}

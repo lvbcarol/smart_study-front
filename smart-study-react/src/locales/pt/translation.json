@@ -68,6 +68,15 @@
     "explanationLabel": "Explicação",
     "aiError": "O serviço de IA está ocupado no momento. Por favor, aguarde um instante e tente enviar seu tópico novamente."
   },
+  "quizzPage": {
+    "loading": "Carregando Dados do Quizz...",
+    "reviewingAttempt": "Revisando Tentativa nº {{number}} ({{score}}%)",
+    "backToAttempts": "Voltar para Tentativas",
+    "title": "{{lessonTitle}} - Quizzes",
+    "startNew": "Iniciar Novo Quizz",
+    "attempt": "Tentativa nº {{number}}",
+    "noAttempts": "Nenhuma tentativa de quizz ainda. Comece uma nova!"
+  },
   "progress": {
     "title": "Meu Progresso",
     "subtitle": "Aqui está uma visão geral da sua performance nos estudos.",
