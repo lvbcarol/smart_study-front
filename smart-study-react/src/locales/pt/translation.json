@@ -120,5 +120,36 @@
     "aslTitle": "Abrir Dicionário de ASL",
     "vlibrasTitle": "Abrir site do VLibras",
     "screenReaderTitle": "Saiba mais sobre o NVDA, um leitor de tela gratuito"
+  },
+  "progress": {
+    "title": "Meu Progresso",
+    "subtitle": "Aqui está uma visão geral da sua performance nos estudos.",
+    "loading": "Carregando Dados...",
+    "noData": "Ainda não há dados de quizzes.",
+    "card1": {
+      "title": "Média Geral por Caderno",
+      "desc": "Uma comparação geral do seu desempenho.",
+      "legendTitle": "Visão Geral das Matérias",
+      "legendText": "Este gráfico mostra sua pontuação média geral para cada caderno. Use-o para identificar rapidamente em quais matérias você precisa de mais atenção.",
+      "barName": "Média"
+    },
+    "card2": {
+      "title": "Pontuação Média por Aula",
+      "desc": "Selecione um caderno para ver a média de cada aula.",
+      "selectPlaceholder": "Selecione um Caderno",
+      "noData": "Selecione um caderno para ver o gráfico.",
+      "legendTitle": "Análise por Aula",
+      "legendText": "Filtre por caderno para comparar seu desempenho médio em cada aula, ajudando a identificar tópicos específicos para revisão."
+    },
+    "card3": {
+      "title": "Progresso por Tentativa",
+      "desc": "Selecione um caderno e uma aula para acompanhar suas notas.",
+      "selectNotebookPlaceholder": "Selecione um Caderno",
+      "selectLessonPlaceholder": "Selecione uma Aula",
+      "noAttempts": "Esta aula ainda não tem tentativas de quizz.",
+      "pleaseSelect": "Por favor, selecione um caderno e uma aula.",
+      "legendTitle": "Análise Detalhada",
+      "legendText": "Filtre por caderno e aula para ver a progressão da sua pontuação em cada tentativa. Perfeito para acompanhar a melhora em um tópico específico."
+    }
   }
 }

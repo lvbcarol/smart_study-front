@@ -120,5 +120,36 @@
     "aslTitle": "Open ASL Dictionary",
     "vlibrasTitle": "Open VLibras Website",
     "screenReaderTitle": "Learn about NVDA, a free screen reader"
+  },
+  "progress": {
+    "title": "My Progress",
+    "subtitle": "Here's a visual overview of your study performance.",
+    "loading": "Loading Data...",
+    "noData": "No quiz data available yet.",
+    "card1": {
+      "title": "Overall Average by Notebook",
+      "desc": "A general comparison of your performance.",
+      "legendTitle": "Subject Overview",
+      "legendText": "This chart shows your overall average score for each notebook. Use it to quickly identify which subjects need more attention.",
+      "barName": "Average"
+    },
+    "card2": {
+      "title": "Average Score by Lesson",
+      "desc": "Select a notebook to see the average for each lesson.",
+      "selectPlaceholder": "Select a Notebook",
+      "noData": "Select a notebook to see the chart.",
+      "legendTitle": "Lesson Analysis",
+      "legendText": "Filter by notebook to compare your average performance in each lesson, helping you pinpoint specific topics for review."
+    },
+    "card3": {
+      "title": "Progress by Attempt",
+      "desc": "Select a notebook and a lesson to track your scores.",
+      "selectNotebookPlaceholder": "Select a Notebook",
+      "selectLessonPlaceholder": "Select a Lesson",
+      "noAttempts": "This lesson has no quiz attempts yet.",
+      "pleaseSelect": "Please select a notebook and lesson.",
+      "legendTitle": "Deep Dive Analysis",
+      "legendText": "Filter by notebook and lesson to see the score progression for every single attempt. Perfect for tracking improvement on a specific topic."
+    }
   }
 }
