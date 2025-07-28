@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar';
 import ChatMessage from '../components/ChatMessage';
 import { FaPaperPlane, FaSave, FaArrowLeft } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import { useInteractiveSound } from '../hooks/useInteractiveSound'; // 1. Importe o hook
+import { useInteractiveSound } from '../hooks/useInteractiveSound';
 
 interface Message {
   sender: 'user' | 'bot';
@@ -15,10 +15,10 @@ interface Message {
 }
 
 const SummaryPage: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { lessonId } = useParams();
   const navigate = useNavigate();
-  const soundEvents = useInteractiveSound(); // 2. Inicialize o hook
+  const soundEvents = useInteractiveSound();
   const [lessonTitle, setLessonTitle] = useState('your subject');
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
@@ -56,10 +56,13 @@ const SummaryPage: React.FC = () => {
     setIsChatSaved(false);
 
     try {
-      const response = await api.post('/ai/summarize', { topic: trimmedInput, context: lessonTitle });
+      const response = await api.post('/ai/summarize', { 
+        topic: trimmedInput, 
+        context: lessonTitle,
+        language: i18n.language // Envia o idioma atual para a IA
+      });
       setMessages([...newMessages, { sender: 'bot', text: response.data.summary }]);
     } catch (error) {
-      // ✅ 3. Mensagem de erro aprimorada
       setMessages([...newMessages, { sender: 'bot', text: 'The AI service is currently busy. Please wait a moment and try submitting your topic again.' }]);
     } finally {
       setIsLoading(false);
@@ -94,7 +97,6 @@ const SummaryPage: React.FC = () => {
         {(!isChatSaved || !hasSummary) && (
           <form onSubmit={handleSendMessage} className="mt-4 flex items-center gap-3">
             <input type="text" value={userInput} onChange={(e) => setUserInput(e.target.value)} placeholder={t('chat.typeSubject')} className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" disabled={isLoading} />
-            {/* ✅ 4. Adiciona sons ao botão de enviar */}
             <button {...soundEvents} type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}>
               <FaPaperPlane />
             </button>
@@ -103,8 +105,14 @@ const SummaryPage: React.FC = () => {
         
         {(hasSummary && !isChatSaved && !isLoading) && (
             <div className="flex justify-center mt-4">
-                {/* ✅ 4. Adiciona sons ao botão de salvar */}
-                <button {...soundEvents} onClick={handleSaveChat} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition">
+                <button 
+                  {...soundEvents} 
+                  onClick={() => {
+                    soundEvents.onClick();
+                    handleSaveChat();
+                  }}
+                  className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition"
+                >
                     <FaSave /> {t('chat.saveConversation')}
                 </button>
             </div>
@@ -112,11 +120,10 @@ const SummaryPage: React.FC = () => {
 
         {(isChatSaved) && (
             <div className="flex justify-center mt-4">
-                {/* ✅ 4. Adiciona sons ao botão de voltar */}
                 <button 
                   {...soundEvents}
                   onClick={() => {
-                    soundEvents.onClick(); // Garante que o som de clique toque antes de navegar
+                    soundEvents.onClick();
                     navigate(`/subjects/${lessonId}`);
                   }}
                   className="bg-white bg-opacity-20 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition"

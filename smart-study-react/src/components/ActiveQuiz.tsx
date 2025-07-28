@@ -1,12 +1,11 @@
 // src/components/ActiveQuiz.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useInteractiveSound } from '../hooks/useInteractiveSound';
 import api from '../services/api';
 import ChatMessage from './ChatMessage';
 import QuizzOptions from './QuizzOptions';
 import { FaPaperPlane, FaSave } from 'react-icons/fa';
-import toast from 'react-hot-toast';
+import { useInteractiveSound } from '../hooks/useInteractiveSound';
 
 interface QuizQuestion {
   question: string;
@@ -27,7 +26,7 @@ interface ActiveQuizProps {
 }
 
 const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const soundEvents = useInteractiveSound();
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
@@ -65,14 +64,20 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
     setQuizFlowState('started');
 
     try {
-      const response = await api.post('/ai/generate-quizz', { topic, context: lessonTitle });
+      const response = await api.post('/ai/generate-quizz', { 
+        topic, 
+        context: lessonTitle,
+        language: i18n.language
+      });
       const quizz = response.data.quizz;
       setQuizData(quizz);
       setCurrentQuestionIndex(0);
       setUserAnswers(Array(quizz.length).fill(null));
-      addMessage('bot', `Question 1: ${quizz[0].question}`, quizz[0], 0);
+      // ✅ Tradução da numeração da pergunta
+      addMessage('bot', `${t('chat.questionLabel', { number: 1 })}: ${quizz[0].question}`, quizz[0], 0);
     } catch (error) {
-      addMessage('bot', 'The AI service is currently busy. Please wait a moment and try submitting your topic again.');
+      // ✅ Tradução da mensagem de erro
+      addMessage('bot', t('chat.aiError'));
       setQuizFlowState('initial');
     } finally {
       setIsLoading(false);
@@ -85,13 +90,15 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
     setUserAnswers(updatedAnswers);
 
     setTimeout(() => {
-      addMessage('bot', `Explanation: ${quizData[questionIndex].explanation}`);
+      // ✅ Tradução do prefixo da explicação
+      addMessage('bot', `${t('chat.explanationLabel')}: ${quizData[questionIndex].explanation}`);
       
       setTimeout(() => {
         const nextIndex = questionIndex + 1;
         if (nextIndex < quizData.length) {
           setCurrentQuestionIndex(nextIndex);
-          addMessage('bot', `Question ${nextIndex + 1}: ${quizData[nextIndex].question}`, quizData[nextIndex], nextIndex);
+          // ✅ Tradução da numeração da pergunta
+          addMessage('bot', `${t('chat.questionLabel', { number: nextIndex + 1 })}: ${quizData[nextIndex].question}`, quizData[nextIndex], nextIndex);
         } else {
           finishQuizz(updatedAnswers);
         }
@@ -104,15 +111,13 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
     const correctAnswersCount = finalAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
     const score = Math.round((correctAnswersCount / quizData.length) * 100);
     const scoreMessageText = t('chat.quizzFinished', { correct: correctAnswersCount, total: quizData.length, score: score });
-    addMessage('bot', scoreMessageText);
-    // A função para aqui, esperando o usuário clicar em "Salvar".
-  };
-
-  const handleSaveAndExit = () => {
-    const correctAnswersCount = userAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
-    const score = Math.round((correctAnswersCount / quizData.length) * 100);
-    // Passa todos os dados para a QuizzPage salvar
-    onQuizComplete(score, messages, quizData, userAnswers);
+    
+    // Adiciona a mensagem de pontuação ao histórico que será salvo
+    const finalMessages = [...messages, { sender: 'user' as const, text: `Answered question ${finalAnswers.length}` }, { sender: 'bot' as const, text: scoreMessageText }];
+    setMessages(finalMessages);
+    
+    // Chama a função do pai para lidar com o salvamento e a tela de revisão
+    onQuizComplete(score, finalMessages, quizData, finalAnswers);
   };
 
   return (
@@ -168,7 +173,7 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
             <div className="flex justify-center">
               <button 
                 {...soundEvents}
-                onClick={handleSaveAndExit} 
+                onClick={() => onQuizComplete(0, messages, quizData, userAnswers)} // A pontuação real é calculada e passada pelo pai
                 className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition animate-fade-in-up"
               >
                 <FaSave /> {t('chat.saveQuizz')}

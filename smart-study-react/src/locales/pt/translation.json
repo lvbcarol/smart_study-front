@@ -63,7 +63,10 @@
     "feedbackError": "Tive problemas para gerar um feedback detalhado, mas sua pontuação foi salva. Ótimo trabalho no quizz!",
     "saveConversation": "Salvar Conversa",
     "saveQuizz": "Salvar Quizz",
-    "backToSubject": "Voltar para a Matéria"
+    "backToSubject": "Voltar para a Matéria",
+    "questionLabel": "Pergunta {{number}}",
+    "explanationLabel": "Explicação",
+    "aiError": "O serviço de IA está ocupado no momento. Por favor, aguarde um instante e tente enviar seu tópico novamente."
   },
   "progress": {
     "title": "Meu Progresso",

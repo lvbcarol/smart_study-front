@@ -55,7 +55,7 @@
     "goBack": "go back to Notebooks"
   },
   "chat": {
-    "thinking": "Thinking...",
+     "thinking": "Thinking...",
     "summaryInitial": "Hello! What specific subject within \"{{title}}\" would you like me to summarize today?",
     "quizzInitial": "What topic do you want to study today? Send me the subject for the quizz.",
     "typeSubject": "Type your subject here...",
@@ -63,7 +63,10 @@
     "feedbackError": "I had trouble generating detailed feedback, but your score was saved. Great job on the quiz!",
     "saveConversation": "Save Conversation",
     "saveQuizz": "Save Quizz",
-    "backToSubject": "Back to Subject"
+    "backToSubject": "Back to Subject",
+    "questionLabel": "Question {{number}}",
+    "explanationLabel": "Explanation",
+    "aiError": "The AI service is currently busy. Please wait a moment and try submitting your topic again."
   },
   "progress": {
     "title": "My Progress",
