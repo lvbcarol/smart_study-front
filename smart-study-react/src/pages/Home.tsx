@@ -1,16 +1,18 @@
 // src/pages/Home.tsx
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Importar
+import { useTranslation } from 'react-i18next';
+import { useInteractiveSound } from '../hooks/useInteractiveSound'; // 1. Importe o hook de som
 import Navbar from '../components/Navbar';
 import booksIllustration from '../assets/books-illustration.png';
 import laptopUserImage from '../assets/laptop-user-image.png';
 import { FaBook } from 'react-icons/fa';
 
 const Home: React.FC = () => {
-  const { t } = useTranslation(); // Usar o hook de tradução
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const soundEvents = useInteractiveSound(); // 2. Inicialize o hook
   const userName = location.state?.userName?.split(' ')[0] || 'Student';
   const [animationKey, setAnimationKey] = useState(0);
 
@@ -45,13 +47,16 @@ const Home: React.FC = () => {
             </p>
             <img 
               src={booksIllustration} 
-              alt="Illustration of a stack of books" 
+              alt="Illustration of a stack of three colorful books" 
               className="w-48 h-auto mt-4 animate-float"
             />
+            {/* ✅ 3. APLIQUE OS EFEITOS DE SOM AO BOTÃO */}
             <button 
+              onMouseEnter={soundEvents.onMouseEnter} // Som de hover
               onClick={(e) => {
-                e.stopPropagation();
-                navigate('/my-notebooks');
+                e.stopPropagation(); // Impede que o clique reinicie a animação da página
+                soundEvents.onClick(); // Toca o som de clique
+                navigate('/my-notebooks'); // Executa a navegação
               }}
               className="bg-white text-gray-900 font-bold py-3 px-8 rounded-full flex items-center gap-3 self-start mt-4 hover:bg-gray-200 transition-transform transform hover:scale-105"
             >
@@ -66,6 +71,8 @@ const Home: React.FC = () => {
           >
             <div 
               className="w-[500px] h-[500px] bg-cover bg-center animate-float"
+              role="img"
+              aria-label="Stylized image of a person's hands typing on a laptop in a dark room"
               style={{ 
                 backgroundImage: `url(${laptopUserImage})`,
                 clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' 
