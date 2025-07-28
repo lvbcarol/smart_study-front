@@ -7,10 +7,17 @@ import Navbar from '../components/Navbar';
 import ToggleSwitch from '../components/ui/ToggleSwitch';
 import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
+import { useInteractiveSound } from '../hooks/useInteractiveSound'; // 1. Importe o hook de som
 
 interface User {
-  _id: string; name: string; email: string; language: 'en-US' | 'pt-BR';
-  accessibility: { audioDescription: boolean; signLanguage: boolean; };
+  _id: string;
+  name: string;
+  email: string;
+  language: 'en-US' | 'pt-BR';
+  accessibility: {
+    audioDescription: boolean;
+    signLanguage: boolean;
+  };
 }
 
 const MyAccount: React.FC = () => {
@@ -19,6 +26,7 @@ const MyAccount: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [initialSettings, setInitialSettings] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const soundEvents = useInteractiveSound(); // 2. Inicialize o hook
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -39,6 +47,7 @@ const MyAccount: React.FC = () => {
   }, [i18n, setSignLanguageEnabled, setAudioEnabled]);
 
   const handleAccessibilityChange = (field: keyof User['accessibility'], value: boolean) => {
+    soundEvents.onClick(); // Adiciona som ao toggle
     if (!user) return;
     setUser(prevUser => ({
         ...prevUser!,
@@ -47,6 +56,7 @@ const MyAccount: React.FC = () => {
   };
   
   const handleLanguageChange = (lang: 'en-US' | 'pt-BR') => {
+    soundEvents.onClick(); // Adiciona som ao botão de idioma
     if (!user) return;
     setUser({ ...user, language: lang });
     i18n.changeLanguage(lang.split('-')[0]);
@@ -106,10 +116,19 @@ const MyAccount: React.FC = () => {
           <div className="bg-white text-gray-800 p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold border-b pb-2 mb-4">{t('myAccount.languageSettings')}</h2>
             <div className="flex gap-4">
-              <button onClick={() => handleLanguageChange('en-US')} className={`p-4 rounded-lg flex-1 text-center font-bold transition ${user?.language === 'en-US' ? 'bg-purple-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}>
+              {/* ✅ 3. Adiciona os eventos de som aos botões de idioma */}
+              <button 
+                onMouseEnter={soundEvents.onMouseEnter}
+                onClick={() => handleLanguageChange('en-US')} 
+                className={`p-4 rounded-lg flex-1 text-center font-bold transition ${user?.language === 'en-US' ? 'bg-purple-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+              >
                 ENG-USA
               </button>
-              <button onClick={() => handleLanguageChange('pt-BR')} className={`p-4 rounded-lg flex-1 text-center font-bold transition ${user?.language === 'pt-BR' ? 'bg-purple-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}>
+              <button 
+                onMouseEnter={soundEvents.onMouseEnter}
+                onClick={() => handleLanguageChange('pt-BR')} 
+                className={`p-4 rounded-lg flex-1 text-center font-bold transition ${user?.language === 'pt-BR' ? 'bg-purple-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+              >
                 PT-BR
               </button>
             </div>
@@ -118,16 +137,17 @@ const MyAccount: React.FC = () => {
           <div className="bg-white text-gray-800 p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold border-b pb-2 mb-4">{t('myAccount.accessibility')}</h2>
             <div className="space-y-4">
+              {/* Os toggles já tocam som de clique através da função 'handleAccessibilityChange' */}
               <ToggleSwitch label={t('myAccount.audioDescription')} enabled={user?.accessibility.audioDescription || false} onChange={(val) => handleAccessibilityChange('audioDescription', val)} />
               <ToggleSwitch label={t('myAccount.signLanguage')} enabled={user?.accessibility.signLanguage || false} onChange={(val) => handleAccessibilityChange('signLanguage', val)} />
             </div>
-            {/* ✅ TEXTO EXPLICATIVO ADICIONADO AQUI */}
             <p className="text-xs text-gray-500 mt-4 pt-4 border-t">
               {t('myAccount.accessibilityHelpText')}
             </p>
           </div>
           
           <div className="flex justify-end">
+            {/* O componente Button já tem som, não precisa mexer */}
             <Button onClick={handleSaveChanges} disabled={!hasChanges}>
               {t('myAccount.saveChanges')}
             </Button>
