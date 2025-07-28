@@ -22,7 +22,7 @@ interface NotebookCardProps {
 const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdate, index }) => {
   const { t } = useTranslation();
   const { playAppearSound } = useSounds();
-  const soundEvents = useInteractiveSound(); // Hook para sons de clique e hover
+  const soundEvents = useInteractiveSound();
   
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [currentTitle, setCurrentTitle] = useState(notebook.title);
@@ -33,16 +33,11 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
   const navigate = useNavigate();
 
   const [confirmModal, setConfirmModal] = useState({
-    isOpen: false,
-    type: '' as 'notebook' | 'lesson',
-    id: '',
-    title: ''
+    isOpen: false, type: '' as 'notebook' | 'lesson', id: '', title: ''
   });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      playAppearSound();
-    }, index * 100);
+    const timer = setTimeout(() => playAppearSound(), index * 100);
     return () => clearTimeout(timer);
   }, [playAppearSound, index]);
 
@@ -57,9 +52,9 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
       const response = await api.put(`/notebooks/${notebook._id}`, { title: currentTitle });
       onUpdate(response.data);
       setIsEditingTitle(false);
-      toast.success('Notebook title updated!');
+      toast.success(t('myNotebooks.titleUpdatedSuccess'));
     } catch (error) {
-      toast.error('Error updating title.');
+      toast.error(t('myNotebooks.titleUpdatedError'));
     }
   };
   
@@ -71,9 +66,9 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
       onUpdate(response.data);
       setNewLessonTitle('');
       setIsAddingLesson(false);
-      toast.success('Lesson added!');
+      toast.success(t('myNotebooks.lessonAddedSuccess'));
     } catch (error) {
-      toast.error('Error adding lesson.');
+      toast.error(t('myNotebooks.lessonAddedError'));
     }
   };
 
@@ -97,9 +92,9 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
       const response = await api.put(`/notebooks/${notebook._id}/lessons/${editingLessonId}`, { title: editingLessonTitle });
       onUpdate(response.data);
       setEditingLessonId(null);
-      toast.success('Lesson updated!');
+      toast.success(t('myNotebooks.lessonUpdatedSuccess'));
     } catch (error) {
-      toast.error('Error updating lesson.');
+      toast.error(t('myNotebooks.lessonUpdatedError'));
     }
   };
 
@@ -107,18 +102,18 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
     if (confirmModal.type === 'notebook') {
       try {
         await api.delete(`/notebooks/${confirmModal.id}`);
-        toast.success('Notebook deleted!');
+        toast.success(t('myNotebooks.deleteSuccess'));
         onDelete(confirmModal.id);
       } catch (error) {
-        toast.error('Error deleting notebook.');
+        toast.error(t('myNotebooks.deleteError'));
       }
     } else if (confirmModal.type === 'lesson') {
       try {
         const response = await api.delete(`/notebooks/${notebook._id}/lessons/${confirmModal.id}`);
         onUpdate(response.data);
-        toast.success('Lesson deleted!');
+        toast.success(t('myNotebooks.lessonDeletedSuccess'));
       } catch (error) {
-        toast.error('Error deleting lesson.');
+        toast.error(t('myNotebooks.lessonDeletedError'));
       }
     }
     setConfirmModal({ isOpen: false, type: '', id: '', title: '' });
@@ -160,14 +155,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                     </form>
                   ) : (
                     <>
-                      <button 
-                        {...soundEvents}
-                        onClick={() => {
-                          // O som de clique já é acionado pelo 'soundEvents'
-                          navigate(`/subjects/${lesson._id}`);
-                        }} 
-                        className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition"
-                      >
+                      <button {...soundEvents} onClick={() => navigate(`/subjects/${lesson._id}`)} className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition">
                         {lesson.title}
                       </button>
                       <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -182,13 +170,22 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
 
             {isAddingLesson ? (
               <form onSubmit={handleAddLesson} className="mt-4 flex gap-2">
-                <input type="text" value={newLessonTitle} onChange={(e) => setNewLessonTitle(e.target.value)} placeholder="New lesson name" className="flex-grow bg-violet-900 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-white" autoFocus />
-                <Button type="submit">Save</Button>
+                <input 
+                  type="text" 
+                  value={newLessonTitle} 
+                  onChange={(e) => setNewLessonTitle(e.target.value)} 
+                  // ✅ TRADUÇÃO APLICADA
+                  placeholder={t('myNotebooks.newLessonPlaceholder')}
+                  className="flex-grow bg-violet-900 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-white" 
+                  autoFocus 
+                />
+                {/* O componente Button já é traduzido, mas podemos ser explícitos */}
+                <Button type="submit">{t('myNotebooks.save')}</Button>
                 <Button type="button" variant="secondary" onClick={() => setIsAddingLesson(false)}>X</Button>
               </form>
             ) : (
               <button {...soundEvents} onClick={() => setIsAddingLesson(true)} className="mt-4 text-gray-300 hover:text-white flex items-center gap-2">
-                <FaPlus size={12} /> New lesson
+                <FaPlus size={12} /> {t('myNotebooks.newLesson')}
               </button>
             )}
           </div>
@@ -198,7 +195,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
       <Modal 
         isOpen={confirmModal.isOpen} 
         onClose={() => setConfirmModal({ ...confirmModal, isOpen: false })}
-        title={t('myNotebooks.deleteModal.titleNotebook') || 'Delete Notebook'}
+        title={confirmModal.type === 'notebook' ? t('myNotebooks.deleteModal.titleNotebook') : t('myNotebooks.deleteModal.titleLesson')}
       >
         <p className="text-gray-600">
             {confirmModal.type === 'notebook' 

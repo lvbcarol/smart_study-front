@@ -20,9 +20,12 @@
     "modalPlaceholder": "Ex: Programação Orientada a Objetos",
     "cancel": "Cancelar",
     "create": "Criar",
+    "createSuccess": "Caderno criado!",
+    "createError": "Erro ao criar caderno.",
     "confirmDelete": "Tem certeza que deseja deletar o caderno \"{{title}}\"?",
     "newLesson": "Nova aula",
     "save": "Salvar",
+    "newLessonPlaceholder": "Nome da nova aula",
     "deleteModal": {
       "titleNotebook": "Excluir Caderno",
       "titleLesson": "Excluir Aula",
@@ -30,7 +33,18 @@
       "bodyLesson": "Você tem certeza que deseja excluir esta aula?",
       "confirm": "Excluir",
       "cancel": "Cancelar"
-    }
+    },
+    "deleteSuccess": "Caderno deletado!",
+    "deleteError": "Erro ao deletar caderno.",
+    "lessonAddedSuccess": "Aula adicionada!",
+    "lessonAddedError": "Erro ao adicionar aula.",
+    "titleUpdatedSuccess": "Título do caderno atualizado!",
+    "titleUpdatedError": "Erro ao atualizar título.",
+    "lessonUpdatedSuccess": "Aula atualizada!",
+    "lessonUpdatedError": "Erro ao atualizar aula.",
+    "lessonDeletedSuccess": "Aula deletada!",
+    "lessonDeletedError": "Erro ao deletar aula.",
+    "goBackToHome": "voltar para o Início"
   },
   "subject": {
     "title": "O que você gostaria de fazer hoje?",
@@ -99,7 +113,7 @@
       "typescript": "Para garantir que nosso código seja robusto, escalável e livre de erros.",
       "gemini": "O poderoso cérebro de IA que gera seus resumos e quizzes.",
       "brevo": "O serviço que entrega e-mails importantes de forma confiável, como redefinições de senha.",
-      "recharts": "Para criar os gráficos bonitos e perspicazes em sua página de Progresso."
+      "tremor": "Para criar os gráficos bonitos e perspicazes em sua página de Progresso."
     }
   },
   "widgets": {

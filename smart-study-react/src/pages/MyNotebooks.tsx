@@ -10,6 +10,7 @@ import Modal from '../components/ui/Modal';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import toast from 'react-hot-toast';
+import { useInteractiveSound } from '../hooks/useInteractiveSound';
 
 interface Lesson { _id: string; title: string; }
 interface Notebook { _id: string; title: string; lessons: Lesson[]; }
@@ -21,6 +22,7 @@ const MyNotebooks: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newNotebookTitle, setNewNotebookTitle] = useState('');
   const navigate = useNavigate();
+  const soundEvents = useInteractiveSound();
 
   useEffect(() => {
     const fetchNotebooks = async () => {
@@ -46,9 +48,9 @@ const MyNotebooks: React.FC = () => {
       setNotebooks([...notebooks, response.data]);
       setNewNotebookTitle('');
       setIsModalOpen(false);
-      toast.success(t('myNotebooks.createSuccess') || 'Notebook created!');
+      toast.success(t('myNotebooks.createSuccess'));
     } catch (error) {
-      toast.error(t('myNotebooks.createError') || 'Error creating notebook.');
+      toast.error(t('myNotebooks.createError'));
     }
   };
 
@@ -67,7 +69,7 @@ const MyNotebooks: React.FC = () => {
   if (isLoading) {
     return (
       <div style={backgroundStyle} className="min-h-screen text-white flex items-center justify-center">
-        <p className="text-xl animate-pulse">{t('myNotebooks.loading') || 'Loading...'}</p>
+        <p className="text-xl animate-pulse">{t('myNotebooks.loading')}</p>
       </div>
     );
   }
@@ -78,7 +80,7 @@ const MyNotebooks: React.FC = () => {
       <main className="container mx-auto p-4 md:p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold">{t('myNotebooks.title')}</h1>
-          <button onClick={() => setIsModalOpen(true)} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0">
+          <button {...soundEvents} onClick={() => { soundEvents.onClick(); setIsModalOpen(true); }} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0">
             <FaPlus />
             <span className="hidden md:inline">{t('myNotebooks.newNotebook')}</span>
           </button>
@@ -105,11 +107,16 @@ const MyNotebooks: React.FC = () => {
 
         <div className="mt-16">
           <button 
-            onClick={() => navigate('/home')}
+            {...soundEvents}
+            onClick={() => {
+              soundEvents.onClick();
+              navigate('/home');
+            }}
             className="bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-3 hover:bg-opacity-30 transition"
           >
             <FaArrowLeft />
-            <span>go back to Home</span>
+            {/* ✅ TRADUÇÃO APLICADA AQUI */}
+            <span>{t('myNotebooks.goBackToHome')}</span>
           </button>
         </div>
 

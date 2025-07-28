@@ -20,9 +20,12 @@
     "modalPlaceholder": "E.g., Object-Oriented Programming",
     "cancel": "Cancel",
     "create": "Create",
+    "createSuccess": "Notebook created!",
+    "createError": "Error creating notebook.",
     "confirmDelete": "Are you sure you want to delete the notebook \"{{title}}\"?",
     "newLesson": "New lesson",
     "save": "Save",
+    "newLessonPlaceholder": "New lesson name",
     "deleteModal": {
       "titleNotebook": "Delete Notebook",
       "titleLesson": "Delete Lesson",
@@ -30,9 +33,19 @@
       "bodyLesson": "Are you sure you want to delete this lesson?",
       "confirm": "Delete",
       "cancel": "Cancel"
-    }
+    },
+    "deleteSuccess": "Notebook deleted!",
+    "deleteError": "Error deleting notebook.",
+    "lessonAddedSuccess": "Lesson added!",
+    "lessonAddedError": "Error adding lesson.",
+    "titleUpdatedSuccess": "Notebook title updated!",
+    "titleUpdatedError": "Error updating title.",
+    "lessonUpdatedSuccess": "Lesson updated!",
+    "lessonUpdatedError": "Error updating lesson.",
+    "lessonDeletedSuccess": "Lesson deleted!",
+    "lessonDeletedError": "Error deleting lesson.",
+    "goBackToHome": "go back to Home"
   },
-  
   "subject": {
     "title": "What would you like to do today?",
     "summaryTitle": "Summary",
@@ -58,7 +71,7 @@
     "loading": "Loading your progress data...",
     "noDataTitle": "No Progress Data Yet",
     "noDataSubtitle": "It looks like you haven't completed any quizzes yet. Complete a quiz in one of your notebooks, and your progress will show up here!",
-    "chartOverall": "Overall Performance Over Time",
+    "chartOverall": "Overall Average by Notebook",
     "chartRecent": "Recent Performance (Last 15)",
     "chartAverage": "Average Score by Notebook"
   },
@@ -100,7 +113,7 @@
       "typescript": "To ensure our code is robust, scalable, and error-free.",
       "gemini": "The powerful AI brain that generates your summaries and quizzes.",
       "brevo": "The service that reliably delivers important emails, like password resets.",
-      "recharts": "To create the beautiful and insightful graphs on your Progress page."
+      "tremor": "To create the beautiful and insightful graphs on your Progress page."
     }
   },
   "widgets": {
