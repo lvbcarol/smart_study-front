@@ -8,8 +8,10 @@ import ActiveQuiz from '../components/ActiveQuiz';
 import ChatMessage from '../components/ChatMessage';
 import QuizzOptions from '../components/QuizzOptions';
 import toast from 'react-hot-toast';
-import { FaArrowLeft, FaPlus } from 'react-icons/fa';
+import { FaArrowLeft, FaPlus, FaSave } from 'react-icons/fa';
+import { useInteractiveSound } from '../hooks/useInteractiveSound';
 
+// --- Interfaces de Tipagem ---
 interface QuizQuestion {
   question: string;
   options: string[];
@@ -36,7 +38,9 @@ const QuizzPage: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const soundEvents = useInteractiveSound();
   
+  // Estado que controla qual tela mostrar: 'list', 'active_quiz', ou 'view_attempt'
   const [view, setView] = useState<'list' | 'active_quiz' | 'view_attempt'>('list');
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [selectedAttempt, setSelectedAttempt] = useState<Attempt | null>(null);
@@ -45,11 +49,13 @@ const QuizzPage: React.FC = () => {
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Efeito para rolar para o final da conversa quando estiver visualizando uma tentativa
     if (view === 'view_attempt') {
       chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [selectedAttempt, view]);
 
+  // Função para buscar as tentativas de quizz da API
   const fetchAttempts = async () => {
     if (!lessonId) return;
     setIsLoading(true);
@@ -64,12 +70,14 @@ const QuizzPage: React.FC = () => {
     }
   };
 
+  // Busca as tentativas sempre que a página carregar ou voltar para a tela de lista
   useEffect(() => {
     if (view === 'list') {
       fetchAttempts();
     }
   }, [lessonId, view]);
 
+  // Função chamada pelo ActiveQuiz após o usuário clicar em "Salvar"
   const handleQuizSave = async (score: number, chatHistory: Message[], quizData: QuizQuestion[], userAnswers: (number | null)[]) => {
     if (!lessonId) return;
     const loadingToast = toast.loading('Saving your attempt...');
@@ -82,7 +90,7 @@ const QuizzPage: React.FC = () => {
       });
       toast.dismiss(loadingToast);
       toast.success('Your new attempt has been saved!');
-      setView('list');
+      setView('list'); // Volta para a lista de tentativas, que será recarregada pelo useEffect
     } catch (error) {
       toast.dismiss(loadingToast);
       toast.error("Failed to save your quiz attempt.");
@@ -91,6 +99,7 @@ const QuizzPage: React.FC = () => {
   
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
 
+  // Função que decide o que renderizar baseado no estado 'view'
   const renderContent = () => {
     if (isLoading) {
       return <div className="text-center w-full text-xl animate-pulse">Loading...</div>;
@@ -105,7 +114,14 @@ const QuizzPage: React.FC = () => {
         <div className="chat-container w-full flex flex-col h-full">
           <div className="flex justify-between items-center mb-4 flex-shrink-0">
             <h2 className="text-2xl font-bold">Reviewing Attempt #{selectedAttempt.attemptNumber} ({selectedAttempt.score}%)</h2>
-            <button onClick={() => setView('list')} className="bg-white bg-opacity-20 text-white font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
+            <button 
+              {...soundEvents} 
+              onClick={() => { 
+                soundEvents.onClick(); 
+                setView('list'); 
+              }} 
+              className="bg-white bg-opacity-20 text-white font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition"
+            >
                <FaArrowLeft /> Back to Attempts
             </button>
           </div>
@@ -118,7 +134,7 @@ const QuizzPage: React.FC = () => {
                     options={msg.quizzOptions.options}
                     correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
                     selectedAnswerIndex={selectedAttempt.userAnswers[msg.questionIndex!]}
-                    onSelectAnswer={() => {}}
+                    onSelectAnswer={() => {}} // Desabilita o clique na revisão
                   />
                 )}
               </div>
@@ -131,12 +147,18 @@ const QuizzPage: React.FC = () => {
 
     // A view padrão é a lista de tentativas (o "Hub")
     return (
-      // ✅ ESTILIZAÇÃO AQUI: Conteúdo centralizado e com largura máxima
-      <div className="w-full max-w-3xl mx-auto flex flex-col items-center text-center">
+      <div className="w-full max-w-3xl mx-auto flex flex-col items-center text-center animate-fade-in-up">
         <div className="flex justify-between items-center mb-8 w-full">
           <h1 className="text-4xl font-bold">{lessonTitle} - Quizzes</h1>
-          <button onClick={() => setView('active_quiz')} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0">
-            <FaPlus />
+          <button 
+            {...soundEvents} 
+            onClick={() => { 
+              soundEvents.onClick(); 
+              setView('active_quiz'); 
+            }} 
+            className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0"
+          >
+            <FaPlus /> 
             <span className="hidden md:inline">Start New Quiz</span>
           </button>
         </div>
@@ -145,8 +167,12 @@ const QuizzPage: React.FC = () => {
             attempts.slice().reverse().map((att, index) => (
               <button 
                 key={att._id} 
-                onClick={() => { setSelectedAttempt(att); setView('view_attempt'); }} 
-                // ✅ ESTILIZAÇÃO E ANIMAÇÃO AQUI
+                {...soundEvents}
+                onClick={() => { 
+                  soundEvents.onClick();
+                  setSelectedAttempt(att); 
+                  setView('view_attempt'); 
+                }} 
                 className="w-full text-left p-4 bg-violet-600 rounded-lg shadow-lg hover:bg-violet-500 transition-all transform hover:scale-105 animate-fade-in-up"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
@@ -161,7 +187,14 @@ const QuizzPage: React.FC = () => {
             <p className="text-center text-gray-400 py-8">No quiz attempts yet. Start a new one!</p>
           )}
         </div>
-        <button onClick={() => navigate(`/subjects/${lessonId}`)} className="mt-16 bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
+        <button 
+          {...soundEvents} 
+          onClick={() => { 
+            soundEvents.onClick(); 
+            navigate(`/subjects/${lessonId}`); 
+          }} 
+          className="mt-16 bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition"
+        >
           <FaArrowLeft /> {t('chat.backToSubject')}
         </button>
       </div>

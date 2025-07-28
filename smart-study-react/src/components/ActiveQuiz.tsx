@@ -1,10 +1,12 @@
 // src/components/ActiveQuiz.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useInteractiveSound } from '../hooks/useInteractiveSound';
 import api from '../services/api';
 import ChatMessage from './ChatMessage';
 import QuizzOptions from './QuizzOptions';
 import { FaPaperPlane, FaSave } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 interface QuizQuestion {
   question: string;
@@ -26,6 +28,7 @@ interface ActiveQuizProps {
 
 const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) => {
   const { t } = useTranslation();
+  const soundEvents = useInteractiveSound();
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -97,13 +100,12 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
   };
 
   const finishQuizz = (finalAnswers: (number | null)[]) => {
-    setQuizFlowState('finished'); // Muda o estado para 'finalizado'
+    setQuizFlowState('finished');
     const correctAnswersCount = finalAnswers.filter((answer, index) => answer === quizData[index].correctAnswerIndex).length;
     const score = Math.round((correctAnswersCount / quizData.length) * 100);
-
     const scoreMessageText = t('chat.quizzFinished', { correct: correctAnswersCount, total: quizData.length, score: score });
     addMessage('bot', scoreMessageText);
-    // ✅ FIM: A função para aqui. A chamada de feedback da IA foi removida.
+    // A função para aqui, esperando o usuário clicar em "Salvar".
   };
 
   const handleSaveAndExit = () => {
@@ -121,12 +123,17 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
               <div key={index}>
                 <ChatMessage message={msg} />
                 {msg.quizzOptions && (
-                  <QuizzOptions 
-                    options={msg.quizzOptions.options}
-                    correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
-                    selectedAnswerIndex={userAnswers[msg.questionIndex!]}
-                    onSelectAnswer={(selectedIndex) => handleAnswerSelect(selectedIndex, msg.questionIndex!)}
-                  />
+                  <div onMouseEnter={soundEvents.onMouseEnter}>
+                    <QuizzOptions 
+                      options={msg.quizzOptions.options}
+                      correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
+                      selectedAnswerIndex={userAnswers[msg.questionIndex!]}
+                      onSelectAnswer={(selectedIndex) => {
+                        soundEvents.onClick();
+                        handleAnswerSelect(selectedIndex, msg.questionIndex!);
+                      }}
+                    />
+                  </div>
                 )}
               </div>
             ))}
@@ -146,16 +153,24 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
                   className="w-full bg-white bg-opacity-10 backdrop-blur-sm rounded-full p-3 pl-5 focus:outline-none focus:ring-2 focus:ring-purple-400" 
                   disabled={isLoading} 
                 />
-                <button type="submit" className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" disabled={isLoading}>
+                <button 
+                  {...soundEvents}
+                  type="submit" 
+                  className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" 
+                  disabled={isLoading}
+                >
                   <FaPaperPlane />
                 </button>
             </form>
           )}
           
-          {/* O botão de salvar só aparece quando o quizz é finalizado */}
           {quizFlowState === 'finished' && (
             <div className="flex justify-center">
-              <button onClick={handleSaveAndExit} className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition animate-fade-in-up">
+              <button 
+                {...soundEvents}
+                onClick={handleSaveAndExit} 
+                className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition animate-fade-in-up"
+              >
                 <FaSave /> {t('chat.saveQuizz')}
               </button>
             </div>
