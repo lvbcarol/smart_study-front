@@ -127,6 +127,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
   return (
     <>
       <div 
+        {...soundEvents}
         className="flex bg-violet-500 bg-opacity-30 backdrop-blur-sm rounded-2xl shadow-lg border border-violet-700 overflow-hidden transition-all duration-300 transform hover:scale-105 animate-fade-in-up"
         style={{ animationDelay: `${index * 100}ms` }}
       >
@@ -159,7 +160,14 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                     </form>
                   ) : (
                     <>
-                      <button {...soundEvents} onClick={() => navigate(`/subjects/${lesson._id}`)} className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition">
+                      <button 
+                        {...soundEvents}
+                        onClick={() => {
+                          // O som de clique já é acionado pelo 'soundEvents'
+                          navigate(`/subjects/${lesson._id}`);
+                        }} 
+                        className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition"
+                      >
                         {lesson.title}
                       </button>
                       <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -190,7 +198,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
       <Modal 
         isOpen={confirmModal.isOpen} 
         onClose={() => setConfirmModal({ ...confirmModal, isOpen: false })}
-        title={confirmModal.type === 'notebook' ? t('myNotebooks.deleteModal.titleNotebook') : t('myNotebooks.deleteModal.titleLesson')}
+        title={t('myNotebooks.deleteModal.titleNotebook') || 'Delete Notebook'}
       >
         <p className="text-gray-600">
             {confirmModal.type === 'notebook' 
