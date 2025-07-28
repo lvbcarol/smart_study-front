@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import useEmblaCarousel from 'embla-carousel-react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import { useInteractiveSound } from '../hooks/useInteractiveSound'; // 1. Importe o hook
+import { useInteractiveSound } from '../hooks/useInteractiveSound';
 
 // --- Interfaces ---
 interface Attempt { score: number; date: string; attemptNumber: number; }
@@ -18,7 +18,7 @@ interface LessonAverageChartData { name: string; averageScore: number; }
 interface NotebookAverageChartData { name: string; averageScore: number; }
 
 const ProgressPage: React.FC = () => {
-  const soundEvents = useInteractiveSound(); // 2. Inicialize o hook
+  const soundEvents = useInteractiveSound();
   const [allNotebooks, setAllNotebooks] = useState<Notebook[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [notebookForAttempts, setNotebookForAttempts] = useState<string>('');
@@ -45,11 +45,8 @@ const ProgressPage: React.FC = () => {
       try {
         const response = await api.get('/notebooks');
         setAllNotebooks(response.data);
-      } catch (error) {
-        console.error("Error fetching notebooks for progress page:", error);
-      } finally {
-        setIsLoading(false);
-      }
+      } catch (error) { console.error("Error fetching notebooks for progress page:", error); } 
+      finally { setIsLoading(false); }
     };
     fetchNotebooks();
   }, []);
@@ -119,7 +116,6 @@ const ProgressPage: React.FC = () => {
         <div className="embla w-full max-w-6xl mt-8">
           <div className="embla__viewport" ref={emblaRef}>
             <div className="embla__container">
-
               {/* Slide 1: Média Geral por Caderno */}
               <div className="embla__slide p-4 flex flex-col lg:flex-row items-center gap-8">
                 <div className="lg:w-2/3 w-full h-[28rem]"><Card className="w-full h-full bg-white text-black"><CardHeader><CardTitle>Overall Average by Notebook</CardTitle><CardDescription>A general comparison of your performance.</CardDescription></CardHeader><CardContent><ResponsiveContainer width="100%" height={300}><BarChart data={averageByNotebookData}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" tick={{ fontSize: 12 }} /><YAxis domain={[0, 100]} /><Tooltip cursor={{ fill: '#f3f4f6' }} /><Bar dataKey="averageScore" name="Average" fill="#a78bfa" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></CardContent></Card></div>
@@ -134,6 +130,7 @@ const ProgressPage: React.FC = () => {
                       <CardTitle>Average Score by Lesson</CardTitle>
                       <CardDescription>Select a notebook to see the average for each lesson.</CardDescription>
                       <div className="mt-4">
+                        {/* ✅ CORREÇÃO AQUI: 'notebook' trocado por 'allNotebooks' */}
                         <Select onValueChange={(value) => { soundEvents.onClick(); setNotebookForLessonAverage(value); }}>
                           <SelectTrigger {...soundEvents}><SelectValue placeholder="Select a Notebook" /></SelectTrigger>
                           <SelectContent>{allNotebooks.map(notebook => <SelectItem {...soundEvents} key={notebook._id} value={notebook._id}>{notebook.title}</SelectItem>)}</SelectContent>
@@ -164,7 +161,7 @@ const ProgressPage: React.FC = () => {
                         </Select>
                         <Select onValueChange={(value) => { soundEvents.onClick(); setLessonForAttempts(value); }} disabled={!notebookForAttempts} value={lessonForAttempts}>
                           <SelectTrigger {...soundEvents}><SelectValue placeholder="Select a Lesson" /></SelectTrigger>
-                          <SelectContent>{selectedNotebookForAttempts?.lessons.map(lesson => <SelectItem {...soundEvents} key={notebook._id} value={lesson._id}>{lesson.title}</SelectItem>)}</SelectContent>
+                          <SelectContent>{selectedNotebookForAttempts?.lessons.map(lesson => <SelectItem {...soundEvents} key={lesson._id} value={lesson._id}>{lesson.title}</SelectItem>)}</SelectContent>
                         </Select>
                       </div>
                     </CardHeader>
@@ -181,7 +178,6 @@ const ProgressPage: React.FC = () => {
             </div>
           </div>
           
-          {/* ✅ 3. Adiciona os eventos de som aos controles do carrossel */}
           <div className="flex items-center justify-center mt-8 gap-8">
             <button onMouseEnter={soundEvents.onMouseEnter} onClick={() => { soundEvents.onClick(); scrollPrev(); }} className="bg-white bg-opacity-20 p-3 rounded-full hover:bg-opacity-30 transition"><FaArrowLeft /></button>
             <div className="flex gap-3">
