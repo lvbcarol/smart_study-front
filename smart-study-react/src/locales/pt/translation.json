@@ -132,7 +132,8 @@
   "widgets": {
     "aslTitle": "Abrir Dicionário de ASL",
     "vlibrasTitle": "Abrir site do VLibras",
-    "screenReaderTitle": "Saiba mais sobre o NVDA, um leitor de tela gratuito"
+    "screenReaderTitle": "Saiba mais sobre o NVDA, um leitor de tela gratuito",
+    "musicPlayerTooltip": "Clique para ligar/desligar a música. <br /> Segure e arraste para mover o botão na tela."
   },
   "progress": {
     "title": "Meu Progresso",

@@ -132,7 +132,8 @@
   "widgets": {
     "aslTitle": "Open ASL Dictionary",
     "vlibrasTitle": "Open VLibras Website",
-    "screenReaderTitle": "Learn about NVDA, a free screen reader"
+    "screenReaderTitle": "Learn about NVDA, a free screen reader",
+    "musicPlayerTooltip": "Click to play/pause music. <br /> Hold and drag to move the button."
   },
   "progress": {
     "title": "My Progress",

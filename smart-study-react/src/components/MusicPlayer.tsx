@@ -2,10 +2,12 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useMusic } from '../context/MusicContext';
 import { FaPlay, FaPause } from 'react-icons/fa';
-import { Tooltip } from 'react-tooltip'; // ✅ 1. Importe o Tooltip
+import { Tooltip } from 'react-tooltip';
+import { useTranslation } from 'react-i18next'; // 1. Importe o hook de tradução
 
 const MusicPlayer: React.FC = () => {
   const { isPlaying, togglePlayPause } = useMusic();
+  const { t } = useTranslation(); // 2. Inicialize o hook
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const playerRef = useRef<HTMLButtonElement>(null);
@@ -42,19 +44,15 @@ const MusicPlayer: React.FC = () => {
     }
   };
 
-  const tooltipContent = "Click to play/pause music. <br /> Hold and drag to move the button.";
-  const tooltipContentPt = "Clique para ligar/desligar a música. <br /> Segure e arraste para mover o botão na tela.";
-
   return (
     <>
       <button
         ref={playerRef}
         onMouseDown={handleDragStart}
         onClick={handleClick}
-        // ✅ 2. Adicione o ID para o Tooltip encontrar o botão
         data-tooltip-id="music-player-tooltip"
-        // ✅ 3. Adicione o conteúdo do tooltip em um atributo
-        data-tooltip-html={tooltipContentPt} // Você pode usar um 't()' do i18next aqui se quiser
+        // ✅ 3. Usa a função de tradução para o conteúdo do tooltip
+        data-tooltip-html={t('widgets.musicPlayerTooltip')}
         className={`fixed bottom-4 left-4 z-50 bg-white bg-opacity-20 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm transition-transform duration-100 ${isDragging ? 'cursor-grabbing scale-110' : 'cursor-grab'}`}
         style={{
           transform: `translate(${position.x}px, ${position.y}px)`,
@@ -63,7 +61,6 @@ const MusicPlayer: React.FC = () => {
         {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
       </button>
 
-      {/* ✅ 4. Adicione o componente Tooltip à página */}
       <Tooltip 
         id="music-player-tooltip" 
         place="top"
