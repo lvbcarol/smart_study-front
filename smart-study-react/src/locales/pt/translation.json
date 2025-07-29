@@ -2,7 +2,7 @@
   "navbar": {
     "home": "Início",
     "myNotebooks": "Meus cadernos",
-    "progress": " Meu Progresso",
+    "progress": "Meu Progresso",
     "aboutUs": "Sobre nós",
     "myAccount": "Minha conta"
   },
@@ -26,7 +26,7 @@
     "newLesson": "Nova aula",
     "save": "Salvar",
     "newLessonPlaceholder": "Nome da nova aula",
-     "subtitle": "Esta é sua área de estudo. Você pode criar, editar e deletar seus cadernos. Dentro de cada caderno, você pode criar, editar e deletar aulas. Ao clicar em uma aula já criada, você será redirecionado para a área de estudo.",
+    "subtitle": "Esta é sua área de estudo. Você pode criar, editar e deletar seus cadernos. Dentro de cada caderno, você pode criar, editar e deletar aulas. Ao clicar em uma aula já criada, você será redirecionado para a área de estudo.",
     "tooltipNewNotebook": "Crie um novo caderno. Você pode usar os cadernos para separar seu estudo por matérias.",
     "tooltipNewLesson": "Crie uma nova aula. Você pode usar as aulas para separar os tópicos de cada matéria.",
     "deleteModal": {
@@ -87,9 +87,31 @@
     "loading": "Carregando seus dados de progresso...",
     "noDataTitle": "Ainda Não Há Dados de Progresso",
     "noDataSubtitle": "Parece que você ainda não completou nenhum quizz. Complete um quizz em um dos seus cadernos, e seu progresso aparecerá aqui!",
-    "chartOverall": "Desempenho Geral ao Longo do Tempo",
-    "chartRecent": "Desempenho Recente (Últimos 15)",
-    "chartAverage": "Pontuação Média por Caderno"
+    "card1": {
+      "title": "Média Geral por Caderno",
+      "desc": "Uma comparação geral do seu desempenho.",
+      "legendTitle": "Visão Geral das Matérias",
+      "legendText": "Este gráfico mostra sua pontuação média geral para cada caderno. Use-o para identificar rapidamente em quais matérias você precisa de mais atenção.",
+      "barName": "Média"
+    },
+    "card2": {
+      "title": "Pontuação Média por Aula",
+      "desc": "Selecione um caderno para ver a média de cada aula.",
+      "selectPlaceholder": "Selecione um Caderno",
+      "noData": "Selecione um caderno para ver o gráfico.",
+      "legendTitle": "Análise por Aula",
+      "legendText": "Filtre por caderno para comparar seu desempenho médio em cada aula, ajudando a identificar tópicos específicos para revisão."
+    },
+    "card3": {
+      "title": "Progresso por Tentativa",
+      "desc": "Selecione um caderno e uma aula para acompanhar suas notas.",
+      "selectNotebookPlaceholder": "Selecione um Caderno",
+      "selectLessonPlaceholder": "Selecione uma Aula",
+      "noAttempts": "Esta aula ainda não tem tentativas de quizz.",
+      "pleaseSelect": "Por favor, selecione um caderno e uma aula.",
+      "legendTitle": "Análise Detalhada",
+      "legendText": "Filtre por caderno e aula para ver a progressão da sua pontuação em cada tentativa. Perfeito para acompanhar a melhora em um tópico específico."
+    }
   },
   "myAccount": {
     "welcome": "Bem-vindo(a), {{name}}",
@@ -116,7 +138,7 @@
     },
     "story": {
       "title": "Nossa História",
-      "text": "Este projeto foi idealizado e desenvolvido pela estudante de Sistemas de Informação <strong>Carolina Lansoni Vilas Boas</strong>, em parceria com o <strong>Instituto Mauá de Tecnologia</strong> e o programa global <strong>Grand Challenges Scholarship Program</strong>. Estamos comprometidos com a inclusão, acessebilidade, aprendizado personalizado e desenvlvimento contínuo.",
+      "text": "Este projeto foi idealizado e desenvolvido pela estudante de Sistemas de Informação <strong>Carolina Lansoni Vilas Boas</strong>, em parceria com o <strong>Instituto Mauá de Tecnologia</strong> e o programa global <strong>Grand Challenges Scholarship Program</strong>. Estamos comprometidos com a inclusão, acessibilidade, aprendizado personalizado e desenvolvimento contínuo.",
       "motto": "Estude sempre, estude inteligente!"
     },
     "techStack": {
@@ -138,35 +160,9 @@
     "screenReaderTitle": "Saiba mais sobre o NVDA, um leitor de tela gratuito",
     "musicPlayerTooltip": "Clique para ligar/desligar a música. <br /> Segure e arraste para mover o botão na tela."
   },
-  "progress": {
-    "title": "Meu Progresso",
-    "subtitle": "Aqui está uma visão geral da sua performance nos estudos.",
-    "loading": "Carregando Dados...",
-    "noData": "Ainda não há dados de quizzes.",
-    "card1": {
-      "title": "Média Geral por Caderno",
-      "desc": "Uma comparação geral do seu desempenho.",
-      "legendTitle": "Visão Geral das Matérias",
-      "legendText": "Este gráfico mostra sua pontuação média geral para cada caderno. Use-o para identificar rapidamente em quais matérias você precisa de mais atenção.",
-      "barName": "Média"
-    },
-    "card2": {
-      "title": "Pontuação Média por Aula",
-      "desc": "Selecione um caderno para ver a média de cada aula.",
-      "selectPlaceholder": "Selecione um Caderno",
-      "noData": "Selecione um caderno para ver o gráfico.",
-      "legendTitle": "Análise por Aula",
-      "legendText": "Filtre por caderno para comparar seu desempenho médio em cada aula, ajudando a identificar tópicos específicos para revisão."
-    },
-    "card3": {
-      "title": "Progresso por Tentativa",
-      "desc": "Selecione um caderno e uma aula para acompanhar suas notas.",
-      "selectNotebookPlaceholder": "Selecione um Caderno",
-      "selectLessonPlaceholder": "Selecione uma Aula",
-      "noAttempts": "Esta aula ainda não tem tentativas de quizz.",
-      "pleaseSelect": "Por favor, selecione um caderno e uma aula.",
-      "legendTitle": "Análise Detalhada",
-      "legendText": "Filtre por caderno e aula para ver a progressão da sua pontuação em cada tentativa. Perfeito para acompanhar a melhora em um tópico específico."
-    }
+  "footer": {
+    "description": "A IA pode cometer erros, conferir as respostas é recomendado.",
+    "developedBy": "Desenvolvido por Carolina Lansoni Vilas Boas",
+    "rights": "Todos os direitos reservados."
   }
 }

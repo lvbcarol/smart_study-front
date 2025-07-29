@@ -58,11 +58,11 @@
     "goBack": "go back to Notebooks"
   },
   "chat": {
-     "thinking": "Thinking...",
+    "thinking": "Thinking...",
     "summaryInitial": "Hello! I'm Bob, the study assistant of Smart Study. I'm here to help! What topic would you like me to summarize today? Send me the subject for the summary.",
     "quizzInitial": "Hello I'm Bob, the study assistant of Smart Study. I'm here to help! What topic do you want to study today? Send me the subject for the quizz.",
     "typeSubject": "Type your subject here...",
-    "quizzFinished": "Quizz finished! 🏆\n\nYou got {{correct}} out of {{total}} correct ({{score}}%). Keep up the great work! Do you neeed more practice? Start a new attemp in the attempts page.",
+    "quizzFinished": "Quizz finished! 🏆\n\nYou got {{correct}} out of {{total}} correct ({{score}}%). Keep up the great work! Do you need more practice? Start a new attempt in the attempts page.",
     "feedbackError": "Your score was saved. Great job on the quiz!",
     "saveConversation": "Save Conversation",
     "saveQuizz": "Save Quizz",
@@ -84,12 +84,35 @@
   "progress": {
     "title": "My Progress",
     "subtitle": "Here's a visual overview of your study performance.",
-    "loading": "Loading your progress data...",
+    "loading": "Loading Data...",
+    "noData": "No quiz data available yet.",
     "noDataTitle": "No Progress Data Yet",
     "noDataSubtitle": "It looks like you haven't completed any quizzes yet. Complete a quiz in one of your notebooks, and your progress will show up here!",
-    "chartOverall": "Overall Average by Notebook",
-    "chartRecent": "Recent Performance (Last 15)",
-    "chartAverage": "Average Score by Notebook"
+    "card1": {
+      "title": "Overall Average by Notebook",
+      "desc": "A general comparison of your performance.",
+      "legendTitle": "Subject Overview",
+      "legendText": "This chart shows your overall average score for each notebook. Use it to quickly identify which subjects need more attention.",
+      "barName": "Average"
+    },
+    "card2": {
+      "title": "Average Score by Lesson",
+      "desc": "Select a notebook to see the average for each lesson.",
+      "selectPlaceholder": "Select a Notebook",
+      "noData": "Select a notebook to see the chart.",
+      "legendTitle": "Lesson Analysis",
+      "legendText": "Filter by notebook to compare your average performance in each lesson, helping you pinpoint specific topics for review."
+    },
+    "card3": {
+      "title": "Progress by Attempt",
+      "desc": "Select a notebook and a lesson to track your scores.",
+      "selectNotebookPlaceholder": "Select a Notebook",
+      "selectLessonPlaceholder": "Select a Lesson",
+      "noAttempts": "This lesson has no quiz attempts yet.",
+      "pleaseSelect": "Please select a notebook and lesson.",
+      "legendTitle": "Deep Dive Analysis",
+      "legendText": "Filter by notebook and lesson to see the score progression for every single attempt. Perfect for tracking improvement on a specific topic."
+    }
   },
   "myAccount": {
     "welcome": "Welcome, {{name}}",
@@ -138,35 +161,9 @@
     "screenReaderTitle": "Learn about NVDA, a free screen reader",
     "musicPlayerTooltip": "Click to play/pause music. <br /> Hold and drag to move the button."
   },
-  "progress": {
-    "title": "My Progress",
-    "subtitle": "Here's a visual overview of your study performance.",
-    "loading": "Loading Data...",
-    "noData": "No quiz data available yet.",
-    "card1": {
-      "title": "Overall Average by Notebook",
-      "desc": "A general comparison of your performance.",
-      "legendTitle": "Subject Overview",
-      "legendText": "This chart shows your overall average score for each notebook. Use it to quickly identify which subjects need more attention.",
-      "barName": "Average"
-    },
-    "card2": {
-      "title": "Average Score by Lesson",
-      "desc": "Select a notebook to see the average for each lesson.",
-      "selectPlaceholder": "Select a Notebook",
-      "noData": "Select a notebook to see the chart.",
-      "legendTitle": "Lesson Analysis",
-      "legendText": "Filter by notebook to compare your average performance in each lesson, helping you pinpoint specific topics for review."
-    },
-    "card3": {
-      "title": "Progress by Attempt",
-      "desc": "Select a notebook and a lesson to track your scores.",
-      "selectNotebookPlaceholder": "Select a Notebook",
-      "selectLessonPlaceholder": "Select a Lesson",
-      "noAttempts": "This lesson has no quiz attempts yet.",
-      "pleaseSelect": "Please select a notebook and lesson.",
-      "legendTitle": "Deep Dive Analysis",
-      "legendText": "Filter by notebook and lesson to see the score progression for every single attempt. Perfect for tracking improvement on a specific topic."
-    }
+  "footer": {
+    "description": "AI can make mistakes, double-checking the information provided is recommended.",
+    "developedBy": "Developed by Carolina Lansoni Vilas Boas",
+    "rights": "All rights reserved."
   }
 }
