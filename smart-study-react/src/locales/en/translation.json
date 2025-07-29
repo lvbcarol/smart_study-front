@@ -26,6 +26,9 @@
     "newLesson": "New lesson",
     "save": "Save",
     "newLessonPlaceholder": "New lesson name",
+    "subtitle": "This is your study area. You can create, edit, and delete your notebooks. Inside each notebook, you can create, edit, and delete lessons. Clicking on an existing lesson will redirect you to the study area.",
+    "tooltipNewNotebook": "Create a new notebook. You can use notebooks to separate your studies by subject.",
+    "tooltipNewLesson": "Create a new lesson. You can use lessons to separate the topics of each subject.",
     "deleteModal": {
       "titleNotebook": "Delete Notebook",
       "titleLesson": "Delete Lesson",

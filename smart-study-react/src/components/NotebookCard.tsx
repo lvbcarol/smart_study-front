@@ -33,11 +33,16 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
   const navigate = useNavigate();
 
   const [confirmModal, setConfirmModal] = useState({
-    isOpen: false, type: '' as 'notebook' | 'lesson', id: '', title: ''
+    isOpen: false,
+    type: '' as 'notebook' | 'lesson',
+    id: '',
+    title: ''
   });
 
   useEffect(() => {
-    const timer = setTimeout(() => playAppearSound(), index * 100);
+    const timer = setTimeout(() => {
+      playAppearSound();
+    }, index * 100);
     return () => clearTimeout(timer);
   }, [playAppearSound, index]);
 
@@ -122,9 +127,9 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
   return (
     <>
       <div 
-        {...soundEvents}
         className="flex bg-violet-500 bg-opacity-30 backdrop-blur-sm rounded-2xl shadow-lg border border-violet-700 overflow-hidden transition-all duration-300 transform hover:scale-105 animate-fade-in-up"
         style={{ animationDelay: `${index * 100}ms` }}
+        onMouseEnter={soundEvents.onMouseEnter}
       >
         <div className="bg-white bg-opacity-10 p-2 flex flex-col items-center gap-2">
           {Array.from({ length: 12 }).map((_, i) => <div key={i} className="w-4 h-4 bg-gray-400 bg-opacity-50 rounded-full"></div>)}
@@ -140,10 +145,10 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
               ) : (
                 <div className="flex items-center gap-2">
                   <h3 className="text-2xl font-bold">{notebook.title}</h3>
-                  <button {...soundEvents} onClick={() => setIsEditingTitle(true)} className="text-gray-300 hover:text-white"><FaPencilAlt size={14} /></button>
+                  <button {...soundEvents} onClick={() => { soundEvents.onClick(); setIsEditingTitle(true); }} className="text-gray-300 hover:text-white"><FaPencilAlt size={14} /></button>
                 </div>
               )}
-              <button {...soundEvents} onClick={handleDeleteNotebookRequest} className="text-gray-300 hover:text-red-500"><FaTrash /></button>
+              <button {...soundEvents} onClick={() => { soundEvents.onClick(); handleDeleteNotebookRequest(); }} className="text-gray-300 hover:text-red-500"><FaTrash /></button>
             </div>
             
             <div className="space-y-2">
@@ -155,12 +160,19 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                     </form>
                   ) : (
                     <>
-                      <button {...soundEvents} onClick={() => navigate(`/subjects/${lesson._id}`)} className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition">
+                      <button 
+                        {...soundEvents} 
+                        onClick={() => {
+                          soundEvents.onClick();
+                          navigate(`/subjects/${lesson._id}`);
+                        }} 
+                        className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition"
+                      >
                         {lesson.title}
                       </button>
                       <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button {...soundEvents} onClick={() => handleStartEditLesson(lesson)} className="p-1 text-gray-300 hover:text-white"><FaPencilAlt size={12} /></button>
-                        <button {...soundEvents} onClick={() => handleDeleteLessonRequest(lesson)} className="p-1 text-gray-300 hover:text-red-500"><FaTrash size={12} /></button>
+                        <button {...soundEvents} onClick={() => { soundEvents.onClick(); handleStartEditLesson(lesson); }} className="p-1 text-gray-300 hover:text-white"><FaPencilAlt size={12} /></button>
+                        <button {...soundEvents} onClick={() => { soundEvents.onClick(); handleDeleteLessonRequest(lesson); }} className="p-1 text-gray-300 hover:text-red-500"><FaTrash size={12} /></button>
                       </div>
                     </>
                   )}
@@ -170,21 +182,21 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
 
             {isAddingLesson ? (
               <form onSubmit={handleAddLesson} className="mt-4 flex gap-2">
-                <input 
-                  type="text" 
-                  value={newLessonTitle} 
-                  onChange={(e) => setNewLessonTitle(e.target.value)} 
-                  // ✅ TRADUÇÃO APLICADA
-                  placeholder={t('myNotebooks.newLessonPlaceholder')}
-                  className="flex-grow bg-violet-900 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-white" 
-                  autoFocus 
-                />
-                {/* O componente Button já é traduzido, mas podemos ser explícitos */}
+                <input type="text" value={newLessonTitle} onChange={(e) => setNewLessonTitle(e.target.value)} placeholder={t('myNotebooks.newLessonPlaceholder')} className="flex-grow bg-violet-900 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-white" autoFocus />
                 <Button type="submit">{t('myNotebooks.save')}</Button>
                 <Button type="button" variant="secondary" onClick={() => setIsAddingLesson(false)}>X</Button>
               </form>
             ) : (
-              <button {...soundEvents} onClick={() => setIsAddingLesson(true)} className="mt-4 text-gray-300 hover:text-white flex items-center gap-2">
+              <button 
+                {...soundEvents} 
+                onClick={() => { 
+                  soundEvents.onClick(); 
+                  setIsAddingLesson(true); 
+                }} 
+                data-tooltip-id="notebooks-tooltip"
+                data-tooltip-content={t('myNotebooks.tooltipNewLesson')}
+                className="mt-4 text-gray-300 hover:text-white flex items-center gap-2"
+              >
                 <FaPlus size={12} /> {t('myNotebooks.newLesson')}
               </button>
             )}
@@ -211,8 +223,11 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                 {t('myNotebooks.deleteModal.cancel')}
             </Button>
             <button 
-                {...soundEvents}
-                onClick={handleConfirmDelete} 
+                onMouseEnter={soundEvents.onMouseEnter}
+                onClick={() => {
+                    soundEvents.onClick();
+                    handleConfirmDelete();
+                }} 
                 className="bg-red-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-red-700 transition"
             >
                 {t('myNotebooks.deleteModal.confirm')}

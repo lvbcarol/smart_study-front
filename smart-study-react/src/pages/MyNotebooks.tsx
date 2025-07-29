@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FaPlus, FaArrowLeft } from 'react-icons/fa';
+import { Tooltip } from 'react-tooltip'; // Importação do Tooltip
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import NotebookCard from '../components/NotebookCard';
@@ -78,9 +79,18 @@ const MyNotebooks: React.FC = () => {
     <div style={backgroundStyle} className="min-h-screen text-white">
       <Navbar />
       <main className="container mx-auto p-4 md:p-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">{t('myNotebooks.title')}</h1>
-          <button {...soundEvents} onClick={() => { soundEvents.onClick(); setIsModalOpen(true); }} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h1 className="text-4xl font-bold">{t('myNotebooks.title')}</h1>
+            <p className="text-gray-400 mt-2 max-w-2xl">{t('myNotebooks.subtitle')}</p>
+          </div>
+          <button 
+            {...soundEvents} 
+            onClick={() => { soundEvents.onClick(); setIsModalOpen(true); }}
+            data-tooltip-id="notebooks-tooltip"
+            data-tooltip-content={t('myNotebooks.tooltipNewNotebook')}
+            className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0"
+          >
             <FaPlus />
             <span className="hidden md:inline">{t('myNotebooks.newNotebook')}</span>
           </button>
@@ -115,7 +125,6 @@ const MyNotebooks: React.FC = () => {
             className="bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-3 hover:bg-opacity-30 transition"
           >
             <FaArrowLeft />
-            {/* ✅ TRADUÇÃO APLICADA AQUI */}
             <span>{t('myNotebooks.goBackToHome')}</span>
           </button>
         </div>
@@ -133,6 +142,12 @@ const MyNotebooks: React.FC = () => {
           </div>
         </form>
       </Modal>
+
+      <Tooltip 
+        id="notebooks-tooltip" 
+        place="bottom"
+        style={{ backgroundColor: '#2A0E46', color: 'white', borderRadius: '8px', maxWidth: '300px', textAlign: 'center' }}
+      />
     </div>
   );
 };

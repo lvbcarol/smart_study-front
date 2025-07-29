@@ -26,6 +26,9 @@
     "newLesson": "Nova aula",
     "save": "Salvar",
     "newLessonPlaceholder": "Nome da nova aula",
+     "subtitle": "Esta é sua área de estudo. Você pode criar, editar e deletar seus cadernos. Dentro de cada caderno, você pode criar, editar e deletar aulas. Ao clicar em uma aula já criada, você será redirecionado para a área de estudo.",
+    "tooltipNewNotebook": "Crie um novo caderno. Você pode usar os cadernos para separar seu estudo por matérias.",
+    "tooltipNewLesson": "Crie uma nova aula. Você pode usar as aulas para separar os tópicos de cada matéria.",
     "deleteModal": {
       "titleNotebook": "Excluir Caderno",
       "titleLesson": "Excluir Aula",
