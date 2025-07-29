@@ -83,7 +83,8 @@ const QuizzPage: React.FC = () => {
         userAnswers,
       });
       toast.dismiss(loadingToast);
-      toast.success('Your new attempt has been saved!');
+      // ✅ CORREÇÃO AQUI: Usa a função de tradução
+      toast.success(t('quizzPage.saveSuccess'));
       setView('list');
     } catch (error) {
       toast.dismiss(loadingToast);

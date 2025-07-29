@@ -75,7 +75,8 @@
     "title": "{{lessonTitle}} - Quizzes",
     "startNew": "Iniciar Novo Quizz",
     "attempt": "Tentativa nº {{number}}",
-    "noAttempts": "Nenhuma tentativa de quizz ainda. Comece uma nova!"
+    "noAttempts": "Nenhuma tentativa de quizz ainda. Comece uma nova!",
+    "saveSuccess": "Sua nova tentativa foi salva com sucesso!"
   },
   "progress": {
     "title": "Meu Progresso",
