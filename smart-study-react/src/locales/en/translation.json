@@ -2,14 +2,14 @@
   "navbar": {
     "home": "Home",
     "myNotebooks": "My notebooks",
-    "progress": "Progress",
+    "progress": "My Progress",
     "aboutUs": "About us",
     "myAccount": "My account"
   },
   "home": {
     "welcome": "Welcome back, {{name}}.",
     "title": "Stop memorizing. Start understanding.",
-    "subtitle": "Smart Study is your personal AI study assistant. Transform your notes into interactive summaries, generate practice quizzes on any topic, and track your learning progress to ace your exams with confidence.",
+    "subtitle": "Smart Study is your personal AI study assistant. Get precise summaries, tips for study materials, generate practice quizzes on any topic, and track your learning progress to ace your exams with confidence.",
     "cta": "Go to My Notebooks"
   },
   "myNotebooks": {
@@ -47,20 +47,20 @@
     "goBackToHome": "go back to Home"
   },
   "subject": {
-    "title": "What would you like to do today?",
+    "title": "How would you like to study today?",
     "summaryTitle": "Summary",
     "summaryDesc": "Keep in mind the main topics of each class!",
     "quizzTitle": "Quizz",
-    "quizzDesc": "Test your knowledge with the approaches that most suits you!",
+    "quizzDesc": "Test your knowledge!",
     "goBack": "go back to Notebooks"
   },
   "chat": {
      "thinking": "Thinking...",
-    "summaryInitial": "Hello! What specific subject within \"{{title}}\" would you like me to summarize today?",
-    "quizzInitial": "What topic do you want to study today? Send me the subject for the quizz.",
+    "summaryInitial": "Hello! I'm Bob, the study assistant of Smart Study. I'm here to help! What topic would you like me to summarize today? Send me the subject for the summary.",
+    "quizzInitial": "Hello I'm Bob, the study assistant of Smart Study. I'm here to help! What topic do you want to study today? Send me the subject for the quizz.",
     "typeSubject": "Type your subject here...",
-    "quizzFinished": "Quizz finished! 🏆\n\nYou got {{correct}} out of {{total}} correct ({{score}}%).",
-    "feedbackError": "I had trouble generating detailed feedback, but your score was saved. Great job on the quiz!",
+    "quizzFinished": "Quizz finished! 🏆\n\nYou got {{correct}} out of {{total}} correct ({{score}}%). Keep up the great work! Do you neeed more practice? Start a new attemp in the attempts page.",
+    "feedbackError": "Your score was saved. Great job on the quiz!",
     "saveConversation": "Save Conversation",
     "saveQuizz": "Save Quizz",
     "backToSubject": "Back to Subject",
@@ -113,7 +113,7 @@
     },
     "story": {
       "title": "Our Story",
-      "text": "This project was conceived and developed by Information Systems student <strong>Carolina Lansoni Vilas Boas</strong>, in partnership with the <strong>Instituto Mauá de Tecnologia</strong> and the global <strong>Grand Challenges Scholarship Program</strong>. We are committed to inclusivity, with future developments planned for enhanced accessibility.",
+      "text": "This project was conceived and developed by Information Systems student <strong>Carolina Lansoni Vilas Boas</strong>, in partnership with the <strong>Instituto Mauá de Tecnologia</strong> and the global <strong>Grand Challenges Scholarship Program</strong>. We are committed to inclusivity, accessibility, personalized learning, and continuous development.",
       "motto": "Study smart, always!"
     },
     "techStack": {
@@ -126,7 +126,7 @@
       "typescript": "To ensure our code is robust, scalable, and error-free.",
       "gemini": "The powerful AI brain that generates your summaries and quizzes.",
       "brevo": "The service that reliably delivers important emails, like password resets.",
-      "tremor": "To create the beautiful and insightful graphs on your Progress page."
+      "recharts and shadcn/ui": "To create the beautiful and insightful graphs on your Progress page."
     }
   },
   "widgets": {

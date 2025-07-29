@@ -2,14 +2,14 @@
   "navbar": {
     "home": "Início",
     "myNotebooks": "Meus cadernos",
-    "progress": "Progresso",
+    "progress": " Meu Progresso",
     "aboutUs": "Sobre nós",
     "myAccount": "Minha conta"
   },
   "home": {
     "welcome": "Bem-vindo(a) de volta, {{name}}.",
     "title": "Pare de memorizar. Comece a entender.",
-    "subtitle": "O Smart Study é seu assistente de estudos pessoal com IA. Transforme suas anotações em resumos interativos, gere quizzes práticos sobre qualquer tópico e acompanhe seu progresso para gabaritar suas provas com confiança.",
+    "subtitle": "O Smart Study é seu assistente de estudos pessoal com IA. Obtenha resumos precisos, dicas de materiais de estudos, gere quizzes práticos sobre qualquer tópico e acompanhe seu progresso para gabaritar suas provas com confiança.",
     "cta": "Ir para Meus Cadernos"
   },
   "myNotebooks": {
@@ -47,20 +47,20 @@
     "goBackToHome": "voltar para o Início"
   },
   "subject": {
-    "title": "O que você gostaria de fazer hoje?",
+    "title": "Como vamos estudar hoje?",
     "summaryTitle": "Resumo",
     "summaryDesc": "Tenha em mente os tópicos principais de cada aula!",
     "quizzTitle": "Quizz",
-    "quizzDesc": "Teste seu conhecimento com as abordagens que mais combinam com você!",
+    "quizzDesc": "Teste seus conhecimentos!",
     "goBack": "voltar para Cadernos"
   },
   "chat": {
     "thinking": "Pensando...",
-    "summaryInitial": "Olá! Qual tópico específico dentro de \"{{title}}\" você gostaria que eu resumisse hoje?",
-    "quizzInitial": "Qual tema você quer estudar hoje? Me envie o tópico para o quizz.",
+    "summaryInitial": "Olá, eu sou o Bob, o assistente de estudos do Smart Study. Estou aqui para te ajudar! O que você gostaria que eu resumisse hoje? Me envie o tópico para o resumo",
+    "quizzInitial": "Olá, eu sou o Bob, o assistente de estudos do Smart Study. Estou aqui para te ajudar! Qual tema você quer estudar hoje? Me envie o tópico para o quizz.",
     "typeSubject": "Digite o assunto aqui...",
-    "quizzFinished": "Quizz finalizado! 🏆\n\nVocê acertou {{correct}} de {{total}} questões ({{score}}%).",
-    "feedbackError": "Tive problemas para gerar um feedback detalhado, mas sua pontuação foi salva. Ótimo trabalho no quizz!",
+    "quizzFinished": "Quizz finalizado! 🏆\n\nVocê acertou {{correct}} de {{total}} questões ({{score}}%). Continue se dedicando nos estudos e verá sua evolução! Precisa treinar mais? Inicie uma nova tentativa na página de tentativas.",
+    "feedbackError": "Sua pontuação foi salva. Ótimo trabalho no quizz!",
     "saveConversation": "Salvar Conversa",
     "saveQuizz": "Salvar Quizz",
     "backToSubject": "Voltar para a Matéria",
@@ -113,7 +113,7 @@
     },
     "story": {
       "title": "Nossa História",
-      "text": "Este projeto foi idealizado e desenvolvido pela estudante de Sistemas de Informação <strong>Carolina Lansoni Vilas Boas</strong>, em parceria com o <strong>Instituto Mauá de Tecnologia</strong> e o programa global <strong>Grand Challenges Scholarship Program</strong>. Estamos comprometidos com a inclusão, com futuros desenvolvimentos planejados para recursos de acessibilidade aprimorados.",
+      "text": "Este projeto foi idealizado e desenvolvido pela estudante de Sistemas de Informação <strong>Carolina Lansoni Vilas Boas</strong>, em parceria com o <strong>Instituto Mauá de Tecnologia</strong> e o programa global <strong>Grand Challenges Scholarship Program</strong>. Estamos comprometidos com a inclusão, acessebilidade, aprendizado personalizado e desenvlvimento contínuo.",
       "motto": "Estude sempre, estude inteligente!"
     },
     "techStack": {
@@ -126,7 +126,7 @@
       "typescript": "Para garantir que nosso código seja robusto, escalável e livre de erros.",
       "gemini": "O poderoso cérebro de IA que gera seus resumos e quizzes.",
       "brevo": "O serviço que entrega e-mails importantes de forma confiável, como redefinições de senha.",
-      "tremor": "Para criar os gráficos bonitos e perspicazes em sua página de Progresso."
+      "recharts and shadcn/ui": "Para criar os gráficos bonitos e perspicazes em sua página de Progresso."
     }
   },
   "widgets": {

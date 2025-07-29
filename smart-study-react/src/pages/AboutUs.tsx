@@ -42,7 +42,7 @@ const AboutUs: React.FC = () => {
     { name: 'TypeScript', descriptionKey: 'aboutUs.techStack.typescript' },
     { name: 'Gemini AI API', descriptionKey: 'aboutUs.techStack.gemini' },
     { name: 'Brevo', descriptionKey: 'aboutUs.techStack.brevo' },
-    { name: 'Tremor', descriptionKey: 'aboutUs.techStack.tremor' },
+    { name: 'Recharts and Shadcn/ui', descriptionKey: 'aboutUs.techStack.recharts and shadcn/ui' },
   ];
 
   return (
