@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    // --- Configurações que você já tinha ---
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    // --- Configurações essenciais para React + TypeScript ---
+    "jsx": "react-jsx", // A mais importante: diz para o TS entender e processar JSX
+    "target": "ES6", // Define para qual versão do JavaScript o código será compilado
+    "module": "esnext", // Usa o sistema de módulos mais moderno
+    "moduleResolution": "node", // Como o TS procura os módulos
+    "lib": ["dom", "dom.iterable", "esnext"], // Bibliotecas padrão disponíveis
+    "esModuleInterop": true, // Permite melhor compatibilidade entre CommonJS e ES Modules
+    "allowSyntheticDefaultImports": true, // Permite importações padrão de módulos sem um 'default' export
+    "strict": true, // Habilita todas as checagens de tipo mais rigorosas
+    "forceConsistentCasingInFileNames": true, // Garante que os nomes de arquivos sejam consistentes no case
+    "resolveJsonModule": true, // Permite importar arquivos .json
+    "isolatedModules": true, // Garante que cada arquivo possa ser transpilado sem depender de outros
+    "noEmit": true, // Não gera arquivos de saída (o bundler, como o Vite ou Webpack, faz isso)
+    "skipLibCheck": true // Pula a verificação de tipos em arquivos de declaração (.d.ts)
+  },
+  "include": [
+    "src" // Diz ao TypeScript para incluir todos os arquivos dentro da pasta 'src'
+  ],
+  "exclude": [
+    "node_modules" // Ignora a pasta node_modules
+  ]
+}
