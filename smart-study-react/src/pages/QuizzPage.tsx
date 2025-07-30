@@ -1,4 +1,3 @@
-// src/pages/QuizzPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,7 @@ import toast from 'react-hot-toast';
 import { FaArrowLeft, FaPlus } from 'react-icons/fa';
 import { useInteractiveSound } from '../hooks/useInteractiveSound';
 
+// --- Interfaces ---
 interface QuizQuestion {
   question: string;
   options: string[];
@@ -83,7 +83,6 @@ const QuizzPage: React.FC = () => {
         userAnswers,
       });
       toast.dismiss(loadingToast);
-      // ✅ CORREÇÃO AQUI: Usa a função de tradução
       toast.success(t('quizzPage.saveSuccess'));
       setView('list');
     } catch (error) {
@@ -100,7 +99,8 @@ const QuizzPage: React.FC = () => {
     }
 
     if (view === 'active_quiz') {
-      return <ActiveQuiz lessonId={lessonId!} lessonTitle={lessonTitle} onQuizComplete={handleQuizSave} />;
+      // ✅ CORREÇÃO AQUI: A prop 'lessonId' foi removida pois não é necessária no componente ActiveQuiz.
+      return <ActiveQuiz lessonTitle={lessonTitle} onQuizComplete={handleQuizSave} />;
     }
 
     if (view === 'view_attempt' && selectedAttempt) {
@@ -121,7 +121,7 @@ const QuizzPage: React.FC = () => {
                     options={msg.quizzOptions.options}
                     correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
                     selectedAnswerIndex={selectedAttempt.userAnswers[msg.questionIndex!]}
-                    onSelectAnswer={() => {}}
+                    onSelectAnswer={() => {}} // Desabilitado no modo de visualização
                   />
                 )}
               </div>
