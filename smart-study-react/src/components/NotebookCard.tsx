@@ -12,11 +12,20 @@ import { useInteractiveSound } from '../hooks/useInteractiveSound';
 
 interface Lesson { _id: string; title: string; }
 interface Notebook { _id: string; title: string; lessons: Lesson[]; }
+
 interface NotebookCardProps {
   notebook: Notebook;
   onDelete: (id: string) => void;
   onUpdate: (updatedNotebook: Notebook) => void;
   index: number;
+}
+
+// << MUDANÇA: Interface para o estado do modal, deixando o código mais limpo e seguro.
+interface ConfirmModalState {
+  isOpen: boolean;
+  type: 'notebook' | 'lesson' | null;
+  id: string | null;
+  title: string;
 }
 
 const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdate, index }) => {
@@ -32,10 +41,11 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
   const [editingLessonTitle, setEditingLessonTitle] = useState('');
   const navigate = useNavigate();
 
-  const [confirmModal, setConfirmModal] = useState({
+  // << MUDANÇA: Estado do modal agora usa a nova interface e inicializa com `null`.
+  const [confirmModal, setConfirmModal] = useState<ConfirmModalState>({
     isOpen: false,
-    type: '' as 'notebook' | 'lesson',
-    id: '',
+    type: null,
+    id: null,
     title: ''
   });
 
@@ -104,7 +114,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
   };
 
   const handleConfirmDelete = async () => {
-    if (confirmModal.type === 'notebook') {
+    if (confirmModal.type === 'notebook' && confirmModal.id) {
       try {
         await api.delete(`/notebooks/${confirmModal.id}`);
         toast.success(t('myNotebooks.deleteSuccess'));
@@ -112,7 +122,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
       } catch (error) {
         toast.error(t('myNotebooks.deleteError'));
       }
-    } else if (confirmModal.type === 'lesson') {
+    } else if (confirmModal.type === 'lesson' && confirmModal.id) {
       try {
         const response = await api.delete(`/notebooks/${notebook._id}/lessons/${confirmModal.id}`);
         onUpdate(response.data);
@@ -121,8 +131,14 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
         toast.error(t('myNotebooks.lessonDeletedError'));
       }
     }
-    setConfirmModal({ isOpen: false, type: '', id: '', title: '' });
+    // << MUDANÇA: Resetar o estado para a forma correta com `null`.
+    setConfirmModal({ isOpen: false, type: null, id: null, title: '' });
   };
+  
+  const handleCloseModal = () => {
+    // << MUDANÇA: Função dedicada para fechar e resetar o modal.
+    setConfirmModal({ isOpen: false, type: null, id: null, title: '' });
+  }
 
   return (
     <>
@@ -206,19 +222,19 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
 
       <Modal 
         isOpen={confirmModal.isOpen} 
-        onClose={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+        onClose={handleCloseModal} // << MUDANÇA: Usar a nova função de fechar/resetar.
         title={confirmModal.type === 'notebook' ? t('myNotebooks.deleteModal.titleNotebook') : t('myNotebooks.deleteModal.titleLesson')}
       >
         <p className="text-gray-600">
-            {confirmModal.type === 'notebook' 
-                ? t('myNotebooks.deleteModal.bodyNotebook') 
-                : t('myNotebooks.deleteModal.bodyLesson')
-            }
+          {confirmModal.type === 'notebook' 
+              ? t('myNotebooks.deleteModal.bodyNotebook') 
+              : t('myNotebooks.deleteModal.bodyLesson')
+          }
         </p>
         <div className="flex justify-end gap-4 mt-6">
             <Button 
                 variant="secondary" 
-                onClick={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+                onClick={handleCloseModal} // << MUDANÇA: Usar a nova função de fechar/resetar.
             >
                 {t('myNotebooks.deleteModal.cancel')}
             </Button>
