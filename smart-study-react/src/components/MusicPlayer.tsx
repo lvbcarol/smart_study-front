@@ -3,11 +3,11 @@ import React, { useState, useRef, useCallback } from 'react';
 import { useMusic } from '../context/MusicContext';
 import { FaPlay, FaPause } from 'react-icons/fa';
 import { Tooltip } from 'react-tooltip';
-import { useTranslation } from 'react-i18next'; // 1. Importe o hook de tradução
+import { useTranslation } from 'react-i18next';
 
 const MusicPlayer: React.FC = () => {
   const { isPlaying, togglePlayPause } = useMusic();
-  const { t } = useTranslation(); // 2. Inicialize o hook
+  const { t } = useTranslation();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const playerRef = useRef<HTMLButtonElement>(null);
@@ -51,12 +51,9 @@ const MusicPlayer: React.FC = () => {
         onMouseDown={handleDragStart}
         onClick={handleClick}
         data-tooltip-id="music-player-tooltip"
-        // ✅ 3. Usa a função de tradução para o conteúdo do tooltip
         data-tooltip-html={t('widgets.musicPlayerTooltip')}
         className={`fixed bottom-4 left-4 z-50 bg-white bg-opacity-20 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm transition-transform duration-100 ${isDragging ? 'cursor-grabbing scale-110' : 'cursor-grab'}`}
-        style={{
-          transform: `translate(${position.x}px, ${position.y}px)`,
-        }}
+        style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
       >
         {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
       </button>
@@ -64,7 +61,6 @@ const MusicPlayer: React.FC = () => {
       <Tooltip 
         id="music-player-tooltip" 
         place="top"
-        effect="solid"
         style={{ backgroundColor: '#2A0E46', color: 'white', borderRadius: '8px' }}
       />
     </>

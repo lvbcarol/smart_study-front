@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next';
 
 // Provedores de Contexto
 import { AccessibilityProvider, useAccessibility } from './context/AccessibilityContext';
-import { MusicProvider } from './context/MusicContext';
+import { MusicProvider } from './context/MusicContext'; // ✅ A LINHA QUE FALTAVA
 import { SoundProvider } from './context/SoundContext';
 
 // Componentes Globais e Widgets
 import VLibrasWidget from './components/VLibrasWidget';
 import ASLHelperButton from './components/ASLHelperButton';
 import ScreenReaderHelper from './components/ScreenReaderHelper';
-import AudioSettingsButton from './components/AudioSettingsButton';
+import MusicPlayer from './components/MusicPlayer';
 import Footer from './components/Footer';
 
 // Todas as Páginas
@@ -38,7 +38,6 @@ const AppContent: React.FC = () => {
 
   return (
     <Router>
-      {/* O container flex flex-col garante que o footer fique no final */}
       <div className="min-h-screen flex flex-col">
         <Toaster 
           position="top-right"
@@ -52,9 +51,8 @@ const AppContent: React.FC = () => {
         {isSignLanguageEnabled && (i18n.language === 'pt' || i18n.language === 'pt-BR') && <VLibrasWidget />}
         {isSignLanguageEnabled && i18n.language === 'en' && <ASLHelperButton />}
         {isAudioEnabled && <ScreenReaderHelper />}
-        <AudioSettingsButton />
+        <MusicPlayer />
 
-        {/* O 'flex-grow' faz esta seção ocupar todo o espaço disponível, empurrando o footer para baixo */}
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Navigate to="/register" />} />
@@ -83,7 +81,6 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    // Ordem correta dos provedores
     <SoundProvider>
       <MusicProvider>
         <AccessibilityProvider>

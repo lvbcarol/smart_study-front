@@ -1,13 +1,5 @@
 // src/context/SoundContext.tsx
-import React, { createContext, useContext, ReactNode, useRef, useEffect } from 'react'; // ✅ useEffect adicionado aqui
-
-// Funções para tocar os sons
-const playSound = (audioRef: React.RefObject<HTMLAudioElement>) => {
-  if (audioRef.current) {
-    audioRef.current.currentTime = 0; // Reinicia o som para que possa ser tocado de novo rapidamente
-    audioRef.current.play().catch(error => console.error("Error playing sound:", error)); // Adicionado .catch para evitar erros
-  }
-};
+import React, { createContext, useContext, ReactNode, useRef, useEffect, useCallback } from 'react';
 
 interface SoundContextType {
   playAppearSound: () => void;
@@ -18,17 +10,28 @@ interface SoundContextType {
 const SoundContext = createContext<SoundContextType | undefined>(undefined);
 
 export const SoundProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Criamos uma referência para cada efeito sonoro
-  const appearSoundRef = useRef<HTMLAudioElement>(new Audio('/sound-appear.mp3'));
-  const hoverSoundRef = useRef<HTMLAudioElement>(new Audio('/sound-hover.mp3'));
-  const clickSoundRef = useRef<HTMLAudioElement>(new Audio('/sound-click.mp3'));
+  const appearSoundRef = useRef<HTMLAudioElement | null>(null);
+  const hoverSoundRef = useRef<HTMLAudioElement | null>(null);
+  const clickSoundRef = useRef<HTMLAudioElement | null>(null);
 
-  // Ajusta o volume para não ser muito alto
   useEffect(() => {
-    if (appearSoundRef.current) appearSoundRef.current.volume = 0.3;
-    if (hoverSoundRef.current) hoverSoundRef.current.volume = 0.2;
-    if (clickSoundRef.current) clickSoundRef.current.volume = 0.5;
-  }, []); // Este useEffect estava causando o erro por não ter sido importado
+    // Carrega os sons e define um volume padrão
+    appearSoundRef.current = new Audio('/sound-appear.mp3');
+    appearSoundRef.current.volume = 0.3;
+    
+    hoverSoundRef.current = new Audio('/sound-hover.mp3');
+    hoverSoundRef.current.volume = 0.2;
+
+    clickSoundRef.current = new Audio('/sound-click.mp3');
+    clickSoundRef.current.volume = 0.5;
+  }, []);
+  
+  const playSound = useCallback((audioRef: React.RefObject<HTMLAudioElement>) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(error => console.error("Error playing sound:", error));
+    }
+  }, []);
 
   const value = {
     playAppearSound: () => playSound(appearSoundRef),
@@ -36,14 +39,9 @@ export const SoundProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     playClickSound: () => playSound(clickSoundRef),
   };
 
-  return (
-    <SoundContext.Provider value={value}>
-      {children}
-    </SoundContext.Provider>
-  );
+  return <SoundContext.Provider value={value}>{children}</SoundContext.Provider>;
 };
 
-// Hook customizado para facilitar o uso
 export const useSounds = (): SoundContextType => {
   const context = useContext(SoundContext);
   if (context === undefined) {
