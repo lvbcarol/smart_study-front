@@ -11,7 +11,7 @@ import Modal from '../components/ui/Modal';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import toast from 'react-hot-toast';
-import { useInteractiveSound } from '../hooks/useInteractiveSound';
+
 
 interface Lesson { _id: string; title: string; }
 interface Notebook { _id: string; title: string; lessons: Lesson[]; }
@@ -23,7 +23,7 @@ const MyNotebooks: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newNotebookTitle, setNewNotebookTitle] = useState('');
   const navigate = useNavigate();
-  const soundEvents = useInteractiveSound();
+  
 
   useEffect(() => {
     const fetchNotebooks = async () => {
@@ -85,8 +85,8 @@ const MyNotebooks: React.FC = () => {
             <p className="text-gray-400 mt-2 max-w-2xl">{t('myNotebooks.subtitle')}</p>
           </div>
           <button 
-            {...soundEvents} 
-            onClick={() => { soundEvents.onClick(); setIsModalOpen(true); }}
+             
+            
             data-tooltip-id="notebooks-tooltip"
             data-tooltip-content={t('myNotebooks.tooltipNewNotebook')}
             className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0"
@@ -117,9 +117,9 @@ const MyNotebooks: React.FC = () => {
 
         <div className="mt-16">
           <button 
-            {...soundEvents}
+            
             onClick={() => {
-              soundEvents.onClick();
+              
               navigate('/home');
             }}
             className="bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-3 hover:bg-opacity-30 transition"

@@ -4,11 +4,9 @@ import { Link } from 'react-router-dom';
 import navLogo from '../assets/navbar-logo.png';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { useSounds } from '../context/SoundContext';
 
 const Navbar: React.FC = () => {
   const { t } = useTranslation();
-  const { playHoverSound, playClickSound } = useSounds();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
@@ -29,8 +27,6 @@ const Navbar: React.FC = () => {
           <Link 
             to="/home" 
             className="flex items-center gap-3"
-            onMouseEnter={playHoverSound}
-            onClick={playClickSound}
           >
             <img src={navLogo} alt="Smart Study Logo" className="h-8 w-auto" />
             <span className="text-xl font-bold hidden sm:inline">Smart Study</span>
@@ -44,8 +40,6 @@ const Navbar: React.FC = () => {
               key={link.href} 
               to={link.href} 
               className="text-gray-300 hover:text-white transition whitespace-nowrap"
-              onMouseEnter={playHoverSound}
-              onClick={playClickSound}
             >
               {link.label}
             </Link>
@@ -56,7 +50,7 @@ const Navbar: React.FC = () => {
         <div className="w-1/3 flex justify-end">
             <button 
               onClick={() => {
-                playClickSound();
+                
                 setIsMenuOpen(!isMenuOpen);
               }} 
               className="md:hidden z-50 p-2" 
@@ -79,9 +73,9 @@ const Navbar: React.FC = () => {
               key={link.href} 
               to={link.href} 
               className="text-2xl text-white hover:text-purple-300 transition"
-              onMouseEnter={playHoverSound}
+              
               onClick={() => {
-                playClickSound();
+               
                 setIsMenuOpen(false);
               }} 
             >

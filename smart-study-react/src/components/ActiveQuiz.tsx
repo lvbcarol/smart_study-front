@@ -5,7 +5,7 @@ import api from '../services/api';
 import ChatMessage from './ChatMessage';
 import QuizzOptions from './QuizzOptions';
 import { FaPaperPlane, FaSave } from 'react-icons/fa';
-import { useInteractiveSound } from '../hooks/useInteractiveSound';
+
 
 interface QuizQuestion {
   question: string;
@@ -27,7 +27,6 @@ interface ActiveQuizProps {
 
 const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) => {
   const { t, i18n } = useTranslation();
-  const soundEvents = useInteractiveSound();
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -126,13 +125,12 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
               <div key={index}>
                 <ChatMessage message={msg} />
                 {msg.quizzOptions && (
-                  <div onMouseEnter={soundEvents.onMouseEnter}>
+                  <div>
                     <QuizzOptions 
                       options={msg.quizzOptions.options}
                       correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
                       selectedAnswerIndex={userAnswers[msg.questionIndex!]}
                       onSelectAnswer={(selectedIndex) => {
-                        soundEvents.onClick();
                         handleAnswerSelect(selectedIndex, msg.questionIndex!);
                       }}
                     />
@@ -157,7 +155,7 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
                   disabled={isLoading} 
                 />
                 <button 
-                  {...soundEvents}
+                 
                   type="submit" 
                   className="bg-purple-600 rounded-full p-4 hover:bg-purple-500 transition disabled:opacity-50" 
                   disabled={isLoading}
@@ -170,7 +168,7 @@ const ActiveQuiz: React.FC<ActiveQuizProps> = ({ lessonTitle, onQuizComplete }) 
           {quizFlowState === 'finished' && (
             <div className="flex justify-center">
               <button 
-                {...soundEvents}
+               
                 onClick={handleSaveAndExit} 
                 className="bg-green-600 font-semibold py-2 px-5 rounded-full flex items-center gap-2 hover:bg-green-500 transition animate-fade-in-up"
               >

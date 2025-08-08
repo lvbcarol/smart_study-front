@@ -5,11 +5,11 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Navbar from '../components/Navbar';
 import aboutUsImage from '../assets/aboutus.png';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import { useInteractiveSound } from '../hooks/useInteractiveSound'; // 1. Importe o hook
+
 
 const AboutUs: React.FC = () => {
   const { t } = useTranslation();
-  const soundEvents = useInteractiveSound(); // 2. Inicialize o hook
+ 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -112,9 +112,9 @@ const AboutUs: React.FC = () => {
           {/* ✅ 3. Adiciona os eventos de som aos controles do carrossel */}
           <div className="flex items-center justify-center mt-8 gap-8">
             <button 
-              onMouseEnter={soundEvents.onMouseEnter}
+              
               onClick={() => {
-                soundEvents.onClick();
+                
                 scrollPrev();
               }}
               className="bg-white bg-opacity-20 p-3 rounded-full hover:bg-opacity-30 transition"
@@ -125,9 +125,9 @@ const AboutUs: React.FC = () => {
               {[...Array(3).keys()].map(index => (
                 <button 
                   key={index} 
-                  onMouseEnter={soundEvents.onMouseEnter}
+                 
                   onClick={() => {
-                    soundEvents.onClick();
+                    
                     scrollTo(index);
                   }}
                   className={`w-3 h-3 rounded-full transition ${selectedIndex === index ? 'bg-white' : 'bg-gray-600'}`}
@@ -135,9 +135,9 @@ const AboutUs: React.FC = () => {
               ))}
             </div>
             <button 
-              onMouseEnter={soundEvents.onMouseEnter}
+             
               onClick={() => {
-                soundEvents.onClick();
+                
                 scrollNext();
               }}
               className="bg-white bg-opacity-20 p-3 rounded-full hover:bg-opacity-30 transition"

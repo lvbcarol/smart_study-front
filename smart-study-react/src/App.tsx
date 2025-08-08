@@ -6,14 +6,11 @@ import { useTranslation } from 'react-i18next';
 
 // Provedores de Contexto
 import { AccessibilityProvider, useAccessibility } from './context/AccessibilityContext';
-import { MusicProvider } from './context/MusicContext'; // ✅ A LINHA QUE FALTAVA
-import { SoundProvider } from './context/SoundContext';
 
 // Componentes Globais e Widgets
 import VLibrasWidget from './components/VLibrasWidget';
 import ASLHelperButton from './components/ASLHelperButton';
 import ScreenReaderHelper from './components/ScreenReaderHelper';
-import MusicPlayer from './components/MusicPlayer';
 import Footer from './components/Footer';
 
 // Todas as Páginas
@@ -51,7 +48,6 @@ const AppContent: React.FC = () => {
         {isSignLanguageEnabled && (i18n.language === 'pt' || i18n.language === 'pt-BR') && <VLibrasWidget />}
         {isSignLanguageEnabled && i18n.language === 'en' && <ASLHelperButton />}
         {isAudioEnabled && <ScreenReaderHelper />}
-        <MusicPlayer />
 
         <main className="flex-grow">
           <Routes>
@@ -81,13 +77,9 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <SoundProvider>
-      <MusicProvider>
         <AccessibilityProvider>
           <AppContent />
         </AccessibilityProvider>
-      </MusicProvider>
-    </SoundProvider>
   );
 }
 

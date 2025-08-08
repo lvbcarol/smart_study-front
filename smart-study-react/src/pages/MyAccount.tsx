@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar';
 import ToggleSwitch from '../components/ui/ToggleSwitch';
 import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
-import { useInteractiveSound } from '../hooks/useInteractiveSound'; // 1. Importe o hook de som
+
 
 interface User {
   _id: string;
@@ -26,7 +26,7 @@ const MyAccount: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [initialSettings, setInitialSettings] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const soundEvents = useInteractiveSound(); // 2. Inicialize o hook
+  
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -47,7 +47,7 @@ const MyAccount: React.FC = () => {
   }, [i18n, setSignLanguageEnabled, setAudioEnabled]);
 
   const handleAccessibilityChange = (field: keyof User['accessibility'], value: boolean) => {
-    soundEvents.onClick(); // Adiciona som ao toggle
+    
     if (!user) return;
     setUser(prevUser => ({
         ...prevUser!,
@@ -56,7 +56,7 @@ const MyAccount: React.FC = () => {
   };
   
   const handleLanguageChange = (lang: 'en-US' | 'pt-BR') => {
-    soundEvents.onClick(); // Adiciona som ao botão de idioma
+    
     if (!user) return;
     setUser({ ...user, language: lang });
     i18n.changeLanguage(lang.split('-')[0]);
@@ -118,14 +118,14 @@ const MyAccount: React.FC = () => {
             <div className="flex gap-4">
               {/* ✅ 3. Adiciona os eventos de som aos botões de idioma */}
               <button 
-                onMouseEnter={soundEvents.onMouseEnter}
+                
                 onClick={() => handleLanguageChange('en-US')} 
                 className={`p-4 rounded-lg flex-1 text-center font-bold transition ${user?.language === 'en-US' ? 'bg-purple-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
               >
                 ENG-USA
               </button>
               <button 
-                onMouseEnter={soundEvents.onMouseEnter}
+                
                 onClick={() => handleLanguageChange('pt-BR')} 
                 className={`p-4 rounded-lg flex-1 text-center font-bold transition ${user?.language === 'pt-BR' ? 'bg-purple-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
               >
