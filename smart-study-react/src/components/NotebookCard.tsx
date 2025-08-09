@@ -8,8 +8,18 @@ import api from '../services/api';
 import Modal from './ui/Modal';
 import Button from './ui/Button';
 
-interface Lesson { _id: string; title: string; }
-interface Notebook { _id: string; title: string; lessons: Lesson[]; }
+// --- Interfaces ---
+interface Lesson {
+  _id: string;
+  title: string;
+}
+
+interface Notebook {
+  _id: string;
+  title: string;
+  lessons: Lesson[];
+}
+
 interface NotebookCardProps {
   notebook: Notebook;
   onDelete: (id: string) => void;
@@ -17,23 +27,36 @@ interface NotebookCardProps {
   index: number;
 }
 
+// Interface para o estado do modal (Boa Prática)
+interface ConfirmModalState {
+  isOpen: boolean;
+  type: 'notebook' | 'lesson' | ''; // Tipo corrigido para aceitar string vazia
+  id: string;
+  title: string;
+}
+
+// --- Componente ---
 const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdate, index }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  // --- Estados ---
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [currentTitle, setCurrentTitle] = useState(notebook.title);
   const [isAddingLesson, setIsAddingLesson] = useState(false);
   const [newLessonTitle, setNewLessonTitle] = useState('');
   const [editingLessonId, setEditingLessonId] = useState<string | null>(null);
   const [editingLessonTitle, setEditingLessonTitle] = useState('');
-  const navigate = useNavigate();
 
-  const [confirmModal, setConfirmModal] = useState({
+  // Estado do modal de confirmação com a tipagem correta
+  const [confirmModal, setConfirmModal] = useState<ConfirmModalState>({
     isOpen: false,
-    type: '' as 'notebook' | 'lesson',
+    type: '',
     id: '',
     title: ''
   });
 
+  // --- Funções ---
   const handleTitleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (currentTitle.trim() === '' || currentTitle === notebook.title) {
@@ -109,9 +132,10 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
         toast.error(t('myNotebooks.lessonDeletedError'));
       }
     }
-    setConfirmModal({ isOpen: false, type: '', id: '', title: '' });
+    setConfirmModal({ isOpen: false, type: '', id: '', title: '' }); // Agora isso é válido
   };
 
+  // --- Renderização ---
   return (
     <>
       <div 
@@ -138,7 +162,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
               <button onClick={handleDeleteNotebookRequest} className="text-gray-300 hover:text-red-500"><FaTrash /></button>
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
               {notebook.lessons && notebook.lessons.map(lesson => (
                 <div key={lesson._id} className="flex items-center gap-2 group">
                   {editingLessonId === lesson._id ? (
@@ -147,7 +171,7 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                     </form>
                   ) : (
                     <>
-                      <button onClick={() => navigate(`/subjects/${lesson._id}`)} className="flex-grow text-left p-2 rounded hover:bg-violet-800 transition">
+                      <button onClick={() => navigate(`/subjects/${lesson._id}`)} className="flex-grow text-left p-2 rounded bg-violet-400 bg-opacity-50 border border-transparent hover:bg-violet-800 hover:border-violet-900 transition">
                         {lesson.title}
                       </button>
                       <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -167,7 +191,12 @@ const NotebookCard: React.FC<NotebookCardProps> = ({ notebook, onDelete, onUpdat
                 <Button type="button" variant="secondary" onClick={() => setIsAddingLesson(false)}>X</Button>
               </form>
             ) : (
-              <button onClick={() => setIsAddingLesson(true)} className="mt-4 text-gray-300 hover:text-white flex items-center gap-2">
+              <button 
+                data-tooltip-id="notebooks-tooltip"
+                data-tooltip-content={t('myNotebooks.tooltipNewLesson')}
+                onClick={() => setIsAddingLesson(true)} 
+                className="mt-4 text-gray-300 hover:text-white flex items-center gap-2"
+              >
                 <FaPlus size={12} /> {t('myNotebooks.newLesson')}
               </button>
             )}
