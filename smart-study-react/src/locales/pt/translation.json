@@ -60,7 +60,7 @@
   "chat": {
     "thinking": "Pensando...",
     "summaryInitial": "Olá, eu sou o Bob, o assistente de estudos do Smart Study. Estou aqui para te ajudar! O que você gostaria que eu resumisse hoje? Me envie o tópico para o resumo",
-    "quizzInitial": "Olá, eu sou o Bob, o assistente de estudos do Smart Study. Estou aqui para te ajudar! Qual tema você quer estudar hoje? Me envie o tópico para o quizz.",
+    "quizzInitial": "Olá, eu sou o Bob, o assistente de estudos do Smart Study. Estou aqui para te ajudar! Este quizz tem 8 perguntas, seu progresso só será salvo se você responder todas elas. Você também pode revisar suas respostas ao clicar em uma tentativa concluida. Vamos começar! Qual tópico você gostaria de testar? Me envie o assunto para o quizz.",
     "typeSubject": "Digite o assunto aqui...",
     "quizzFinished": "Quizz finalizado! 🏆\n\nVocê acertou {{correct}} de {{total}} questões ({{score}}%). Continue se dedicando nos estudos e verá sua evolução! Precisa treinar mais? Inicie uma nova tentativa na página de tentativas.",
     "feedbackError": "Sua pontuação foi salva. Ótimo trabalho no quizz!",

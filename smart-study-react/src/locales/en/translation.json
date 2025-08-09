@@ -60,7 +60,7 @@
   "chat": {
     "thinking": "Thinking...",
     "summaryInitial": "Hello! I'm Bob, the study assistant of Smart Study. I'm here to help! What topic would you like me to summarize today? Send me the subject for the summary.",
-    "quizzInitial": "Hello I'm Bob, the study assistant of Smart Study. I'm here to help! What topic do you want to study today? Send me the subject for the quizz.",
+    "quizzInitial": "Hello I'm Bob, the study assistant of Smart Study. This quiz has 8 questions, your progress will only be saved if you answer all of them. You can also review your answers by clicking on an completed attempt. Let's get started! What topic would you like to quiz yourself on? Send me the subject for the quiz.",
     "typeSubject": "Type your subject here...",
     "quizzFinished": "Quizz finished! 🏆\n\nYou got {{correct}} out of {{total}} correct ({{score}}%). Keep up the great work! Do you need more practice? Start a new attempt in the attempts page.",
     "feedbackError": "Your score was saved. Great job on the quiz!",
