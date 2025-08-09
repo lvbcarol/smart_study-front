@@ -1,3 +1,4 @@
+// src/pages/QuizzPage.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +9,6 @@ import ChatMessage from '../components/ChatMessage';
 import QuizzOptions from '../components/QuizzOptions';
 import toast from 'react-hot-toast';
 import { FaArrowLeft, FaPlus } from 'react-icons/fa';
-import { useInteractiveSound } from '../hooks/useInteractiveSound';
 
 // --- Interfaces ---
 interface QuizQuestion {
@@ -37,7 +37,6 @@ const QuizzPage: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const soundEvents = useInteractiveSound();
   
   const [view, setView] = useState<'list' | 'active_quiz' | 'view_attempt'>('list');
   const [attempts, setAttempts] = useState<Attempt[]>([]);
@@ -99,7 +98,7 @@ const QuizzPage: React.FC = () => {
     }
 
     if (view === 'active_quiz') {
-      // ✅ CORREÇÃO AQUI: A prop 'lessonId' foi removida pois não é necessária no componente ActiveQuiz.
+      // ✅ A prop 'lessonId' foi removida pois não é necessária no componente ActiveQuiz.
       return <ActiveQuiz lessonTitle={lessonTitle} onQuizComplete={handleQuizSave} />;
     }
 
@@ -108,7 +107,8 @@ const QuizzPage: React.FC = () => {
         <div className="chat-container w-full flex flex-col h-full">
           <div className="flex justify-between items-center mb-4 flex-shrink-0">
             <h2 className="text-2xl font-bold">{t('quizzPage.reviewingAttempt', { number: selectedAttempt.attemptNumber, score: selectedAttempt.score })}</h2>
-            <button {...soundEvents} onClick={() => { soundEvents.onClick(); setView('list'); }} className="bg-white bg-opacity-20 text-white font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
+            {/* ✅ CORREÇÃO AQUI: Adiciona a função onClick para voltar à lista */}
+            <button onClick={() => setView('list')} className="bg-white bg-opacity-20 text-white font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
                <FaArrowLeft /> {t('quizzPage.backToAttempts')}
             </button>
           </div>
@@ -121,7 +121,7 @@ const QuizzPage: React.FC = () => {
                     options={msg.quizzOptions.options}
                     correctAnswerIndex={msg.quizzOptions.correctAnswerIndex}
                     selectedAnswerIndex={selectedAttempt.userAnswers[msg.questionIndex!]}
-                    onSelectAnswer={() => {}} // Desabilitado no modo de visualização
+                    onSelectAnswer={() => {}}
                   />
                 )}
               </div>
@@ -137,7 +137,8 @@ const QuizzPage: React.FC = () => {
       <div className="w-full max-w-3xl mx-auto flex flex-col items-center text-center animate-fade-in-up">
         <div className="flex justify-between items-center mb-8 w-full">
           <h1 className="text-4xl font-bold">{t('quizzPage.title', { lessonTitle })}</h1>
-          <button {...soundEvents} onClick={() => { soundEvents.onClick(); setView('active_quiz'); }} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0">
+          {/* ✅ CORREÇÃO AQUI: Adiciona a função onClick para iniciar um novo quizz */}
+          <button onClick={() => setView('active_quiz')} className="bg-white text-gray-800 font-semibold py-2 px-4 rounded-full flex items-center gap-2 hover:bg-gray-200 transition flex-shrink-0">
             <FaPlus /> <span className="hidden md:inline">{t('quizzPage.startNew')}</span>
           </button>
         </div>
@@ -146,9 +147,7 @@ const QuizzPage: React.FC = () => {
             attempts.slice().reverse().map((att, index) => (
               <button 
                 key={att._id} 
-                {...soundEvents}
                 onClick={() => { 
-                  soundEvents.onClick();
                   setSelectedAttempt(att); 
                   setView('view_attempt'); 
                 }} 
@@ -166,7 +165,8 @@ const QuizzPage: React.FC = () => {
             <p className="text-center text-gray-400 py-8">{t('quizzPage.noAttempts')}</p>
           )}
         </div>
-        <button {...soundEvents} onClick={() => { soundEvents.onClick(); navigate(`/subjects/${lessonId}`); }} className="mt-16 bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
+        {/* ✅ CORREÇÃO AQUI: Adiciona a função onClick para voltar à página de matérias */}
+        <button onClick={() => navigate(`/subjects/${lessonId}`)} className="mt-16 bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-2 hover:bg-opacity-30 transition">
           <FaArrowLeft /> {t('chat.backToSubject')}
         </button>
       </div>

@@ -6,7 +6,7 @@ import api from '../services/api';
 import Navbar from '../components/Navbar';
 import FeatureCard from '../components/FeatureCard';
 import { FaArrowLeft } from 'react-icons/fa';
-import { useInteractiveSound } from '../hooks/useInteractiveSound'; // 1. Importe o hook
+
 
 interface SubjectDetails {
   notebookTitle: string;
@@ -17,7 +17,7 @@ const SubjectPage: React.FC = () => {
   const { t } = useTranslation();
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
-  const soundEvents = useInteractiveSound(); // 2. Inicialize o hook
+  
   const [details, setDetails] = useState<SubjectDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -67,8 +67,7 @@ const SubjectPage: React.FC = () => {
                 // O FeatureCard é um Link, então adicionamos os eventos manualmente
                 <div 
                   key={feature.tag}
-                  onMouseEnter={soundEvents.onMouseEnter}
-                  onClick={soundEvents.onClick}
+                  
                 >
                   <FeatureCard 
                     index={index}
@@ -81,9 +80,9 @@ const SubjectPage: React.FC = () => {
             <div className="mt-16">
               {/* ✅ 3. Adiciona os eventos de som ao botão "go back" */}
               <button 
-                onMouseEnter={soundEvents.onMouseEnter}
+                
                 onClick={() => {
-                  soundEvents.onClick();
+                 
                   navigate('/my-notebooks');
                 }}
                 className="bg-white bg-opacity-20 text-white font-semibold py-3 px-6 rounded-full flex items-center gap-3 hover:bg-opacity-30 transition"
