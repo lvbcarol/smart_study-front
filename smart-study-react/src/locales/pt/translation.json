@@ -140,18 +140,6 @@
       "title": "Nossa História",
       "text": "Este projeto foi idealizado e desenvolvido pela estudante de Sistemas de Informação <strong>Carolina Lansoni Vilas Boas</strong>, mentorada pelo professor <strong>Rafael Hauckewitz Todaro</strong>, em parceria com o <strong>Instituto Mauá de Tecnologia</strong> e o programa global <strong>Grand Challenges Scholarship Program</strong>. Estamos comprometidos com a inclusão, acessibilidade, aprendizado personalizado e desenvolvimento contínuo.",
       "motto": "Estude sempre, estude inteligente!"
-    },
-    "techStack": {
-      "title": "Tecnologias Utilizadas",
-      "subtitle": "As tecnologias que dão vida ao Smart Study",
-      "react": "Para construir nossa interface de usuário rápida e interativa.",
-      "nodejs": "O motor do nosso backend, gerenciando toda a lógica do servidor.",
-      "mongodb": "Nosso banco de dados flexível na nuvem, onde seus dados de estudo são armazenados com segurança.",
-      "tailwind": "Para criar o design moderno e responsivo que você vê.",
-      "typescript": "Para garantir que nosso código seja robusto, escalável e livre de erros.",
-      "gemini": "O poderoso cérebro de IA que gera seus resumos e quizzes.",
-      "brevo": "O serviço que entrega e-mails importantes de forma confiável, como redefinições de senha.",
-      "recharts and shadcn/ui": "Para criar os gráficos bonitos e perspicazes em sua página de Progresso."
     }
   },
   "widgets": {

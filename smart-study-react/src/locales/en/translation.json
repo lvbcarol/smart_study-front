@@ -141,18 +141,6 @@
       "title": "Our Story",
       "text": "This project was conceived and developed by Information Systems student <strong>Carolina Lansoni Vilas Boas</strong>, who was mentored by the professor <strong>Rafael Hauckewitz Todaro</strong>, in partnership with the <strong>Instituto Mauá de Tecnologia</strong> and the global <strong>Grand Challenges Scholarship Program</strong>. We are committed to inclusivity, accessibility, personalized learning, and continuous development.",
       "motto": "Study smart, always!"
-    },
-    "techStack": {
-      "title": "Tech Stack",
-      "subtitle": "The technologies that power Smart Study",
-      "react": "For building our fast and interactive user interface.",
-      "nodejs": "The engine of our backend, handling all server-side logic.",
-      "mongodb": "Our flexible cloud database where your study data is securely stored.",
-      "tailwind": "For crafting the modern, responsive design you see.",
-      "typescript": "To ensure our code is robust, scalable, and error-free.",
-      "gemini": "The powerful AI brain that generates your summaries and quizzes.",
-      "brevo": "The service that reliably delivers important emails, like password resets.",
-      "recharts and shadcn/ui": "To create the beautiful and insightful graphs on your Progress page."
     }
   },
   "widgets": {

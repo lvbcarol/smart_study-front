@@ -6,10 +6,9 @@ import Navbar from '../components/Navbar';
 import aboutUsImage from '../assets/aboutus.png';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
-
 const AboutUs: React.FC = () => {
   const { t } = useTranslation();
- 
+
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -33,17 +32,6 @@ const AboutUs: React.FC = () => {
   }, [emblaApi]);
 
   const backgroundStyle = { background: 'linear-gradient(135deg, #1e0a3c 0%, #2A0E46 100%)' };
-
-  const techStack = [
-    { name: 'React', descriptionKey: 'aboutUs.techStack.react' },
-    { name: 'Node.js', descriptionKey: 'aboutUs.techStack.nodejs' },
-    { name: 'MongoDB Atlas', descriptionKey: 'aboutUs.techStack.mongodb' },
-    { name: 'Tailwind CSS', descriptionKey: 'aboutUs.techStack.tailwind' },
-    { name: 'TypeScript', descriptionKey: 'aboutUs.techStack.typescript' },
-    { name: 'Gemini AI API', descriptionKey: 'aboutUs.techStack.gemini' },
-    { name: 'Brevo', descriptionKey: 'aboutUs.techStack.brevo' },
-    { name: 'Recharts and Shadcn/ui', descriptionKey: 'aboutUs.techStack.recharts and shadcn/ui' },
-  ];
 
   return (
     <div style={backgroundStyle} className="min-h-screen text-white overflow-hidden flex flex-col">
@@ -91,28 +79,16 @@ const AboutUs: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* --- Slide 3: Ficha Técnica --- */}
-                <div className="embla__slide flex flex-col items-center text-center p-4">
-                   <h2 className="text-4xl font-bold">{t('aboutUs.techStack.title')}</h2>
-                   <p className="mt-2 text-gray-400">{t('aboutUs.techStack.subtitle')}</p>
-                    <div className="mt-6 w-full grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {techStack.map(tech => (
-                        <div key={tech.name} className="bg-gray-900 bg-opacity-40 p-4 rounded-lg">
-                          <h4 className="font-bold text-white">{tech.name}</h4>
-                          <p className="text-sm text-gray-400">{t(tech.descriptionKey)}</p>
-                        </div>
-                      ))}
-                    </div>
-                </div>
+                {/* --- Slide 3: Ficha Técnica (REMOVIDO) --- */}
 
               </div>
             </div>
           </div>
 
-          {/* ✅ 3. Adiciona os eventos de som aos controles do carrossel */}
+          {/* Controles do Carrossel */}
           <div className="flex items-center justify-center mt-8 gap-8">
             <button 
-              
+             
               onClick={() => {
                 
                 scrollPrev();
@@ -122,10 +98,11 @@ const AboutUs: React.FC = () => {
               <FaArrowLeft />
             </button>
             <div className="flex gap-3">
-              {[...Array(3).keys()].map(index => (
+              {/* ✅ CORREÇÃO AQUI: Mudado de 3 para 2, pois agora só temos 2 slides */}
+              {[...Array(2).keys()].map(index => (
                 <button 
                   key={index} 
-                 
+                  
                   onClick={() => {
                     
                     scrollTo(index);
