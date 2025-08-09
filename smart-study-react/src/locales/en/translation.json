@@ -8,8 +8,8 @@
   },
   "home": {
     "welcome": "Welcome back, {{name}}.",
-    "title": "Stop memorizing. Start understanding.",
-    "subtitle": "Smart Study is your personal AI study assistant. Get precise summaries, tips for study materials, generate practice quizzes on any topic, and track your learning progress to ace your exams with confidence.",
+    "title": "Your personal AI study assistant",
+    "subtitle": "This is your personalized study area. Get precise summaries, tips for study materials, generate practice quizzes on any topic, and track your learning progress to ace your exams with confidence.",
     "cta": "Go to My Notebooks"
   },
   "myNotebooks": {
@@ -139,7 +139,7 @@
     },
     "story": {
       "title": "Our Story",
-      "text": "This project was conceived and developed by Information Systems student <strong>Carolina Lansoni Vilas Boas</strong>, in partnership with the <strong>Instituto Mauá de Tecnologia</strong> and the global <strong>Grand Challenges Scholarship Program</strong>. We are committed to inclusivity, accessibility, personalized learning, and continuous development.",
+      "text": "This project was conceived and developed by Information Systems student <strong>Carolina Lansoni Vilas Boas</strong>, who was mentored by the professor <strong>Rafael Hauckewitz Todaro</strong>, in partnership with the <strong>Instituto Mauá de Tecnologia</strong> and the global <strong>Grand Challenges Scholarship Program</strong>. We are committed to inclusivity, accessibility, personalized learning, and continuous development.",
       "motto": "Study smart, always!"
     },
     "techStack": {

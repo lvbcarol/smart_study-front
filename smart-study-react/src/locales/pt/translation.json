@@ -8,8 +8,8 @@
   },
   "home": {
     "welcome": "Bem-vindo(a) de volta, {{name}}.",
-    "title": "Pare de memorizar. Comece a entender.",
-    "subtitle": "O Smart Study é seu assistente de estudos pessoal com IA. Obtenha resumos precisos, dicas de materiais de estudos, gere quizzes práticos sobre qualquer tópico e acompanhe seu progresso para gabaritar suas provas com confiança.",
+    "title": "Seu assistente de estudos pessoal com IA",
+    "subtitle": "Esta é sua área de estudo personalizada. Obtenha resumos precisos, dicas de materiais de estudos, gere quizzes práticos sobre qualquer tópico e acompanhe seu progresso para gabaritar suas provas com confiança.",
     "cta": "Ir para Meus Cadernos"
   },
   "myNotebooks": {
@@ -138,7 +138,7 @@
     },
     "story": {
       "title": "Nossa História",
-      "text": "Este projeto foi idealizado e desenvolvido pela estudante de Sistemas de Informação <strong>Carolina Lansoni Vilas Boas</strong>, em parceria com o <strong>Instituto Mauá de Tecnologia</strong> e o programa global <strong>Grand Challenges Scholarship Program</strong>. Estamos comprometidos com a inclusão, acessibilidade, aprendizado personalizado e desenvolvimento contínuo.",
+      "text": "Este projeto foi idealizado e desenvolvido pela estudante de Sistemas de Informação <strong>Carolina Lansoni Vilas Boas</strong>, mentorada pelo professor <strong>Rafael Hauckewitz Todaro</strong>, em parceria com o <strong>Instituto Mauá de Tecnologia</strong> e o programa global <strong>Grand Challenges Scholarship Program</strong>. Estamos comprometidos com a inclusão, acessibilidade, aprendizado personalizado e desenvolvimento contínuo.",
       "motto": "Estude sempre, estude inteligente!"
     },
     "techStack": {
